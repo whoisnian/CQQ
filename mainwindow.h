@@ -1,35 +1,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QCloseEvent>
+#include <QHBoxLayout>
 #include <QMainWindow>
+#include <QSplitter>
 #include <QStatusBar>
 #include <QTabWidget>
-#include <QSplitter>
-#include <QLabel>
-#include <QDir>
-#include <QSpacerItem>
-#include <QClipboard>
-#include <QApplication>
-#include <QCompleter>
-#include <QLineEdit>
-#include <QDialog>
-#include <QTableWidget>
-#include <QTreeWidget>
-#include <QListWidget>
-#include <QPushButton>
-#include <QTextBrowser>
-#include <QFileDialog>
-#include <QPlainTextEdit>
-#include <QHeaderView>
-#include <QHBoxLayout>
-#include <QSizePolicy>
-#include <QMessageBox>
-#include <QCloseEvent>
+#include <QVBoxLayout>
+#include "chatlist.h"
+#include "configmanager.h"
+#include "contactlist.h"
+#include "infowidget.h"
+#include "messagebrowser.h"
+#include "messageedit.h"
+#include "messageedittool.h"
 #include "wsconnection.h"
-#include "cachemanager.h"
-#include "chats.h"
-#include "cqcode.h"
 
+// 主界面
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -37,49 +25,35 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     void init();
+
+private slots:
+    void insertFace(QString face);
+    void sendImage(QString fileName);
+    void sendScreenshot(QString fileName);
+    void sendMessage();
+    void changeChat(QListWidgetItem *item);
+    void deleteChat(QListWidgetItem *item);
 
 protected:
     void closeEvent(QCloseEvent *event);
 
-private slots:
-    void updateMeInfo();
-    void sendTextMessage();
-    void sendFace();
-    void sendPicture();
-    void sendScreenshot();
-
 private:
-    QString ConfigAddress;
-    QString ConfigToken;
-    QString ConfigCachePath;
-
+    ConfigManager *CONFIG;
     WSConnection *WSConn;
-    CacheManager *cacheManager;
-    Chats *chatsManager;
-    QString *selfId;
-    QString *selfNickname;
 
-    QTabWidget *mainTabWidget;
-    QWidget *recentMessagesPage;
-    QWidget *contactsPage;
+    ChatList *chatList;
+    ContactList *friendList;
+    ContactList *groupList;
+    InfoWidget *infoWidget;
+    MessageBrowser *messageBrowser;
+    MessageEdit *messageEdit;
+    MessageEditTool *messageEditTool;
 
-    QListWidget *recentChatsListWidget;
-    QTextBrowser *messageTextBrowser;
-    QWidget *editWidget;
-    QPushButton *facePushButton;
-    QPushButton *picturePushButton;
-    QPushButton *screenshotPushButton;
-    QPushButton *sendPushButton;
-    QTextEdit *messageTextEdit;
-
-    QTabWidget *contactsTabWidget;
-    QTreeWidget *friendsTreeWidget;
-    QTreeWidget *groupsTreeWidget;
-    QLabel *infoAvatarLabel;
-    QLabel *infoNumberLabel;
-    QLabel *infoNicknameLabel;
-    QLabel *infoRemarkLabel;
+    QSplitter *chatWidgetSplitter;
+    QSplitter *messageTabSplitter;
+    QSplitter *contactTabSplitter;
 };
 
 #endif // MAINWINDOW_H

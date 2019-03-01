@@ -1,311 +1,211 @@
 #include "mainwindow.h"
 
-CacheManager *CQCode::cacheManager = nullptr;
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    ConfigAddress = QString("110.110.110.110:6700");
-    ConfigToken = QString("qwertyuiop");
+    // 读取配置文件
+    CONFIG = new ConfigManager(this);
+    if(!CONFIG->loadConfig())
+    {
+        CONFIG->resetWindowSize();
+        CONFIG->changeConfig(true);
+    }
+    CONFIG->resetWindowSize();
 
-    ConfigCachePath = QString("/home/test/CQQ/cache/");
-    cacheManager = new CacheManager(ConfigCachePath);
-
+    // 主窗口设置
     this->setWindowIcon(QIcon::fromTheme("im-qq"));
-    this->resize(800, 600);
+    this->resize(CONFIG->configMainWindowWidth,
+                 CONFIG->configMainWindowHeight);
     this->statusBar()->clearMessage();
 
-    mainTabWidget = new QTabWidget;
+    // 主 TabWidget
+    QTabWidget *mainTabWidget = new QTabWidget(this);
+    mainTabWidget->setFocusPolicy(Qt::NoFocus);
     mainTabWidget->setIconSize(QSize(64, 16));
     this->setCentralWidget(mainTabWidget);
 
-    recentMessagesPage = new QWidget;
-    mainTabWidget->addTab(recentMessagesPage, QIcon::fromTheme("message-new"), "");
+    // 主 TabWidget 的消息 Tab
+    QWidget *messageTab = new QWidget(mainTabWidget);
+    mainTabWidget->addTab(messageTab, QIcon::fromTheme("message-new"), "");
 
-    recentChatsListWidget = new QListWidget;
-    QWidget *messagesWidget = new QWidget;
-    recentChatsListWidget->setMinimumWidth(200);
-    messagesWidget->setMinimumWidth(300);
-    QSizePolicy sizePolicyMessagesWidget = messagesWidget->sizePolicy();
-    sizePolicyMessagesWidget.setHorizontalStretch(1);
-    messagesWidget->setSizePolicy(sizePolicyMessagesWidget);
+    // 消息 Tab 中的聊天列表
+    chatList = new ChatList(messageTab);
 
-    messageTextBrowser = new QTextBrowser;
-    messageTextBrowser->setReadOnly(true);
-    messageTextBrowser->setOpenExternalLinks(true);
-    QSizePolicy sizePolicyMessageListWidget = messageTextBrowser->sizePolicy();
-    sizePolicyMessageListWidget.setVerticalStretch(1);
-    messageTextBrowser->setSizePolicy(sizePolicyMessageListWidget);
-    editWidget = new QWidget;
-    editWidget->setMinimumHeight(150);
+    // 消息 Tab 中的聊天区域
+    QWidget *chatWidget = new QWidget(messageTab);
 
-    QVBoxLayout *layoutEdit = new QVBoxLayout;
-    layoutEdit->setMargin(0);
-    layoutEdit->setSpacing(0);
+    // 聊天区域中的消息显示区域
+    messageBrowser = new MessageBrowser(chatWidget);
 
-    QWidget *toolButtonsWidget = new QWidget;
-    toolButtonsWidget->setMaximumHeight(40);
-    layoutEdit->addWidget(toolButtonsWidget);
+    // 聊天区域中的消息编辑区域
+    QWidget *editWidget = new QWidget(chatWidget);
 
-    QHBoxLayout *layoutToolButtons = new QHBoxLayout;
-    layoutToolButtons->setMargin(0);
-    layoutToolButtons->setSpacing(0);
+    // 消息编辑区域中的编辑工具栏
+    messageEditTool = new MessageEditTool(editWidget);
 
-    facePushButton = new QPushButton;
-    facePushButton->setFlat(true);
-    facePushButton->setIcon(QIcon::fromTheme("smiley-shape"));
-    facePushButton->setIconSize(QSize(24, 24));
-    facePushButton->setToolTip("插入emoji");
-    connect(facePushButton, &QPushButton::clicked, this, &MainWindow::sendFace);
-    layoutToolButtons->addWidget(facePushButton);
+    // 消息编辑区域中的文本编辑框
+    messageEdit = new MessageEdit(editWidget);
 
-    picturePushButton = new QPushButton;
-    picturePushButton->setFlat(true);
-    picturePushButton->setIcon(QIcon::fromTheme("emblem-photos-symbolic"));
-    picturePushButton->setIconSize(QSize(24, 24));
-    picturePushButton->setToolTip("发送图片");
-    connect(picturePushButton, &QPushButton::clicked, this, &MainWindow::sendPicture);
-    layoutToolButtons->addWidget(picturePushButton);
+    // 聊天区域中的消息编辑区域布局
+    QVBoxLayout *editLayout = new QVBoxLayout(editWidget);
+    editLayout->setMargin(0);
+    editLayout->setSpacing(0);
+    editLayout->addWidget(messageEditTool);
+    editLayout->addWidget(messageEdit);
+    editWidget->setLayout(editLayout);
 
-    screenshotPushButton =  new QPushButton;
-    screenshotPushButton->setFlat(true);
-    screenshotPushButton->setIcon(QIcon::fromTheme("edit-cut-symbolic"));
-    screenshotPushButton->setIconSize(QSize(24, 24));
-    screenshotPushButton->setToolTip("发送剪切版中的截图");
-    connect(screenshotPushButton, &QPushButton::clicked, this, &MainWindow::sendScreenshot);
-    layoutToolButtons->addWidget(screenshotPushButton);
+    // 消息 Tab 中的聊天区域布局
+    chatWidgetSplitter = new QSplitter(chatWidget);
+    //connect(chatWidgetSplitter, &QSplitter::splitterMoved, this, &MainWindow::init);
+    chatWidgetSplitter->addWidget(messageBrowser);
+    chatWidgetSplitter->addWidget(editWidget);
+    chatWidgetSplitter->setOrientation(Qt::Vertical);
+    chatWidgetSplitter->setChildrenCollapsible(false);
+    chatWidgetSplitter->setSizes(CONFIG->configChatWidgetSplitterSizes);
+    QHBoxLayout *chatWidgetLayout = new QHBoxLayout(chatWidget);
+    chatWidgetLayout->setMargin(0);
+    chatWidgetLayout->setSpacing(0);
+    chatWidgetLayout->addWidget(chatWidgetSplitter);
+    chatWidget->setLayout(chatWidgetLayout);
 
-    QSpacerItem *spacerItemTool = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    layoutToolButtons->addSpacerItem(spacerItemTool);
+    // 主 TabWidget 的消息 Tab 布局
+    messageTabSplitter = new QSplitter(messageTab);
+    messageTabSplitter->addWidget(chatList);
+    messageTabSplitter->addWidget(chatWidget);
+    messageTabSplitter->setOrientation(Qt::Horizontal);
+    messageTabSplitter->setChildrenCollapsible(false);
+    messageTabSplitter->setSizes(CONFIG->configMessageTabSplitterSizes);
+    QHBoxLayout *messageTabLayout = new QHBoxLayout(messageTab);
+    messageTabLayout->addWidget(messageTabSplitter);
+    messageTab->setLayout(messageTabLayout);
 
-    sendPushButton = new QPushButton;
-    sendPushButton->setIcon(QIcon::fromTheme("document-send"));
-    sendPushButton->setText("发送");
-    sendPushButton->setToolTip("发送");
-    connect(sendPushButton, &QPushButton::clicked, this, &MainWindow::sendTextMessage);
-    layoutToolButtons->addWidget(sendPushButton);
+    // 主 TabWidget 的联系人 Tab
+    QWidget *contactTab = new QWidget(mainTabWidget);
+    mainTabWidget->addTab(contactTab, QIcon::fromTheme("group"), "");
 
-    toolButtonsWidget->setLayout(layoutToolButtons);
+    // 联系人 Tab 中的好友群组 TabWidget
+    QTabWidget *contactTabWidget = new QTabWidget(contactTab);
+    contactTabWidget->setFocusPolicy(Qt::NoFocus);
 
-    messageTextEdit = new QTextEdit;
-    QSizePolicy sizePolicyMessageTextEdit = messageTextEdit->sizePolicy();
-    sizePolicyMessageTextEdit.setVerticalPolicy(QSizePolicy::Ignored);
-    messageTextEdit->setSizePolicy(sizePolicyMessageTextEdit);
-    layoutEdit->addWidget(messageTextEdit);
-    editWidget->setLayout(layoutEdit);
+    // 好友群组 TabWidget 中的好友列表
+    friendList = new ContactList(contactTabWidget);
+    contactTabWidget->addTab(friendList, "好友");
 
-    QSplitter *messageSplitter = new QSplitter;
-    messageSplitter->addWidget(messageTextBrowser);
-    messageSplitter->addWidget(editWidget);
-    messageSplitter->setOrientation(Qt::Vertical);
-    messageSplitter->setChildrenCollapsible(false);
-    QHBoxLayout *layoutMessages = new QHBoxLayout;
-    layoutMessages->setMargin(0);
-    layoutMessages->setSpacing(0);
-    layoutMessages->addWidget(messageSplitter);
-    messagesWidget->setLayout(layoutMessages);
+    // 好友群组 TabWidget 中的群组列表
+    groupList = new ContactList(contactTabWidget);
+    contactTabWidget->addTab(groupList, "群组");
 
-    QSplitter *recentSplitter = new QSplitter;
-    recentSplitter->addWidget(recentChatsListWidget);
-    recentSplitter->addWidget(messagesWidget);
-    recentSplitter->setOrientation(Qt::Horizontal);
-    recentSplitter->setChildrenCollapsible(false);
-    QHBoxLayout *layoutRecentMessagesPage = new QHBoxLayout;
-    layoutRecentMessagesPage->addWidget(recentSplitter);
-    recentMessagesPage->setLayout(layoutRecentMessagesPage);
+    // 联系人 Tab 中的信息区域
+    infoWidget = new InfoWidget(contactTab);
 
-    messageTextBrowser->hide();
-    editWidget->hide();
+    // 主 TabWidget 的联系人 Tab 布局
+    contactTabSplitter = new QSplitter(contactTab);
+    contactTabSplitter->addWidget(contactTabWidget);
+    contactTabSplitter->addWidget(infoWidget);
+    contactTabSplitter->setOrientation(Qt::Horizontal);
+    contactTabSplitter->setChildrenCollapsible(false);
+    contactTabSplitter->setSizes(CONFIG->configContactTabSplitterSizes);
+    QHBoxLayout *contactTabLayout = new QHBoxLayout(contactTab);
+    contactTabLayout->addWidget(contactTabSplitter);
+    contactTab->setLayout(contactTabLayout);
 
-    contactsPage = new QWidget;
-    mainTabWidget->addTab(contactsPage, QIcon::fromTheme("group"), "");
+    connect(messageEditTool, SIGNAL(insertFace(QString)),
+            this, SLOT(insertFace(QString)));
+    connect(messageEditTool, SIGNAL(sendImage(QString)),
+            this, SLOT(sendImage(QString)));
+    connect(messageEditTool, SIGNAL(sendScreenshot(QString)),
+            this, SLOT(sendScreenshot(QString)));
+    connect(messageEditTool, SIGNAL(sendMessage()),
+            this, SLOT(sendMessage()));
+    connect(messageEdit, SIGNAL(ctrlEnterPressed()),
+            this, SLOT(sendMessage()));
+    connect(chatList, SIGNAL(itemClicked(QListWidgetItem *)),
+            this, SLOT(changeChat(QListWidgetItem *)));
+    connect(chatList, SIGNAL(deleteItem(QListWidgetItem *)),
+            this, SLOT(deleteChat(QListWidgetItem *)));
+    connect(friendList, SIGNAL(itemClicked()),
+            this, SLOT(showFriendInfo()));
+    connect(friendsTreeWidget, &QTreeWidget::itemDoubleClicked, this, &WSConnection::startPrivateChat);
+    connect(groupsTreeWidget, &QTreeWidget::itemClicked, this, &WSConnection::showGroupInfo);
+    connect(groupsTreeWidget, &QTreeWidget::itemDoubleClicked, this, &WSConnection::startGroupChat);
 
-    contactsTabWidget = new QTabWidget;
-    QWidget *infoWidgets = new QWidget;
-    QWidget *infoWidgetL = new QWidget;
-    QWidget *infoWidget = new QWidget;
-    QWidget *infoWidgetR = new QWidget;
-
-    contactsTabWidget->setMinimumWidth(200);
-    infoWidgets->setMinimumWidth(300);
-
-    QHBoxLayout *layoutL = new QHBoxLayout;
-    QSpacerItem *spacerItemL = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    layoutL->addSpacerItem(spacerItemL);
-    infoWidgetL->setLayout(layoutL);
-
-    QHBoxLayout *layoutR = new QHBoxLayout;
-    QSpacerItem *spacerItemR = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    layoutR->addSpacerItem(spacerItemR);
-    infoWidgetR->setLayout(layoutR);
-
-    infoAvatarLabel = new QLabel;
-    infoAvatarLabel->setAlignment(Qt::AlignCenter);
-    infoNumberLabel = new QLabel;
-    infoNumberLabel->setAlignment(Qt::AlignCenter);
-    infoNicknameLabel = new QLabel;
-    infoNicknameLabel->setAlignment(Qt::AlignCenter);
-    infoRemarkLabel = new QLabel;
-    infoRemarkLabel->setAlignment(Qt::AlignCenter);
-    QVBoxLayout *layoutInfo = new QVBoxLayout;
-    QSpacerItem *spacerItemU = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    QSpacerItem *spacerItemD = new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    layoutInfo->addSpacerItem(spacerItemU);
-    layoutInfo->addWidget(infoAvatarLabel);
-    layoutInfo->addWidget(infoNumberLabel);
-    layoutInfo->addWidget(infoNicknameLabel);
-    layoutInfo->addWidget(infoRemarkLabel);
-    layoutInfo->addSpacerItem(spacerItemD);
-    infoWidget->setLayout(layoutInfo);
-
-    QHBoxLayout *layouts = new QHBoxLayout;
-    layouts->addWidget(infoWidgetL);
-    layouts->addWidget(infoWidget);
-    layouts->addWidget(infoWidgetR);
-    infoWidgets->setLayout(layouts);
-    QSizePolicy sizePolicyInfoWidgets = infoWidget->sizePolicy();
-    sizePolicyInfoWidgets.setHorizontalStretch(1);
-    infoWidgets->setSizePolicy(sizePolicyInfoWidgets);
-
-    QSplitter *contactsSplitter = new QSplitter;
-    contactsSplitter->addWidget(contactsTabWidget);
-    contactsSplitter->addWidget(infoWidgets);
-    contactsSplitter->setOrientation(Qt::Horizontal);
-    contactsSplitter->setChildrenCollapsible(false);
-    QHBoxLayout *layoutContactsPage = new QHBoxLayout;
-    layoutContactsPage->addWidget(contactsSplitter);
-    contactsPage->setLayout(layoutContactsPage);
-
-    friendsTreeWidget = new QTreeWidget;
-    friendsTreeWidget->header()->hide();
-    contactsTabWidget->addTab(friendsTreeWidget, "好友");
-
-    groupsTreeWidget = new QTreeWidget;
-    groupsTreeWidget->header()->hide();
-    contactsTabWidget->addTab(groupsTreeWidget, "群组");
+    //messageBrowser->hide();
+    //editWidget->hide();
 }
 
 MainWindow::~MainWindow()
 {
-    delete WSConn;
-    delete mainTabWidget;
+    qDebug() << "~MainWindow";
 }
 
 void MainWindow::init()
 {
-    this->statusBar()->showMessage("连接中。。。");
-    WSConn = new WSConnection(ConfigAddress, ConfigToken, cacheManager, this);
-    if(WSConn->isConnected())
-    {
-        selfId = new QString;
-        selfNickname = new QString;
-        WSConn->getMeInfo(selfId, selfNickname);
-        connect(WSConn, &WSConnection::getMeInfoFinished, this, &MainWindow::updateMeInfo);
+    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+                        "1334583207",
+                        "念",
+                        "echo");
+    chatList->addItem("nihao");
+    chatList->addItem("ceshi");
+    chatList->addItem("测试");
+    chatList->addItem("12312312312");
 
-        WSConn->updateContacts(friendsTreeWidget, groupsTreeWidget, infoAvatarLabel, infoNumberLabel, infoNicknameLabel, infoRemarkLabel);
-        this->statusBar()->showMessage("连接成功。", 3000);
-    }
-    else
+    for(int i = 0;i < 5;i++)
     {
-        this->statusBar()->showMessage("连接失败。");
+        QTreeWidgetItem *item = new QTreeWidgetItem;
+        item->setText(0, "num"+QString::number(i));
+        friendList->addTopLevelItem(item);
+        for(int j = 0;j < i;j++)
+        {
+            QTreeWidgetItem *subItem = new QTreeWidgetItem;
+            subItem->setText(0, "sub"+QString::number(j));
+            item->addChild(subItem);
+        }
     }
-    chatsManager = new Chats;
-    cacheManager->loadChats(chatsManager);
-    WSConn->setChats(chatsManager, mainTabWidget, recentChatsListWidget, messageTextBrowser, editWidget, messageTextEdit);
-    CQCode::cacheManager = cacheManager;
+
+    qDebug() << chatWidgetSplitter->sizes();
+    qDebug() << messageTabSplitter->sizes();
+    qDebug() << contactTabSplitter->sizes();
+}
+
+void MainWindow::insertFace(QString face)
+{
+    qDebug() << face;
+    messageEdit->insertPlainText(face);
+}
+
+void MainWindow::sendImage(QString fileName)
+{
+    qDebug() << fileName;
+}
+
+void MainWindow::sendScreenshot(QString fileName)
+{
+    qDebug() << fileName;
+}
+
+void MainWindow::sendMessage()
+{
+    qDebug() << "send" << messageEdit->toPlainText();
+}
+
+void MainWindow::changeChat(QListWidgetItem *item)
+{
+    qDebug() << "change to" << item->text();
+}
+
+void MainWindow::deleteChat(QListWidgetItem *item)
+{
+    qDebug() << "delete" << item->text();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    /*
-    QMessageBox::StandardButton resBtn = QMessageBox::question(this, "退出 CQQ", "确定现在就要退出了吗？\n", QMessageBox::No | QMessageBox::Yes, QMessageBox::Yes);
-    if(resBtn != QMessageBox::Yes)
-    {
-        event->ignore();
-    }
-    else
-    {
-        event->accept();
-    }
-    */
-    WSConn->endChat();
-    cacheManager->saveChats(chatsManager);
+    qDebug() << "closeEvent";
+    CONFIG->configMainWindowWidth = this->width();
+    CONFIG->configMainWindowHeight = this->height();
+    CONFIG->configChatWidgetSplitterSizes = chatWidgetSplitter->sizes();
+    CONFIG->configMessageTabSplitterSizes = messageTabSplitter->sizes();
+    CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
+    CONFIG->saveConfig();
     event->accept();
-}
-
-void MainWindow::updateMeInfo()
-{
-    infoAvatarLabel->setText("<img src=\""+cacheManager->getAvatar(*selfId, CacheManager::FriendAvatar, 100)+"\" />");
-    infoNumberLabel->setText(*selfId);
-    infoNicknameLabel->setText("昵称：" + *selfNickname);
-}
-
-void MainWindow::sendTextMessage()
-{
-    WSConn->sendTextMessage(messageTextEdit->toPlainText(), chatsManager->chats[recentChatsListWidget->currentRow()].type, chatsManager->chats[recentChatsListWidget->currentRow()].senderId);
-    messageTextEdit->clear();
-}
-
-void MainWindow::sendFace()
-{
-    QDialog *dialog = new QDialog(this);
-    dialog->setWindowTitle("发送表情");
-
-    QStringList list;
-    for(auto it = stringFace.begin();it != stringFace.end();it++)
-        list.push_back(it.key());
-
-    QCompleter *completer = new QCompleter(list);
-    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-
-    QLineEdit *lineEdit = new QLineEdit;
-    lineEdit->setCompleter(completer);
-    connect(lineEdit, &QLineEdit::returnPressed, dialog, &QDialog::close);
-
-    QPushButton *ok = new QPushButton("确定");
-    connect(ok, &QPushButton::clicked, dialog, &QDialog::close);
-
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(lineEdit);
-    layout->addWidget(ok);
-
-    dialog->setLayout(layout);
-    dialog->exec();
-
-    QString name = lineEdit->text();
-    if(stringFace[name].isEmpty())
-    {
-        qDebug() << "no face";
-        return;
-    }
-    qDebug() << name << stringFace[name];
-    WSConn->sendFace(stringFace[name], chatsManager->chats[recentChatsListWidget->currentRow()].type, chatsManager->chats[recentChatsListWidget->currentRow()].senderId);
-}
-
-void MainWindow::sendPicture()
-{
-    QString fileName = QFileDialog::getOpenFileName(this, "选择要发送的图片", QDir::home().path(), "Images (*.png *.jpeg *.jpg)");
-    if(!fileName.isEmpty())
-    {
-        if(QFileInfo::exists(fileName)&&QFileInfo(fileName).isFile())
-        {
-            WSConn->sendImage(fileName, chatsManager->chats[recentChatsListWidget->currentRow()].type, chatsManager->chats[recentChatsListWidget->currentRow()].senderId);
-        }
-    }
-}
-
-void MainWindow::sendScreenshot()
-{
-    QClipboard *systemClipboard = QApplication::clipboard();
-    QString fileName = systemClipboard->text();
-    if(fileName.left(7) == "file://")
-        fileName = fileName.mid(7);
-    if(!fileName.isEmpty())
-    {
-        if(QFileInfo::exists(fileName)&&QFileInfo(fileName).isFile())
-        {
-            WSConn->sendImage(fileName, chatsManager->chats[recentChatsListWidget->currentRow()].type, chatsManager->chats[recentChatsListWidget->currentRow()].senderId);
-        }
-    }
 }

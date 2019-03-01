@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-01-30T15:55:56
+# Project created by QtCreator 2019-02-12T18:53:49
 #
 #-------------------------------------------------
 
@@ -29,17 +29,39 @@ SOURCES += \
         mainwindow.cpp \
     wsconnection.cpp \
     cachemanager.cpp \
-    chats.cpp \
-    cqcode.cpp
+    chatmanager.cpp \
+    cqcode.cpp \
+    configmanager.cpp \
+    downloadmanager.cpp \
+    messageedit.cpp \
+    messagebrowser.cpp \
+    chatlist.cpp \
+    infowidget.cpp \
+    contactlist.cpp \
+    messageedittool.cpp \
+    facedialog.cpp
 
 HEADERS += \
         mainwindow.h \
     wsconnection.h \
     cachemanager.h \
-    chats.h \
-    cqcode.h
+    chatmanager.h \
+    cqcode.h \
+    configmanager.h \
+    downloadmanager.h \
+    messageedit.h \
+    messagebrowser.h \
+    chatlist.h \
+    infowidget.h \
+    contactlist.h \
+    messageedittool.h \
+    facedialog.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    README.md \
+    .gitignore
