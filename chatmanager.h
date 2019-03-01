@@ -38,6 +38,7 @@ public:
         SubGroup,
         SubDiscuss,
         SubOther,
+
         SubNormal,
         SubAnonymous,
         SubNotice
@@ -64,6 +65,8 @@ class ChatManager
 {
 public:
     ChatManager(){}
+    int indexOf(QString chatID, Chat::Type type);
+    void addNewChat(QString chatID, QString chatName, Chat::Type type);
 
     friend QDataStream& operator>>(QDataStream& input,
                                    ChatManager& data);

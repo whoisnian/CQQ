@@ -9,6 +9,17 @@ ChatList::ChatList(QWidget *parent)
             this, SLOT(showContextMenu(const QPoint &)));
 }
 
+void ChatList::addNewChatItem(QString avatar,
+                              QString chatID,
+                              QString chatName)
+{
+    QListWidgetItem *item = new QListWidgetItem;
+    item->setIcon(QIcon(avatar));
+    item->setText(chatName);
+    item->setToolTip(chatID);
+    this->insertItem(0, item);
+}
+
 void ChatList::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);

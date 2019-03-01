@@ -1,5 +1,33 @@
 #include "chatmanager.h"
 
+int ChatManager::indexOf(QString chatID, Chat::Type type)
+{
+    for(auto it = this->chats.begin();it < this->chats.end();it++)
+    {
+        if(it->type == type&&it->chatID == chatID)
+        {
+            return it - this->chats.begin();
+        }
+    }
+    return -1;
+}
+
+void ChatManager::addNewChat(QString chatID,
+                             QString chatName,
+                             Chat::Type type)
+{
+    Chat temp;
+    temp.sumNum = 0;
+    temp.unreadNum = 0;
+    temp.type = type;
+    temp.subType = Chat::SubFriend;
+    temp.chatID = chatID;
+    temp.chatName = chatName;
+    temp.editingMessage = "";
+    temp.messages.clear();
+    this->chats.push_front(temp);
+}
+
 QDataStream& operator>>(QDataStream& input, Message& data)
 {
     input >> data.senderID

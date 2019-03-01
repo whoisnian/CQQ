@@ -34,9 +34,14 @@ void InfoWidget::setInfo(QString avatar,
                          QString nickname,
                          QString remark)
 {
-    avatarLabel->setText("<img src=\""
-                         + avatar
-                         + "\" width=\"100\"  height=\"100\" />");
+    avatar = "<img src=\""
+            + avatar
+            + "\" width=\"100\"  height=\"100\" />";
+    if(avatarLabel->text() == avatar)
+    {
+        return;
+    }
+    avatarLabel->setText(avatar);
     numberLabel->setText(number);
     if(remark.isEmpty())
     {

@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->statusBar()->clearMessage();
 
     // 主 TabWidget
-    QTabWidget *mainTabWidget = new QTabWidget(this);
+    mainTabWidget = new QTabWidget(this);
     mainTabWidget->setFocusPolicy(Qt::NoFocus);
     mainTabWidget->setIconSize(QSize(64, 16));
     this->setCentralWidget(mainTabWidget);
@@ -123,11 +123,14 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(changeChat(QListWidgetItem *)));
     connect(chatList, SIGNAL(deleteItem(QListWidgetItem *)),
             this, SLOT(deleteChat(QListWidgetItem *)));
-    connect(friendList, SIGNAL(itemClicked()),
-            this, SLOT(showFriendInfo()));
-    connect(friendsTreeWidget, &QTreeWidget::itemDoubleClicked, this, &WSConnection::startPrivateChat);
-    connect(groupsTreeWidget, &QTreeWidget::itemClicked, this, &WSConnection::showGroupInfo);
-    connect(groupsTreeWidget, &QTreeWidget::itemDoubleClicked, this, &WSConnection::startGroupChat);
+    connect(friendList, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+            this, SLOT(showFriendInfo(QTreeWidgetItem *, int)));
+    connect(friendList, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+            this, SLOT(startPrivateChat(QTreeWidgetItem *, int)));
+    connect(groupList, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+            this, SLOT(showGroupInfo(QTreeWidgetItem *, int)));
+    connect(groupList, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
+            this, SLOT(startGroupChat(QTreeWidgetItem *, int)));
 
     //messageBrowser->hide();
     //editWidget->hide();
@@ -140,6 +143,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
+    chatManager = new ChatManager;
     infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
                         "1334583207",
                         "念",
@@ -158,6 +162,8 @@ void MainWindow::init()
         {
             QTreeWidgetItem *subItem = new QTreeWidgetItem;
             subItem->setText(0, "sub"+QString::number(j));
+            subItem->setToolTip(0, "name sub"+QString::number(j));
+            subItem->setToolTip(1, QString::number(j));
             item->addChild(subItem);
         }
     }
@@ -196,6 +202,85 @@ void MainWindow::changeChat(QListWidgetItem *item)
 void MainWindow::deleteChat(QListWidgetItem *item)
 {
     qDebug() << "delete" << item->text();
+}
+
+void MainWindow::showFriendInfo(QTreeWidgetItem *item, int)
+{
+    if(item->toolTip(1).isEmpty())
+    {
+        return;
+    }
+    // NeedToBeDone: 获取头像路径
+    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+                        item->toolTip(1),
+                        item->text(0),
+                        item->toolTip(0));
+    qDebug() << "showFriendInfo";
+}
+
+void MainWindow::startPrivateChat(QTreeWidgetItem *item, int)
+{
+    if(item->toolTip(1).isEmpty())
+    {
+        return;
+    }
+    int index = chatManager->indexOf(item->toolTip(1), Chat::Private);
+    if(index == -1)
+    {
+        chatManager->addNewChat(item->toolTip(1),
+                                item->text(0), Chat::Private);
+        chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
+                                 item->toolTip(1),
+                                 item->text(0));
+        chatList->setCurrentRow(0);
+        this->changeChat(chatList->item(0));
+    }
+    else
+    {
+        chatList->setCurrentRow(index);
+        this->changeChat(chatList->item(index));
+    }
+    mainTabWidget->setCurrentIndex(0);
+    qDebug() << "startPrivateChat";
+}
+
+void MainWindow::showGroupInfo(QTreeWidgetItem *item, int)
+{
+    if(item->toolTip(1).isEmpty())
+    {
+        return;
+    }
+    // NeedToBeDone: 获取头像路径
+    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+                        item->toolTip(1),
+                        item->text(0));
+    qDebug() << "showGroupInfo";
+}
+
+void MainWindow::startGroupChat(QTreeWidgetItem *item, int)
+{
+    if(item->toolTip(1).isEmpty())
+    {
+        return;
+    }
+    int index = chatManager->indexOf(item->toolTip(1), Chat::Group);
+    if(index == -1)
+    {
+        chatManager->addNewChat(item->toolTip(1),
+                                item->text(0), Chat::Group);
+        chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
+                                 item->toolTip(1),
+                                 item->text(0));
+        chatList->setCurrentRow(0);
+        this->changeChat(chatList->item(0));
+    }
+    else
+    {
+        chatList->setCurrentRow(index);
+        this->changeChat(chatList->item(index));
+    }
+    mainTabWidget->setCurrentIndex(0);
+    qDebug() << "startGroupChat";
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

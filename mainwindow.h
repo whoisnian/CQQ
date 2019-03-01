@@ -9,6 +9,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include "chatlist.h"
+#include "chatmanager.h"
 #include "configmanager.h"
 #include "contactlist.h"
 #include "infowidget.h"
@@ -35,6 +36,10 @@ private slots:
     void sendMessage();
     void changeChat(QListWidgetItem *item);
     void deleteChat(QListWidgetItem *item);
+    void showFriendInfo(QTreeWidgetItem *item, int column);
+    void startPrivateChat(QTreeWidgetItem *item, int column);
+    void showGroupInfo(QTreeWidgetItem *item, int column);
+    void startGroupChat(QTreeWidgetItem *item, int column);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -42,7 +47,9 @@ protected:
 private:
     ConfigManager *CONFIG;
     WSConnection *WSConn;
+    ChatManager *chatManager;
 
+    QTabWidget *mainTabWidget;
     ChatList *chatList;
     ContactList *friendList;
     ContactList *groupList;

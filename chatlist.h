@@ -12,6 +12,7 @@ class ChatList : public QListWidget
 
 public:
     ChatList(QWidget *parent = nullptr);
+    void addNewChatItem(QString avatar, QString chatID, QString chatName);
 
 signals:
     void deleteItem(QListWidgetItem *item);
