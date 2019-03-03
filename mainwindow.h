@@ -48,6 +48,7 @@ private:
     ConfigManager *CONFIG;
     WSConnection *WSConn;
     ChatManager *chatManager;
+    CacheManager *cacheManager;
 
     QTabWidget *mainTabWidget;
     ChatList *chatList;

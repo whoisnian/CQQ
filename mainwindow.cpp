@@ -144,6 +144,12 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     chatManager = new ChatManager;
+    cacheManager = new CacheManager;
+    WSConn = new WSConnection(CONFIG->configAddress,
+                              CONFIG->configToken,
+                              cacheManager,
+                              this);
+
     infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
                         "1334583207",
                         "念",
