@@ -10,6 +10,7 @@ WSConnection::WSConnection(QString address,
     this->cacheManager = cacheManager;
     this->setParent(parent);
     this->loop = new QEventLoop(this);
+    this->heartbeatTimer = new QTimer(this);
 
     connect(&wsAPI, SIGNAL(connected()),
             this, SLOT(wsAPIConnected()));
@@ -87,6 +88,9 @@ void WSConnection::wsAPIConnected()
     connect(&wsAPI, SIGNAL(textMessageReceived(const QString &)),
             this, SLOT(wsAPIReceived(const QString &)));
     loop->exit();
+    heartbeatTimer->start(15000);
+    connect(heartbeatTimer, SIGNAL(timeout()),
+            this, SLOT(sendHeartbeat()));
 }
 
 void WSConnection::wsAPIDisconnected()
@@ -100,25 +104,44 @@ void WSConnection::wsAPIReceived(const QString message)
     qDebug() << "wsAPI received:" << message;
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
+    if(jsonDoc.isNull())
+    {
+        qDebug() << "broken wsAPI message";
+        return;
+    }
 
-    if(commandQueue.head().type == CommandType::get_login_info)
+    if(commandQueue.head().type == CommandType::get_status)
+    {
+        qDebug() << "wsAPI status: "
+                 << (jsonDoc.object().value("data")
+                     .toObject().value("good")
+                     .toBool()?"OK":"ERROR");
+    }
+    else if(commandQueue.head().type == CommandType::get_login_info)
     {
         qDebug() << "get_login_info";
-        if(!jsonDoc.isNull())
-        {
-            QJsonValue temp = jsonDoc.object().value("data");
-            QString ID, Nickname;
-            ID = QString::number(
-                        temp.toObject().value("user_id")
-                        .toVariant().toLongLong());
-            Nickname = temp.toObject().value("nickname").toString();
-            emit getLoginInfoFinished(ID, Nickname);
-        }
-        else
-        {
-            qDebug() << "broken message when get_login_info";
-        }
+        QString ID, Nickname;
+        ID = QString::number(jsonDoc.object().value("data")
+                             .toObject().value("user_id")
+                             .toVariant().toLongLong());
+        Nickname = jsonDoc.object().value("data")
+                   .toObject().value("nickname").toString();
+        emit getLoginInfoFinished(ID, Nickname);
     }
+    else if(commandQueue.head().type == CommandType::_get_friend_list)
+    {
+
+    }
+    else if(commandQueue.head().type == CommandType::get_group_list)
+    {
+
+    }
+    else if(commandQueue.head().type == CommandType::get_group_member_info)
+    {
+
+    }
+
+    startNextCommand();
 }
 
 void WSConnection::wsEVENTConnected()
@@ -138,4 +161,32 @@ void WSConnection::wsEVENTDisconnected()
 void WSConnection::wsEVENTReceived(const QString message)
 {
     qDebug() << "wsEVENT received:" << message;
+    QJsonDocument jsonDoc;
+    jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
+    if(jsonDoc.isNull())
+    {
+        qDebug() << "broken wsEVENT message";
+        return;
+    }
+
+    if(jsonDoc.object().value("post_type") == "meta_event")
+    {
+        if(jsonDoc.object().value("meta_event_type") == "heartbeat")
+        {
+            qDebug() << "wsEVENT status: "
+                     << (jsonDoc.object().value("status")
+                         .toObject().value("good")
+                         .toBool()?"OK":"ERROR");
+        }
+    }
+}
+
+void WSConnection::sendHeartbeat()
+{
+    if(commandQueue.isEmpty())
+    {
+        QString content = "{\"action\":\"get_status\",\"params\":{}}";
+        addCommand(CommandType::get_status, content);
+    }
+    heartbeatTimer->start(15000);
 }

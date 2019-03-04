@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QQueue>
 #include <QString>
+#include <QTimer>
 #include <QWebSocket>
 #include "cachemanager.h"
 
@@ -16,7 +17,8 @@ enum CommandType
     get_login_info,
     _get_friend_list,
     get_group_list,
-    get_group_member_info
+    get_group_member_info,
+    get_status
 };
 
 struct Command
@@ -54,6 +56,8 @@ private slots:
     void wsEVENTDisconnected();
     void wsEVENTReceived(const QString message);
 
+    void sendHeartbeat();
+
 private:
     QString address;
     QString token;
@@ -62,6 +66,7 @@ private:
     QWebSocket wsAPI;
     QWebSocket wsEVENT;
     QEventLoop *loop;
+    QTimer *heartbeatTimer;
 
     QQueue<Command> commandQueue;
     bool newStart;
