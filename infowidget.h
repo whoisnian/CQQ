@@ -15,7 +15,7 @@ public:
     void setInfo(QString avatar,
                  QString number,
                  QString nickname,
-                 QString remark = "");
+                 QString remark);
 
 private:
     QLabel *avatarLabel;

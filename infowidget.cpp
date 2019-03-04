@@ -43,7 +43,7 @@ void InfoWidget::setInfo(QString avatar,
     }
     avatarLabel->setText(avatar);
     numberLabel->setText(number);
-    if(remark.isEmpty())
+    if(remark.isNull())
     {
         nicknameLabel->setText("名称：" + nickname);
         remarkLabel->setText("");
@@ -51,6 +51,13 @@ void InfoWidget::setInfo(QString avatar,
     else
     {
         nicknameLabel->setText("昵称：" + nickname);
-        remarkLabel->setText("备注：" + remark);
+        if(remark.isEmpty())
+        {
+            remarkLabel->setText("");
+        }
+        else
+        {
+            remarkLabel->setText("备注：" + remark);
+        }
     }
 }

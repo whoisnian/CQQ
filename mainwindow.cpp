@@ -56,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 消息 Tab 中的聊天区域布局
     chatWidgetSplitter = new QSplitter(chatWidget);
-    //connect(chatWidgetSplitter, &QSplitter::splitterMoved, this, &MainWindow::init);
     chatWidgetSplitter->addWidget(messageBrowser);
     chatWidgetSplitter->addWidget(editWidget);
     chatWidgetSplitter->setOrientation(Qt::Vertical);
@@ -145,15 +144,23 @@ void MainWindow::init()
 {
     chatManager = new ChatManager;
     cacheManager = new CacheManager;
+    this->statusBar()->showMessage("连接中。。。");
     WSConn = new WSConnection(CONFIG->configAddress,
                               CONFIG->configToken,
                               cacheManager,
                               this);
+    if(WSConn->isConnected())
+    {
+        WSConn->getLoginInfo();
+        connect(WSConn, SIGNAL(getLoginInfoFinished(QString, QString)),
+                this, SLOT(updateLoginInfo(QString, QString)));
+        this->statusBar()->showMessage("连接成功。", 3000);
+    }
+    else
+    {
+        this->statusBar()->showMessage("连接失败。");
+    }
 
-    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
-                        "1334583207",
-                        "念",
-                        "echo");
     chatList->addItem("nihao");
     chatList->addItem("ceshi");
     chatList->addItem("测试");
@@ -259,7 +266,8 @@ void MainWindow::showGroupInfo(QTreeWidgetItem *item, int)
     // NeedToBeDone: 获取头像路径
     infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
                         item->toolTip(1),
-                        item->text(0));
+                        item->text(0),
+                        QString());
     qDebug() << "showGroupInfo";
 }
 
@@ -287,6 +295,17 @@ void MainWindow::startGroupChat(QTreeWidgetItem *item, int)
     }
     mainTabWidget->setCurrentIndex(0);
     qDebug() << "startGroupChat";
+}
+
+void MainWindow::updateLoginInfo(QString id, QString nickname)
+{
+    this->selfID = new QString(id);
+    this->selfNickname = new QString(nickname);
+    // NeedToBeDone: 获取头像路径
+    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+                        id,
+                        nickname,
+                        "");
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -40,6 +40,7 @@ private slots:
     void startPrivateChat(QTreeWidgetItem *item, int column);
     void showGroupInfo(QTreeWidgetItem *item, int column);
     void startGroupChat(QTreeWidgetItem *item, int column);
+    void updateLoginInfo(QString id, QString nickname);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -49,6 +50,8 @@ private:
     WSConnection *WSConn;
     ChatManager *chatManager;
     CacheManager *cacheManager;
+    QString *selfID;
+    QString *selfNickname;
 
     QTabWidget *mainTabWidget;
     ChatList *chatList;

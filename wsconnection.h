@@ -2,10 +2,28 @@
 #define WSCONNECTION_H
 
 #include <QEventLoop>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QObject>
+#include <QQueue>
 #include <QString>
 #include <QWebSocket>
 #include "cachemanager.h"
+
+enum CommandType
+{
+    get_login_info,
+    _get_friend_list,
+    get_group_list,
+    get_group_member_info
+};
+
+struct Command
+{
+    QString content;
+    CommandType type;
+};
 
 // 处理 WebSocket 连接
 class WSConnection : public QObject
@@ -18,6 +36,15 @@ public:
                  CacheManager *cacheManager,
                  QObject *parent = nullptr);
     ~WSConnection();
+
+    bool isConnected();
+    void addCommand(CommandType type, QString content);
+    void startNextCommand();
+
+    void getLoginInfo();
+
+signals:
+    void getLoginInfoFinished(QString id, QString nickname);
 
 private slots:
     void wsAPIConnected();
@@ -35,6 +62,9 @@ private:
     QWebSocket wsAPI;
     QWebSocket wsEVENT;
     QEventLoop *loop;
+
+    QQueue<Command> commandQueue;
+    bool newStart;
 };
 
 #endif // WSCONNECTION_H
