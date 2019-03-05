@@ -10,6 +10,10 @@ class ContactList : public QTreeWidget
 {
 public:
     ContactList(QWidget *parent = nullptr);
+
+    QTreeWidgetItem *addTopItem(QString text);
+    void addChildItem(QString text, QString toolTip, QString extra,
+                      QTreeWidgetItem *parent, QString avatar);
 };
 
 #endif // CONTACTLIST_H

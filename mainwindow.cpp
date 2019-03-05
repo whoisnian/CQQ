@@ -154,6 +154,9 @@ void MainWindow::init()
         WSConn->getLoginInfo();
         connect(WSConn, SIGNAL(getLoginInfoFinished(QString, QString)),
                 this, SLOT(updateLoginInfo(QString, QString)));
+        WSConn->getLoginInfo();
+        WSConn->getFriendList(friendList);
+        WSConn->getGroupList(groupList);
         this->statusBar()->showMessage("连接成功。", 3000);
     }
     else
@@ -165,21 +168,6 @@ void MainWindow::init()
     chatList->addItem("ceshi");
     chatList->addItem("测试");
     chatList->addItem("12312312312");
-
-    for(int i = 0;i < 5;i++)
-    {
-        QTreeWidgetItem *item = new QTreeWidgetItem;
-        item->setText(0, "num"+QString::number(i));
-        friendList->addTopLevelItem(item);
-        for(int j = 0;j < i;j++)
-        {
-            QTreeWidgetItem *subItem = new QTreeWidgetItem;
-            subItem->setText(0, "sub"+QString::number(j));
-            subItem->setToolTip(0, "name sub"+QString::number(j));
-            subItem->setToolTip(1, QString::number(j));
-            item->addChild(subItem);
-        }
-    }
 
     qDebug() << chatWidgetSplitter->sizes();
     qDebug() << messageTabSplitter->sizes();

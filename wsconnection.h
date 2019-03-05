@@ -9,8 +9,10 @@
 #include <QQueue>
 #include <QString>
 #include <QTimer>
+#include <QTreeWidgetItem>
 #include <QWebSocket>
 #include "cachemanager.h"
+#include "contactlist.h"
 
 enum CommandType
 {
@@ -44,6 +46,8 @@ public:
     void startNextCommand();
 
     void getLoginInfo();
+    void getFriendList(ContactList *friendList);
+    void getGroupList(ContactList *groupList);
 
 signals:
     void getLoginInfoFinished(QString id, QString nickname);
@@ -62,6 +66,8 @@ private:
     QString address;
     QString token;
     CacheManager *cacheManager;
+    ContactList *friendList;
+    ContactList *groupList;
 
     QWebSocket wsAPI;
     QWebSocket wsEVENT;

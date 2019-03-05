@@ -82,6 +82,23 @@ void WSConnection::getLoginInfo()
     addCommand(CommandType::get_login_info, content);
 }
 
+void WSConnection::getFriendList(ContactList *friendList)
+{
+    this->friendList = friendList;
+    QString content = "{\"action\":\
+                            \"_get_friend_list\",\
+                            \"params\":{\"flat\":false}\
+                       }";
+    addCommand(CommandType::_get_friend_list, content);
+}
+
+void WSConnection::getGroupList(ContactList *groupList)
+{
+    this->groupList = groupList;
+    QString content = "{\"action\":\"get_group_list\",\"params\":{}}";
+    addCommand(CommandType::get_group_list, content);
+}
+
 void WSConnection::wsAPIConnected()
 {
     qDebug() << "wsAPI connected";
@@ -130,7 +147,44 @@ void WSConnection::wsAPIReceived(const QString message)
     }
     else if(commandQueue.head().type == CommandType::_get_friend_list)
     {
-
+        qDebug() << "_get_friend_list";
+        if(jsonDoc.object().value("data").isArray())
+        {
+            QJsonArray data = jsonDoc.object().value("data").toArray();
+            for(int i = 0;i < data.size();i++)
+            {
+                QTreeWidgetItem *topItem;
+                QString friendGroupName;
+                friendGroupName = data.at(i)
+                        .toObject().value("friend_group_name")
+                        .toString();
+                topItem = friendList->addTopItem(friendGroupName);
+                QJsonArray friends = data.at(i)
+                        .toObject().value("friends")
+                        .toArray();
+                for(int j = 0;j < friends.size();j++)
+                {
+                    QString ID, nickname, remark, avatar;
+                    ID = QString::number(friends.at(j)
+                                         .toObject().value("user_id")
+                                         .toVariant().toLongLong());
+                    nickname = friends.at(j)
+                            .toObject().value("nickname")
+                            .toString();
+                    remark = friends.at(j)
+                            .toObject().value("remark")
+                            .toString();
+                    // NeedToBeDone: 获取头像路径
+                    avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                    if(remark.isEmpty())
+                    {
+                        remark = nickname;
+                    }
+                    friendList->addChildItem(remark, nickname, ID,
+                                             topItem, avatar);
+                }
+            }
+        }
     }
     else if(commandQueue.head().type == CommandType::get_group_list)
     {
