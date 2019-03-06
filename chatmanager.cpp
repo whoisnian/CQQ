@@ -14,13 +14,14 @@ int ChatManager::indexOf(QString chatID, Chat::Type type)
 
 void ChatManager::addNewChat(QString chatID,
                              QString chatName,
-                             Chat::Type type)
+                             Chat::Type type,
+                             Chat::SubType subType)
 {
     Chat temp;
     temp.sumNum = 0;
     temp.unreadNum = 0;
     temp.type = type;
-    temp.subType = Chat::SubFriend;
+    temp.subType = subType;
     temp.chatID = chatID;
     temp.chatName = chatName;
     temp.editingMessage = "";

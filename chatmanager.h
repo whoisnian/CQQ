@@ -66,7 +66,10 @@ class ChatManager
 public:
     ChatManager(){}
     int indexOf(QString chatID, Chat::Type type);
-    void addNewChat(QString chatID, QString chatName, Chat::Type type);
+    void addNewChat(QString chatID,
+                    QString chatName,
+                    Chat::Type type,
+                    Chat::SubType subType);
 
     friend QDataStream& operator>>(QDataStream& input,
                                    ChatManager& data);

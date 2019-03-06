@@ -17,7 +17,7 @@ QTreeWidgetItem *ContactList::addTopItem(QString text)
 void ContactList::addChildItem(QString text, QString toolTip, QString extra,
                                QTreeWidgetItem *parent, QString avatar)
 {
-    QTreeWidgetItem *childItem = new QTreeWidgetItem(parent);
+    QTreeWidgetItem *childItem = new QTreeWidgetItem;
     if(!avatar.isEmpty())
     {
         childItem->setIcon(0, QIcon(avatar));
@@ -25,4 +25,12 @@ void ContactList::addChildItem(QString text, QString toolTip, QString extra,
     childItem->setText(0, text);
     childItem->setToolTip(0, toolTip);
     childItem->setToolTip(1, extra);
+    if(parent != nullptr)
+    {
+        parent->addChild(childItem);
+    }
+    else
+    {
+        this->addTopLevelItem(childItem);
+    }
 }

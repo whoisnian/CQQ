@@ -99,6 +99,18 @@ void WSConnection::getGroupList(ContactList *groupList)
     addCommand(CommandType::get_group_list, content);
 }
 
+void WSConnection::getGroupMemberInfo(QString groupID, QString userID)
+{
+    QString content = "{\"action\":\
+                            \"get_group_member_info\",\
+                            \"params\":{\
+                                \"group_id\":" + groupID + ",\
+                                \"user_id\":" + userID + "\
+                            }\
+                       }";
+    addCommand(CommandType::get_group_member_info, content);
+}
+
 void WSConnection::wsAPIConnected()
 {
     qDebug() << "wsAPI connected";
@@ -188,11 +200,41 @@ void WSConnection::wsAPIReceived(const QString message)
     }
     else if(commandQueue.head().type == CommandType::get_group_list)
     {
-
+        qDebug() << "get_group_list";
+        if(jsonDoc.object().value("data").isArray())
+        {
+            QJsonArray data = jsonDoc.object().value("data").toArray();
+            for(int i = 0;i < data.size();i++)
+            {
+                QString ID, groupName, avatar;
+                ID = QString::number(data.at(i)
+                                     .toObject().value("group_id")
+                                     .toVariant().toLongLong());
+                groupName = data.at(i)
+                        .toObject().value("group_name")
+                        .toString();
+                // NeedToBeDone: 获取头像路径
+                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                groupList->addChildItem(groupName, groupName, ID,
+                                         nullptr, avatar);
+            }
+        }
     }
     else if(commandQueue.head().type == CommandType::get_group_member_info)
     {
-
+        qDebug() << "get_group_member_info";
+        if(jsonDoc.object().value("data").isObject())
+        {
+            QJsonObject data = jsonDoc.object().value("data").toObject();
+            QString groupID, userID, nickname, card;
+            groupID = QString::number(data.value("group_id")
+                                      .toVariant().toLongLong());
+            userID = QString::number(data.value("user_id")
+                                     .toVariant().toLongLong());
+            nickname = data.value("nickname").toString();
+            card = data.value("card").toString();
+            // NeedToBeDone: 存储群名片
+        }
     }
 
     startNextCommand();
@@ -232,6 +274,41 @@ void WSConnection::wsEVENTReceived(const QString message)
                          .toObject().value("good")
                          .toBool()?"OK":"ERROR");
         }
+    }
+    else if(jsonDoc.object().value("post_type") == "message")
+    {
+        if(jsonDoc.object().value("message_type") == "private")
+        {
+
+        }
+        else if(jsonDoc.object().value("message_type") == "group")
+        {
+
+        }
+        else if(jsonDoc.object().value("message_type") == "discuss")
+        {
+
+        }
+        else
+        {
+            qDebug() << "unknown message_type";
+        }
+    }
+    else if(jsonDoc.object().value("post_type") == "notice")
+    {
+        qDebug() << "new notice"
+                 << jsonDoc.object().value("notice_type")
+                    .toString();
+    }
+    else if(jsonDoc.object().value("post_type") == "request")
+    {
+        qDebug() << "new request"
+                 << jsonDoc.object().value("request_type")
+                    .toString();
+    }
+    else
+    {
+        qDebug() << "unknown post_type";
     }
 }
 

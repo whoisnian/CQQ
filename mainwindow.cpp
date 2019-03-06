@@ -229,7 +229,10 @@ void MainWindow::startPrivateChat(QTreeWidgetItem *item, int)
     if(index == -1)
     {
         chatManager->addNewChat(item->toolTip(1),
-                                item->text(0), Chat::Private);
+                                item->text(0),
+                                Chat::Private,
+                                Chat::SubFriend);
+        // NeedToBeDone: 获取头像路径
         chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
                                  item->toolTip(1),
                                  item->text(0));
@@ -269,7 +272,10 @@ void MainWindow::startGroupChat(QTreeWidgetItem *item, int)
     if(index == -1)
     {
         chatManager->addNewChat(item->toolTip(1),
-                                item->text(0), Chat::Group);
+                                item->text(0),
+                                Chat::Group,
+                                Chat::SubNormal);
+        // NeedToBeDone: 获取头像路径
         chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
                                  item->toolTip(1),
                                  item->text(0));
@@ -305,5 +311,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     CONFIG->configMessageTabSplitterSizes = messageTabSplitter->sizes();
     CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
     CONFIG->saveConfig();
+    delete chatManager;
     event->accept();
 }
