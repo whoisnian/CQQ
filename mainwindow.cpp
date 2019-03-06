@@ -148,6 +148,8 @@ void MainWindow::init()
     WSConn = new WSConnection(CONFIG->configAddress,
                               CONFIG->configToken,
                               cacheManager,
+                              chatManager,
+                              chatList,
                               this);
     if(WSConn->isConnected())
     {
@@ -214,8 +216,8 @@ void MainWindow::showFriendInfo(QTreeWidgetItem *item, int)
     // NeedToBeDone: 获取头像路径
     infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
                         item->toolTip(1),
-                        item->text(0),
-                        item->toolTip(0));
+                        item->toolTip(0),
+                        item->text(0));
     qDebug() << "showFriendInfo";
 }
 

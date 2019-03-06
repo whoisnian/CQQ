@@ -3,11 +3,15 @@
 WSConnection::WSConnection(QString address,
                            QString token,
                            CacheManager *cacheManager,
+                           ChatManager *chatManager,
+                           ChatList *chatList,
                            QObject *parent)
 {
     this->address = address;
     this->token = token;
     this->cacheManager = cacheManager;
+    this->chatManager = chatManager;
+    this->chatList = chatList;
     this->setParent(parent);
     this->loop = new QEventLoop(this);
     this->heartbeatTimer = new QTimer(this);

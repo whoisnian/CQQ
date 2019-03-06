@@ -12,6 +12,8 @@
 #include <QTreeWidgetItem>
 #include <QWebSocket>
 #include "cachemanager.h"
+#include "chatlist.h"
+#include "chatmanager.h"
 #include "contactlist.h"
 
 enum CommandType
@@ -38,6 +40,8 @@ public:
     WSConnection(QString address,
                  QString token,
                  CacheManager *cacheManager,
+                 ChatManager *chatManager,
+                 ChatList *chatList,
                  QObject *parent = nullptr);
     ~WSConnection();
 
@@ -67,6 +71,8 @@ private:
     QString address;
     QString token;
     CacheManager *cacheManager;
+    ChatList *chatList;
+    ChatManager *chatManager;
     ContactList *friendList;
     ContactList *groupList;
 
