@@ -166,11 +166,6 @@ void MainWindow::init()
         this->statusBar()->showMessage("连接失败。");
     }
 
-    chatList->addItem("nihao");
-    chatList->addItem("ceshi");
-    chatList->addItem("测试");
-    chatList->addItem("12312312312");
-
     qDebug() << chatWidgetSplitter->sizes();
     qDebug() << messageTabSplitter->sizes();
     qDebug() << contactTabSplitter->sizes();

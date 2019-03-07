@@ -45,6 +45,10 @@ public:
     };
 
     Chat(){}
+    void addNewMessage(QString senderID,
+                       QString senderName,
+                       QString messageString,
+                       QDateTime time);
 
     friend QDataStream& operator>>(QDataStream& input,
                                    Chat& data);
@@ -66,6 +70,7 @@ class ChatManager
 public:
     ChatManager(){}
     int indexOf(QString chatID, Chat::Type type);
+    Chat *chatAt(int index);
     void addNewChat(QString chatID,
                     QString chatName,
                     Chat::Type type,

@@ -12,6 +12,11 @@ int ChatManager::indexOf(QString chatID, Chat::Type type)
     return -1;
 }
 
+Chat *ChatManager::chatAt(int index)
+{
+    return &chats[index];
+}
+
 void ChatManager::addNewChat(QString chatID,
                              QString chatName,
                              Chat::Type type,
@@ -27,6 +32,21 @@ void ChatManager::addNewChat(QString chatID,
     temp.editingMessage = "";
     temp.messages.clear();
     this->chats.push_front(temp);
+}
+
+void Chat::addNewMessage(QString senderID,
+                         QString senderName,
+                         QString messageString,
+                         QDateTime time)
+{
+    Message temp;
+    temp.senderID = senderID;
+    temp.senderName = senderName;
+    temp.messageString = messageString;
+    temp.time = time;
+    this->messages.push_back(temp);
+    this->sumNum += 1;
+    this->unreadNum += 1;
 }
 
 QDataStream& operator>>(QDataStream& input, Message& data)

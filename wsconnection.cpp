@@ -180,10 +180,10 @@ void WSConnection::wsAPIReceived(const QString message)
                         .toArray();
                 for(int j = 0;j < friends.size();j++)
                 {
-                    QString ID, nickname, remark, avatar;
-                    ID = QString::number(friends.at(j)
-                                         .toObject().value("user_id")
-                                         .toVariant().toLongLong());
+                    QString userID, nickname, remark, avatar;
+                    userID = QString::number(friends.at(j)
+                                             .toObject().value("user_id")
+                                             .toVariant().toLongLong());
                     nickname = friends.at(j)
                             .toObject().value("nickname")
                             .toString();
@@ -196,7 +196,7 @@ void WSConnection::wsAPIReceived(const QString message)
                     {
                         remark = nickname;
                     }
-                    friendList->addChildItem(remark, nickname, ID,
+                    friendList->addChildItem(remark, nickname, userID,
                                              topItem, avatar);
                 }
             }
@@ -210,16 +210,16 @@ void WSConnection::wsAPIReceived(const QString message)
             QJsonArray data = jsonDoc.object().value("data").toArray();
             for(int i = 0;i < data.size();i++)
             {
-                QString ID, groupName, avatar;
-                ID = QString::number(data.at(i)
-                                     .toObject().value("group_id")
-                                     .toVariant().toLongLong());
+                QString groupID, groupName, avatar;
+                groupID = QString::number(data.at(i)
+                                          .toObject().value("group_id")
+                                          .toVariant().toLongLong());
                 groupName = data.at(i)
                         .toObject().value("group_name")
                         .toString();
                 // NeedToBeDone: 获取头像路径
                 avatar = "/home/nian/Pictures/ruby_headphones.jpg";
-                groupList->addChildItem(groupName, groupName, ID,
+                groupList->addChildItem(groupName, groupName, groupID,
                                          nullptr, avatar);
             }
         }
@@ -283,7 +283,75 @@ void WSConnection::wsEVENTReceived(const QString message)
     {
         if(jsonDoc.object().value("message_type") == "private")
         {
-
+            QString userID, remark, messageString;
+            QDateTime time;
+            userID = QString::number(jsonDoc.object().value("user_id")
+                                     .toVariant().toLongLong());
+            // NeedToBeDone: 根据QQ号获取备注
+            remark = "remark";
+            messageString = jsonDoc.object().value("message")
+                    .toString();
+            time = QDateTime::fromTime_t(
+                        uint(jsonDoc.object().value("time")
+                             .toVariant().toLongLong()));
+            int index = chatManager->indexOf(userID, Chat::Private);
+            if(index == -1)
+            {
+                QString chatID, chatName, avatar;
+                Chat::SubType subType = Chat::SubFriend;
+                chatID = userID;
+                chatName = remark;
+                if(jsonDoc.object().value("sub_type") == "friend")
+                {
+                    chatName = remark;
+                    subType = Chat::SubFriend;
+                }
+                else if(jsonDoc.object().value("sub_type") == "group")
+                {
+                    chatName = remark + "(group)";
+                    subType = Chat::SubGroup;
+                }
+                else if(jsonDoc.object().value("sub_type") == "discuss")
+                {
+                    chatName = remark + "(discuss)";
+                    subType = Chat::SubDiscuss;
+                }
+                else if(jsonDoc.object().value("sub_type") == "other")
+                {
+                    chatName = remark + "(other)";
+                    subType = Chat::SubOther;
+                }
+                else
+                {
+                    qDebug() << "unknown private sub_type";
+                }
+                chatManager->addNewChat(chatID,
+                                        chatName,
+                                        Chat::Private,
+                                        subType);
+                chatManager->chatAt(0)->addNewMessage(userID,
+                                                      remark,
+                                                      messageString,
+                                                      time);
+                // NeedToBeDone: 获取头像路径
+                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                chatList->addNewChatItem(avatar,
+                                         chatID,
+                                         chatName + "(1)");
+            }
+            else
+            {
+                chatManager->chatAt(index)->addNewMessage(userID,
+                                                          remark,
+                                                          messageString,
+                                                          time);
+                QString chatName, unreadNum;
+                chatName = chatManager->chatAt(index)->chatName;
+                unreadNum = QString::number(
+                            chatManager->chatAt(index)->unreadNum);
+                chatList->item(index)->setText(chatName +
+                                               "(" + unreadNum + ")");
+            }
         }
         else if(jsonDoc.object().value("message_type") == "group")
         {
