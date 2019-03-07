@@ -355,11 +355,127 @@ void WSConnection::wsEVENTReceived(const QString message)
         }
         else if(jsonDoc.object().value("message_type") == "group")
         {
-
+            QString chatID, userID, card, messageString;
+            QDateTime time;
+            chatID = QString::number(jsonDoc.object().value("group_id")
+                                     .toVariant().toLongLong());
+            userID = QString::number(jsonDoc.object().value("user_id")
+                                     .toVariant().toLongLong());
+            card = jsonDoc.object().value("sender")
+                    .toObject().value("card")
+                    .toString();
+            if(card.isEmpty())
+            {
+                card = jsonDoc.object().value("sender")
+                        .toObject().value("nickname")
+                        .toString();
+            }
+            messageString = jsonDoc.object().value("message")
+                    .toString();
+            time = QDateTime::fromTime_t(
+                        uint(jsonDoc.object().value("time")
+                             .toVariant().toLongLong()));
+            int index = chatManager->indexOf(chatID, Chat::Group);
+            if(index == -1)
+            {
+                QString chatName, avatar;
+                Chat::SubType subType = Chat::SubNormal;
+                // NeedToBeDone: 根据群号查询群名称
+                chatName = "group";
+                if(jsonDoc.object().value("sub_type") == "normal")
+                {
+                    subType = Chat::SubNormal;
+                }
+                else if(jsonDoc.object().value("sub_type") == "anonymous")
+                {
+                    subType = Chat::SubAnonymous;
+                }
+                else if(jsonDoc.object().value("sub_type") == "notice")
+                {
+                    subType = Chat::SubNotice;
+                }
+                else
+                {
+                    qDebug() << "unknown group sub_type";
+                }
+                chatManager->addNewChat(chatID,
+                                        chatName,
+                                        Chat::Group,
+                                        subType);
+                chatManager->chatAt(0)->addNewMessage(userID,
+                                                      card,
+                                                      messageString,
+                                                      time);
+                // NeedToBeDone: 获取头像路径
+                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                chatList->addNewChatItem(avatar,
+                                         chatID,
+                                         chatName + "(1)");
+            }
+            else
+            {
+                chatManager->chatAt(index)->addNewMessage(userID,
+                                                          card,
+                                                          messageString,
+                                                          time);
+                QString chatName, unreadNum;
+                chatName = chatManager->chatAt(index)->chatName;
+                unreadNum = QString::number(
+                            chatManager->chatAt(index)->unreadNum);
+                chatList->item(index)->setText(chatName +
+                                               "(" + unreadNum + ")");
+            }
         }
         else if(jsonDoc.object().value("message_type") == "discuss")
         {
-
+            QString chatID, userID, nickname, messageString;
+            QDateTime time;
+            chatID = QString::number(jsonDoc.object().value("discuss_id")
+                                     .toVariant().toLongLong());
+            userID = QString::number(jsonDoc.object().value("user_id")
+                                     .toVariant().toLongLong());
+            nickname = jsonDoc.object().value("sender")
+                    .toObject().value("nickname")
+                    .toString();
+            messageString = jsonDoc.object().value("message")
+                    .toString();
+            time = QDateTime::fromTime_t(
+                        uint(jsonDoc.object().value("time")
+                             .toVariant().toLongLong()));
+            int index = chatManager->indexOf(chatID, Chat::Group);
+            if(index == -1)
+            {
+                QString chatName, avatar;
+                Chat::SubType subType = Chat::SubNormal;
+                // NeedToBeDone: 根据讨论组号查询名称
+                chatName = "discuss";
+                chatManager->addNewChat(chatID,
+                                        chatName,
+                                        Chat::Group,
+                                        subType);
+                chatManager->chatAt(0)->addNewMessage(userID,
+                                                      nickname,
+                                                      messageString,
+                                                      time);
+                // NeedToBeDone: 获取头像路径
+                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                chatList->addNewChatItem(avatar,
+                                         chatID,
+                                         chatName + "(1)");
+            }
+            else
+            {
+                chatManager->chatAt(index)->addNewMessage(userID,
+                                                          nickname,
+                                                          messageString,
+                                                          time);
+                QString chatName, unreadNum;
+                chatName = chatManager->chatAt(index)->chatName;
+                unreadNum = QString::number(
+                            chatManager->chatAt(index)->unreadNum);
+                chatList->item(index)->setText(chatName +
+                                               "(" + unreadNum + ")");
+            }
         }
         else
         {
