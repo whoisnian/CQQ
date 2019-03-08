@@ -41,7 +41,6 @@ private slots:
     void changeConfigFinished(int result);
 
 public:
-    QString configCachePath;        // 缓存目录
     QString configAddress;          // COOLQ 服务器地址
     QString configToken;            // COOLQ Token
 

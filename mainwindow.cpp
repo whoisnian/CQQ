@@ -143,7 +143,13 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     chatManager = new ChatManager;
-    cacheManager = new CacheManager;
+    cacheManager = new CacheManager(this);
+
+    // 从缓存目录中加载之前的聊天记录
+    cacheManager->loadChatManager(chatManager);
+    updateChatListFromChatManager();
+
+    // WebSocket连接
     this->statusBar()->showMessage("连接中。。。");
     WSConn = new WSConnection(CONFIG->configAddress,
                               CONFIG->configToken,
@@ -153,7 +159,6 @@ void MainWindow::init()
                               this);
     if(WSConn->isConnected())
     {
-        WSConn->getLoginInfo();
         connect(WSConn, SIGNAL(getLoginInfoFinished(QString, QString)),
                 this, SLOT(updateLoginInfo(QString, QString)));
         WSConn->getLoginInfo();
@@ -299,6 +304,23 @@ void MainWindow::updateLoginInfo(QString id, QString nickname)
                         "");
 }
 
+void MainWindow::updateChatListFromChatManager()
+{
+    chatList->clear();
+    for(auto it = chatManager->chats.end() - 1;
+        it >= chatManager->chats.begin();it--)
+    {
+        QString chatID, chatName, avatar;
+        chatID = it->chatID;
+        chatName = it->chatName + "(" + QString::number(it->unreadNum) + ")";
+        // NeedToBeDone: 获取头像路径
+        avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+        chatList->addNewChatItem(avatar,
+                                 chatID,
+                                 chatName);
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
@@ -308,6 +330,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     CONFIG->configMessageTabSplitterSizes = messageTabSplitter->sizes();
     CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
     CONFIG->saveConfig();
+    cacheManager->saveChatManager(chatManager);
     delete chatManager;
+    chatManager = nullptr;
     event->accept();
 }

@@ -82,8 +82,7 @@ bool ConfigManager::loadConfig()
         return false;
     }
     QDataStream ds(&configFile);
-    ds >> this->configCachePath
-       >> this->configAddress
+    ds >> this->configAddress
        >> this->configToken
        >> this->configMainWindowWidth
        >> this->configMainWindowHeight
@@ -117,8 +116,7 @@ void ConfigManager::saveConfig()
         return;
     }
     QDataStream ds(&configFile);
-    ds << this->configCachePath
-       << this->configAddress
+    ds << this->configAddress
        << this->configToken
        << this->configMainWindowWidth
        << this->configMainWindowHeight
@@ -154,8 +152,6 @@ void ConfigManager::changeConfigFinished(int result)
     {
         this->configAddress = addressLineEdit->text();
         this->configToken = tokenLineEdit->text();
-        this->configCachePath = QStandardPaths::writableLocation(
-                    QStandardPaths::CacheLocation);
     }
 
     delete dialog;

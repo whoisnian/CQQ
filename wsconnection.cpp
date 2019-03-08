@@ -24,7 +24,6 @@ WSConnection::WSConnection(QString address,
             this, SLOT(wsEVENTConnected()));
     connect(&wsEVENT, SIGNAL(disconnected()),
             this, SLOT(wsEVENTDisconnected()));
-
     wsAPI.open(QUrl("ws://"+address+"/api/?access_token="+token));
     loop->exec();
     wsEVENT.open(QUrl("ws://"+address+"/event/?access_token="+token));

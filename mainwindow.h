@@ -41,6 +41,7 @@ private slots:
     void showGroupInfo(QTreeWidgetItem *item, int column);
     void startGroupChat(QTreeWidgetItem *item, int column);
     void updateLoginInfo(QString id, QString nickname);
+    void updateChatListFromChatManager();
 
 protected:
     void closeEvent(QCloseEvent *event);
