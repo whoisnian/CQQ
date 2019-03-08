@@ -13,6 +13,7 @@
 #include <QList>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QStandardPaths>
 #include <QString>
 #include <QVBoxLayout>
 

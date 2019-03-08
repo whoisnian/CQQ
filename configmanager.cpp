@@ -68,14 +68,15 @@ void ConfigManager::changeConfig(bool blocking)
 // 加载配置文件
 bool ConfigManager::loadConfig()
 {
-    QString configPath = QDir::homePath() + "/.config/CQQ/";
+    QString configPath = QStandardPaths::writableLocation(
+                QStandardPaths::AppConfigLocation);
     QDir dir;
     if(!dir.exists(configPath))
     {
         dir.mkpath(configPath);
         return false;
     }
-    QFile configFile(configPath + "config");
+    QFile configFile(configPath + "/config");
     if(!configFile.open(QIODevice::ReadOnly))
     {
         return false;
@@ -96,13 +97,14 @@ bool ConfigManager::loadConfig()
 // 保存配置文件
 void ConfigManager::saveConfig()
 {
-    QString configPath = QDir::homePath() + "/.config/CQQ/";
+    QString configPath = QStandardPaths::writableLocation(
+                QStandardPaths::AppConfigLocation);
     QDir dir;
     if(!dir.exists(configPath))
     {
         dir.mkpath(configPath);
     }
-    QFile configFile(configPath + "config");
+    QFile configFile(configPath + "/config");
     if(!configFile.open(QIODevice::WriteOnly))
     {
         QMessageBox msgBox;
@@ -152,7 +154,8 @@ void ConfigManager::changeConfigFinished(int result)
     {
         this->configAddress = addressLineEdit->text();
         this->configToken = tokenLineEdit->text();
-        this->configCachePath = QDir::homePath() + "/.cache/CQQ/";
+        this->configCachePath = QStandardPaths::writableLocation(
+                    QStandardPaths::CacheLocation);
     }
 
     delete dialog;
