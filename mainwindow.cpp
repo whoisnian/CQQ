@@ -213,8 +213,11 @@ void MainWindow::showFriendInfo(QTreeWidgetItem *item, int)
     {
         return;
     }
-    // NeedToBeDone: 获取头像路径
-    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+    QString avatar;
+    avatar = cacheManager->getAvatar(item->toolTip(1),
+                                     CacheManager::Friend,
+                                     100);
+    infoWidget->setInfo(avatar,
                         item->toolTip(1),
                         item->toolTip(0),
                         item->text(0));
@@ -234,8 +237,11 @@ void MainWindow::startPrivateChat(QTreeWidgetItem *item, int)
                                 item->text(0),
                                 Chat::Private,
                                 Chat::SubFriend);
-        // NeedToBeDone: 获取头像路径
-        chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
+        QString avatar;
+        avatar = cacheManager->getAvatar(item->toolTip(1),
+                                         CacheManager::Friend,
+                                         100);
+        chatList->addNewChatItem(avatar,
                                  item->toolTip(1),
                                  item->text(0));
         chatList->setCurrentRow(0);
@@ -256,8 +262,11 @@ void MainWindow::showGroupInfo(QTreeWidgetItem *item, int)
     {
         return;
     }
-    // NeedToBeDone: 获取头像路径
-    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+    QString avatar;
+    avatar = cacheManager->getAvatar(item->toolTip(1),
+                                     CacheManager::Group,
+                                     100);
+    infoWidget->setInfo(avatar,
                         item->toolTip(1),
                         item->text(0),
                         QString());
@@ -277,8 +286,11 @@ void MainWindow::startGroupChat(QTreeWidgetItem *item, int)
                                 item->text(0),
                                 Chat::Group,
                                 Chat::SubNormal);
-        // NeedToBeDone: 获取头像路径
-        chatList->addNewChatItem("/home/nian/Pictures/ruby_headphones.jpg",
+        QString avatar;
+        avatar = cacheManager->getAvatar(item->toolTip(1),
+                                         CacheManager::Group,
+                                         100);
+        chatList->addNewChatItem(avatar,
                                  item->toolTip(1),
                                  item->text(0));
         chatList->setCurrentRow(0);
@@ -297,8 +309,11 @@ void MainWindow::updateLoginInfo(QString id, QString nickname)
 {
     this->selfID = new QString(id);
     this->selfNickname = new QString(nickname);
-    // NeedToBeDone: 获取头像路径
-    infoWidget->setInfo("/home/nian/Pictures/ruby_headphones.jpg",
+    QString avatar;
+    avatar = cacheManager->getAvatar(id,
+                                     CacheManager::Friend,
+                                     100);
+    infoWidget->setInfo(avatar,
                         id,
                         nickname,
                         "");
@@ -313,8 +328,18 @@ void MainWindow::updateChatListFromChatManager()
         QString chatID, chatName, avatar;
         chatID = it->chatID;
         chatName = it->chatName + "(" + QString::number(it->unreadNum) + ")";
-        // NeedToBeDone: 获取头像路径
-        avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+        if(it->type == Chat::Private)
+        {
+            avatar = cacheManager->getAvatar(chatID,
+                                             CacheManager::Friend,
+                                             100);
+        }
+        else
+        {
+            avatar = cacheManager->getAvatar(chatID,
+                                             CacheManager::Group,
+                                             100);
+        }
         chatList->addNewChatItem(avatar,
                                  chatID,
                                  chatName);

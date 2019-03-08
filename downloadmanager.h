@@ -2,6 +2,7 @@
 #define DOWNLOADMANAGER_H
 
 #include <QFile>
+#include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QQueue>

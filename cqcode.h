@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QString>
+#include "cachemanager.h"
 
 // CQ 码转换
 class CQCode

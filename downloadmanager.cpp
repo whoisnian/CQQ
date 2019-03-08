@@ -38,6 +38,12 @@ void DownloadManager::startNextDownload()
 
     Task temp = downloadQueue.head();
 
+    if(QFileInfo::exists(temp.path)&&QFileInfo(temp.path).isFile())
+    {
+        startNextDownload();
+        return;
+    }
+
     output.setFileName(temp.path);
     if(!output.open(QIODevice::WriteOnly))
     {

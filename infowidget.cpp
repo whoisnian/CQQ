@@ -39,7 +39,7 @@ void InfoWidget::setInfo(QString avatar,
             + "\" width=\"100\"  height=\"100\" />";
     if(avatarLabel->text() == avatar)
     {
-        //return;
+        return;
     }
     avatarLabel->setText(avatar);
     numberLabel->setText(number);

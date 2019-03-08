@@ -189,8 +189,9 @@ void WSConnection::wsAPIReceived(const QString message)
                     remark = friends.at(j)
                             .toObject().value("remark")
                             .toString();
-                    // NeedToBeDone: 获取头像路径
-                    avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                    avatar = cacheManager->getAvatar(userID,
+                                                     CacheManager::Friend,
+                                                     100);
                     if(remark.isEmpty())
                     {
                         remark = nickname;
@@ -216,8 +217,9 @@ void WSConnection::wsAPIReceived(const QString message)
                 groupName = data.at(i)
                         .toObject().value("group_name")
                         .toString();
-                // NeedToBeDone: 获取头像路径
-                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                avatar = cacheManager->getAvatar(groupID,
+                                                 CacheManager::Group,
+                                                 100);
                 groupList->addChildItem(groupName, groupName, groupID,
                                          nullptr, avatar);
             }
@@ -332,8 +334,9 @@ void WSConnection::wsEVENTReceived(const QString message)
                                                       remark,
                                                       messageString,
                                                       time);
-                // NeedToBeDone: 获取头像路径
-                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                avatar = cacheManager->getAvatar(chatID,
+                                                 CacheManager::Friend,
+                                                 100);
                 chatList->addNewChatItem(avatar,
                                          chatID,
                                          chatName + "(1)");
@@ -405,8 +408,9 @@ void WSConnection::wsEVENTReceived(const QString message)
                                                       card,
                                                       messageString,
                                                       time);
-                // NeedToBeDone: 获取头像路径
-                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                avatar = cacheManager->getAvatar(chatID,
+                                                 CacheManager::Group,
+                                                 100);
                 chatList->addNewChatItem(avatar,
                                          chatID,
                                          chatName + "(1)");
@@ -456,8 +460,9 @@ void WSConnection::wsEVENTReceived(const QString message)
                                                       nickname,
                                                       messageString,
                                                       time);
-                // NeedToBeDone: 获取头像路径
-                avatar = "/home/nian/Pictures/ruby_headphones.jpg";
+                avatar = cacheManager->getAvatar(chatID,
+                                                 CacheManager::Group,
+                                                 100);
                 chatList->addNewChatItem(avatar,
                                          chatID,
                                          chatName + "(1)");

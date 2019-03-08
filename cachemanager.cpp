@@ -3,7 +3,8 @@
 CacheManager::CacheManager(QObject *parent)
 {
     this->setParent(parent);
-    QString cachePath = QStandardPaths::writableLocation(
+    downloadManager = new DownloadManager(this);
+    cachePath = QStandardPaths::writableLocation(
                 QStandardPaths::CacheLocation);
     QDir dir;
     if(!dir.exists(cachePath))
@@ -20,8 +21,6 @@ CacheManager::CacheManager(QObject *parent)
 
 bool CacheManager::loadChatManager(ChatManager *chatManager)
 {
-    QString cachePath = QStandardPaths::writableLocation(
-                QStandardPaths::CacheLocation);
     QFile file(cachePath + "/chat/data");
     if(!file.open(QIODevice::ReadOnly))
     {
@@ -36,8 +35,6 @@ bool CacheManager::loadChatManager(ChatManager *chatManager)
 
 bool CacheManager::saveChatManager(ChatManager *chatManager)
 {
-    QString cachePath = QStandardPaths::writableLocation(
-                QStandardPaths::CacheLocation);
     QFile file(cachePath + "/chat/data");
     if(!file.open(QIODevice::WriteOnly))
     {
@@ -49,4 +46,44 @@ bool CacheManager::saveChatManager(ChatManager *chatManager)
     file.close();
     qDebug() << "save chatManager successfully";
     return true;
+}
+
+QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
+{
+    // size 40 100 140 640
+    QUrl url;
+    QString realPath = "";
+    if(type == AvatarType::Friend)
+    {
+        url.setUrl("http://q1.qlogo.cn/g?b=qq&s="
+                   + QString::number(size) + "&nk=" + ID);
+        realPath = cachePath + "/avatar/friend/"
+                + ID + "_" + QString::number(size);
+    }
+    else if(type == AvatarType::Group)
+    {
+        url.setUrl("http://p.qlogo.cn/gh/"
+                   + ID + "/" + ID + "/" + QString::number(size));
+        realPath = cachePath + "/avatar/group/"
+                + ID + "_" + QString::number(size);
+    }
+
+    if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
+        return realPath;
+
+    downloadManager->addTask(url, realPath, TaskType::avatar);
+    return realPath;
+}
+
+QString CacheManager::getImage(QString file, QString urlString)
+{
+    QUrl url(urlString);
+    QString realPath = "";
+    realPath = cachePath + "/image/" + file;
+
+    if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
+        return realPath;
+
+    downloadManager->addTask(url, realPath, TaskType::image);
+    return realPath;
 }
