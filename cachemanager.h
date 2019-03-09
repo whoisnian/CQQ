@@ -26,11 +26,15 @@ public:
     bool saveChatManager(ChatManager *chatManager);
     QString getAvatar(QString ID, AvatarType type, int size);
     QString getImage(QString file, QString url);
+    QString getCard(QString userID, QString groupID);
 
     QMap<QString, QString> nicknameMap;
     QMap<QString, QString> remarkMap;
     QMap<QString, QString> groupnameMap;
     QMap<QString, QString> cardMap;
+
+signals:
+    void getCardSignal(QString groupID, QString userID);
 
 private:
     QString cachePath;

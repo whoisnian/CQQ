@@ -52,7 +52,6 @@ public:
     void getLoginInfo();
     void getFriendList(ContactList *friendList);
     void getGroupList(ContactList *groupList);
-    void getGroupMemberInfo(QString groupID, QString userID);
 
 signals:
     void getLoginInfoFinished(QString id, QString nickname);
@@ -65,6 +64,7 @@ private slots:
     void wsEVENTDisconnected();
     void wsEVENTReceived(const QString message);
 
+    void getGroupMemberInfo(QString groupID, QString userID);
     void sendHeartbeat();
 
 private:

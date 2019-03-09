@@ -176,7 +176,6 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        // NeedToBeDone: 获取被 @ 人的群名片或昵称
         if(qq == "all")
         {
             result += "<span style=\" color: #ffff66;\">@全体成员 </span>";
@@ -184,7 +183,7 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         else
         {
             result += "<span style=\" color: #ffff66;\">@"
-                    + qq + groupID
+                    + cacheManager->getCard(groupID, qq)
                     + " </span>";
         }
     }

@@ -119,6 +119,8 @@ void WSConnection::wsAPIConnected()
     qDebug() << "wsAPI connected";
     connect(&wsAPI, SIGNAL(textMessageReceived(const QString &)),
             this, SLOT(wsAPIReceived(const QString &)));
+    connect(cacheManager, SIGNAL(getCardSignal(QString, QString)),
+            this, SLOT(getGroupMemberInfo(QString, QString)));
     loop->exit();
     heartbeatTimer->start(15000);
     connect(heartbeatTimer, SIGNAL(timeout()),
@@ -165,6 +167,7 @@ void WSConnection::wsAPIReceived(const QString message)
                              .toVariant().toLongLong());
         Nickname = jsonDoc.object().value("data")
                    .toObject().value("nickname").toString();
+        cacheManager->nicknameMap[ID] = Nickname;
         emit getLoginInfoFinished(ID, Nickname);
     }
     else if(commandQueue.head().type == CommandType::_get_friend_list)
@@ -203,6 +206,8 @@ void WSConnection::wsAPIReceived(const QString message)
                     {
                         remark = nickname;
                     }
+                    cacheManager->nicknameMap[userID] = nickname;
+                    cacheManager->remarkMap[userID] = remark;
                     friendList->addChildItem(remark, nickname, userID,
                                              topItem, avatar);
                 }
@@ -227,6 +232,7 @@ void WSConnection::wsAPIReceived(const QString message)
                 avatar = cacheManager->getAvatar(groupID,
                                                  CacheManager::Group,
                                                  100);
+                cacheManager->groupnameMap[groupID] = groupName;
                 groupList->addChildItem(groupName, groupName, groupID,
                                          nullptr, avatar);
             }
@@ -245,7 +251,14 @@ void WSConnection::wsAPIReceived(const QString message)
                                      .toVariant().toLongLong());
             nickname = data.value("nickname").toString();
             card = data.value("card").toString();
-            // NeedToBeDone: 存储群名片
+            if(card.isEmpty())
+            {
+                cacheManager->cardMap[groupID + "_" + userID] = nickname;
+            }
+            else
+            {
+                cacheManager->cardMap[groupID + "_" + userID] = card;
+            }
         }
     }
 
@@ -295,8 +308,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             QDateTime time;
             userID = QString::number(jsonDoc.object().value("user_id")
                                      .toVariant().toLongLong());
-            // NeedToBeDone: 根据QQ号获取备注
-            remark = "remark";
+            remark = cacheManager->remarkMap[userID];
             messageString = jsonDoc.object().value("message")
                     .toString();
             time = QDateTime::fromTime_t(
@@ -379,6 +391,7 @@ void WSConnection::wsEVENTReceived(const QString message)
                         .toObject().value("nickname")
                         .toString();
             }
+            cacheManager->cardMap[chatID + "_" + userID] = card;
             messageString = jsonDoc.object().value("message")
                     .toString();
             time = QDateTime::fromTime_t(
@@ -389,8 +402,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             {
                 QString chatName, avatar;
                 Chat::SubType subType = Chat::SubNormal;
-                // NeedToBeDone: 根据群号查询群名称
-                chatName = "group";
+                chatName = cacheManager->groupnameMap[chatID];
                 if(jsonDoc.object().value("sub_type") == "normal")
                 {
                     subType = Chat::SubNormal;
@@ -447,6 +459,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             nickname = jsonDoc.object().value("sender")
                     .toObject().value("nickname")
                     .toString();
+            cacheManager->cardMap[chatID + "_" + userID] = nickname;
             messageString = jsonDoc.object().value("message")
                     .toString();
             time = QDateTime::fromTime_t(
@@ -457,8 +470,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             {
                 QString chatName, avatar;
                 Chat::SubType subType = Chat::SubNormal;
-                // NeedToBeDone: 根据讨论组号查询名称
-                chatName = "discuss";
+                chatName = cacheManager->groupnameMap[chatID];
                 chatManager->addNewChat(chatID,
                                         chatName,
                                         Chat::Group,

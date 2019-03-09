@@ -95,3 +95,14 @@ QString CacheManager::getImage(QString file, QString urlString)
     downloadManager->addTask(url, realPath, TaskType::image);
     return realPath;
 }
+
+QString CacheManager::getCard(QString groupID, QString userID)
+{
+    if(!cardMap[groupID + "_" + userID].isEmpty())
+    {
+        return cardMap[groupID + "_" + userID];
+    }
+
+    emit getCardSignal(userID, groupID);
+    return userID + "(loading)";
+}
