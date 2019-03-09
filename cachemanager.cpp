@@ -27,7 +27,11 @@ bool CacheManager::loadChatManager(ChatManager *chatManager)
         return false;
     }
     QDataStream ds(&file);
-    ds >> *chatManager;
+    ds >> *chatManager
+            >> nicknameMap
+            >> remarkMap
+            >> groupnameMap
+            >> cardMap;
     file.close();
     qDebug() << "load chatManager successfully";
     return true;
@@ -42,7 +46,11 @@ bool CacheManager::saveChatManager(ChatManager *chatManager)
         return false;
     }
     QDataStream ds(&file);
-    ds << *chatManager;
+    ds << *chatManager
+       << nicknameMap
+       << remarkMap
+       << groupnameMap
+       << cardMap;
     file.close();
     qDebug() << "save chatManager successfully";
     return true;

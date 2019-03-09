@@ -141,6 +141,13 @@ void WSConnection::wsAPIReceived(const QString message)
         qDebug() << "broken wsAPI message";
         return;
     }
+    else if(jsonDoc.object().value("retcode").toInt() != 0)
+    {
+        qDebug() << "retry because of error retcode";
+        addCommand(commandQueue.head().type,
+                   commandQueue.head().content);
+        return;
+    }
 
     if(commandQueue.head().type == CommandType::get_status)
     {

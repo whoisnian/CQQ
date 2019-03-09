@@ -12,6 +12,7 @@
 #include "chatmanager.h"
 #include "configmanager.h"
 #include "contactlist.h"
+#include "cqcode.h"
 #include "infowidget.h"
 #include "messagebrowser.h"
 #include "messageedit.h"

@@ -13,6 +13,8 @@ class CQCode
 public:
     CQCode(){}
 
+    static CacheManager *cacheManager;
+
     // 解析接收到的信息为可显示的格式
     static QString ParseMessageFromString(QString messageString, QString groupID = "");
     // 解析 CQ 码为可显示的格式

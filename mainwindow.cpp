@@ -140,10 +140,13 @@ MainWindow::~MainWindow()
     qDebug() << "~MainWindow";
 }
 
+CacheManager *CQCode::cacheManager = nullptr;
+
 void MainWindow::init()
 {
     chatManager = new ChatManager;
     cacheManager = new CacheManager(this);
+    CQCode::cacheManager = cacheManager;
 
     // 从缓存目录中加载之前的聊天记录
     cacheManager->loadChatManager(chatManager);

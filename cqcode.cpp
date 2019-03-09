@@ -141,9 +141,8 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        // NeedToBeDone: 缓存图片并指定真实路径
         result += "<a href=\"" + url + "\"><img height=\"50\" src=\""
-                + file
+                + cacheManager->getImage(file, url)
                 + "\"/ ></a><br />";
     }
     else if(type == "record")
