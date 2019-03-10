@@ -61,6 +61,7 @@ QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
     // size 40 100 140 640
     QUrl url;
     QString realPath = "";
+
     if(type == AvatarType::Friend)
     {
         url.setUrl("http://q1.qlogo.cn/g?b=qq&s="
@@ -103,6 +104,6 @@ QString CacheManager::getCard(QString groupID, QString userID)
         return cardMap[groupID + "_" + userID];
     }
 
-    emit getCardSignal(userID, groupID);
+    emit getCardSignal(groupID, userID);
     return userID + "(loading)";
 }

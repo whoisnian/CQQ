@@ -151,6 +151,7 @@ void MainWindow::init()
     // 从缓存目录中加载之前的聊天记录
     cacheManager->loadChatManager(chatManager);
     updateChatListFromChatManager();
+    messageBrowser->setCacheManager(cacheManager);
     messageBrowser->setChatManager(chatManager);
     messageBrowser->setChatList(chatList);
 
@@ -212,7 +213,27 @@ void MainWindow::changeChat(QListWidgetItem *)
     {
         editWidget->show();
     }
+    // 存储正在编辑的消息
+    for(auto &it : chatManager->chats)
+    {
+        if(it.chatID == messageBrowser->curChatID
+                &&it.type == messageBrowser->curChatType)
+        {
+            it.editingMessage = messageEdit->toPlainText();
+            break;
+        }
+    }
     messageBrowser->updateContent();
+    // 恢复之前正在编辑的消息
+    for(auto &it : chatManager->chats)
+    {
+        if(it.chatID == messageBrowser->curChatID
+                &&it.type == messageBrowser->curChatType)
+        {
+            messageEdit->setPlainText(it.editingMessage);
+            break;
+        }
+    }
 }
 
 void MainWindow::deleteChat(QListWidgetItem *item)

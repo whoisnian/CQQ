@@ -2,8 +2,10 @@
 #define MESSAGEBROWSER_H
 
 #include <QTextBrowser>
+#include "cachemanager.h"
 #include "chatlist.h"
 #include "chatmanager.h"
+#include "cqcode.h"
 
 // 聊天消息显示区域
 class MessageBrowser : public QTextBrowser
@@ -12,15 +14,18 @@ class MessageBrowser : public QTextBrowser
 
 public:
     MessageBrowser(QWidget *parent = nullptr);
+    void setCacheManager(CacheManager *cacheManager);
     void setChatManager(ChatManager *chatManager);
     void setChatList(ChatList *chatList);
     void updateContent();
 
-private:
-    ChatManager *chatManager;
-    ChatList *chatList;
     QString curChatID;
     Chat::Type curChatType;
+
+private:
+    CacheManager *cacheManager;
+    ChatManager *chatManager;
+    ChatList *chatList;
 };
 
 #endif // MESSAGEBROWSER_H
