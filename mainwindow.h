@@ -60,6 +60,7 @@ private:
     ContactList *friendList;
     ContactList *groupList;
     InfoWidget *infoWidget;
+    QWidget *editWidget;
     MessageBrowser *messageBrowser;
     MessageEdit *messageEdit;
     MessageEditTool *messageEditTool;

@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     messageBrowser = new MessageBrowser(chatWidget);
 
     // 聊天区域中的消息编辑区域
-    QWidget *editWidget = new QWidget(chatWidget);
+    editWidget = new QWidget(chatWidget);
 
     // 消息编辑区域中的编辑工具栏
     messageEditTool = new MessageEditTool(editWidget);
@@ -131,8 +131,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(groupList, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
             this, SLOT(startGroupChat(QTreeWidgetItem *, int)));
 
-    //messageBrowser->hide();
-    //editWidget->hide();
+    messageBrowser->hide();
+    editWidget->hide();
 }
 
 MainWindow::~MainWindow()
@@ -151,6 +151,8 @@ void MainWindow::init()
     // 从缓存目录中加载之前的聊天记录
     cacheManager->loadChatManager(chatManager);
     updateChatListFromChatManager();
+    messageBrowser->setChatManager(chatManager);
+    messageBrowser->setChatList(chatList);
 
     // WebSocket连接
     this->statusBar()->showMessage("连接中。。。");
@@ -200,9 +202,17 @@ void MainWindow::sendMessage()
     qDebug() << "send" << messageEdit->toPlainText();
 }
 
-void MainWindow::changeChat(QListWidgetItem *item)
+void MainWindow::changeChat(QListWidgetItem *)
 {
-    qDebug() << "change to" << item->text();
+    if(messageBrowser->isHidden())
+    {
+        messageBrowser->show();
+    }
+    if(editWidget->isHidden())
+    {
+        editWidget->show();
+    }
+    messageBrowser->updateContent();
 }
 
 void MainWindow::deleteChat(QListWidgetItem *item)
@@ -330,7 +340,11 @@ void MainWindow::updateChatListFromChatManager()
     {
         QString chatID, chatName, avatar;
         chatID = it->chatID;
-        chatName = it->chatName + "(" + QString::number(it->unreadNum) + ")";
+        chatName = it->chatName;
+        if(it->unreadNum > 0)
+        {
+            chatName += "(" + QString::number(it->unreadNum) + ")";
+        }
         if(it->type == Chat::Private)
         {
             avatar = cacheManager->getAvatar(chatID,

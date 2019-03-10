@@ -137,12 +137,12 @@ void ConfigManager::resetWindowSize()
     configChatWidgetSplitterSizes.push_back(128);
 
     configMessageTabSplitterSizes.clear();
-    configMessageTabSplitterSizes.push_back(200);
-    configMessageTabSplitterSizes.push_back(579);
+    configMessageTabSplitterSizes.push_back(220);
+    configMessageTabSplitterSizes.push_back(559);
 
     configContactTabSplitterSizes.clear();
-    configContactTabSplitterSizes.push_back(200);
-    configContactTabSplitterSizes.push_back(579);
+    configContactTabSplitterSizes.push_back(220);
+    configContactTabSplitterSizes.push_back(559);
 }
 
 // 修改配置文件完成

@@ -31,6 +31,7 @@ FaceDialog::FaceDialog(QWidget *parent)
     this->setParent(parent, Qt::Dialog);
 
     // 7*23+2 = 163 = 13*13-6
+    // NeedToBeDone: 这里使用QTableWidget存在性能问题，需要优化
     QHBoxLayout *faceDialogLayout = new QHBoxLayout(this);
     QTableWidget *tableWidget = new QTableWidget(13, 13, this);
     tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
