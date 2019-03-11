@@ -4,6 +4,8 @@ CacheManager::CacheManager(QObject *parent)
 {
     this->setParent(parent);
     downloadManager = new DownloadManager(this);
+    connect(downloadManager, SIGNAL(downloadImageFinished(QString, QString)),
+            this, SLOT(downloadImageFinished(QString, QString)));
     cachePath = QStandardPaths::writableLocation(
                 QStandardPaths::CacheLocation);
     QDir dir;
@@ -106,4 +108,9 @@ QString CacheManager::getCard(QString groupID, QString userID)
 
     emit getCardSignal(groupID, userID);
     return userID + "(loading)";
+}
+
+void CacheManager::downloadImageFinished(QString filePath, QString url)
+{
+    emit getImageFinished(filePath, url);
 }

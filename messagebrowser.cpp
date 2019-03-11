@@ -16,6 +16,8 @@ MessageBrowser::MessageBrowser(QWidget *parent)
 void MessageBrowser::setCacheManager(CacheManager *cacheManager)
 {
     this->cacheManager = cacheManager;
+    connect(cacheManager, SIGNAL(getImageFinished(QString, QString)),
+            this, SLOT(resizeImage(QString, QString)));
 }
 
 void MessageBrowser::setChatManager(ChatManager *chatManager)
@@ -69,6 +71,11 @@ void MessageBrowser::updateContent()
     this->setHtml(temp);
 }
 
+void MessageBrowser::resizeImage(QString, QString)
+{
+    this->setLineWrapColumnOrWidth(this->lineWrapColumnOrWidth());
+}
+
 void MessageBrowser::showClickedAnchor(const QUrl &link)
 {
     qDebug() << "showClickedAnchor" << link;
@@ -77,11 +84,6 @@ void MessageBrowser::showClickedAnchor(const QUrl &link)
         imageTooltip->hide();
         delete imageTooltip;
         imageTooltip = nullptr;
-    }
-    if(!QFileInfo::exists(link.toString())
-            ||!QFileInfo(link.toString()).isFile())
-    {
-        return;
     }
     QDesktopServices::openUrl(link);
 }
@@ -99,15 +101,19 @@ void MessageBrowser::showHighlighted(const QUrl &link)
         }
         return;
     }
-    if(!QFileInfo::exists(link.toString())
-            ||!QFileInfo(link.toString()).isFile())
+    if(!link.isLocalFile())
+    {
+        return;
+    }
+    if(!QFileInfo::exists(link.toLocalFile())
+            ||!QFileInfo(link.toLocalFile()).isFile())
     {
         return;
     }
     int maxw, maxh;
-    maxw = maxh = 700;
+    maxw = maxh = 500;
     QImage image;
-    image.load(link.toString());
+    image.load(link.toLocalFile());
     if(image.width() < 64&&image.height() < 64)
     {
         return;
@@ -116,11 +122,11 @@ void MessageBrowser::showHighlighted(const QUrl &link)
     {
         if(image.width() * maxh < image.height() * maxw)
         {
-            image = image.scaledToHeight(maxh);
+            image = image.scaledToHeight(maxh, Qt::SmoothTransformation);
         }
         else
         {
-            image = image.scaledToWidth(maxw);
+            image = image.scaledToWidth(maxw, Qt::SmoothTransformation);
         }
     }
     QPalette palette;

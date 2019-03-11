@@ -24,6 +24,7 @@ public:
     Chat::Type curChatType;
 
 private slots:
+    void resizeImage(QString filePath, QString url);
     void showClickedAnchor(const QUrl &link);
     void showHighlighted(const QUrl &link);
 

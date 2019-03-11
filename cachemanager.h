@@ -35,6 +35,10 @@ public:
 
 signals:
     void getCardSignal(QString groupID, QString userID);
+    void getImageFinished(QString filePath, QString url);
+
+private slots:
+    void downloadImageFinished(QString filePath, QString url);
 
 private:
     QString cachePath;

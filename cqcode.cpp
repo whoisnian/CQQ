@@ -141,11 +141,11 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        result += "<a href=\""
+        result += "<a href=\"file://"
                 + cacheManager->getImage(file, url)
                 + "\"><img height=\"50\" src=\"file://"
                 + cacheManager->getImage(file, url)
-                + "\"/ ></a><br />";
+                + "\"/ ></a>";
     }
     else if(type == "record")
     {

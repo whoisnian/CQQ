@@ -31,6 +31,9 @@ public:
 
     void addTask(QUrl url, QString path, TaskType type);
 
+signals:
+    void downloadImageFinished(QString filePath, QString url);
+
 private slots:
     void startNextDownload();
     void downloadFinished();

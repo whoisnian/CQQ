@@ -27,6 +27,11 @@ void DownloadManager::startNextDownload()
 {
     if(!newStart)
     {
+        if(downloadQueue.head().type == TaskType::image)
+        {
+            emit downloadImageFinished(downloadQueue.head().path,
+                                       downloadQueue.head().url.toString());
+        }
         downloadQueue.dequeue();
     }
     newStart = false;
