@@ -4,9 +4,13 @@ MessageBrowser::MessageBrowser(QWidget *parent)
 {
     this->setParent(parent);
     this->setReadOnly(true);
-    this->setOpenExternalLinks(true);
+    this->setOpenLinks(false);
     curChatID = "";
     curChatType = Chat::Private;
+    connect(this, SIGNAL(anchorClicked(const QUrl &)),
+            this, SLOT(showClickedAnchor(const QUrl &)));
+    connect(this, SIGNAL(highlighted(const QUrl &)),
+            this, SLOT(showHighlighted(const QUrl &)));
 }
 
 void MessageBrowser::setCacheManager(CacheManager *cacheManager)
@@ -63,4 +67,68 @@ void MessageBrowser::updateContent()
         temp.append("<hr />");
     }
     this->setHtml(temp);
+}
+
+void MessageBrowser::showClickedAnchor(const QUrl &link)
+{
+    qDebug() << "showClickedAnchor" << link;
+    if(imageTooltip != nullptr)
+    {
+        imageTooltip->hide();
+        delete imageTooltip;
+        imageTooltip = nullptr;
+    }
+    if(!QFileInfo::exists(link.toString())
+            ||!QFileInfo(link.toString()).isFile())
+    {
+        return;
+    }
+    QDesktopServices::openUrl(link);
+}
+
+void MessageBrowser::showHighlighted(const QUrl &link)
+{
+    qDebug() << "showHighlighted" << link;
+    if(link.isEmpty())
+    {
+        if(imageTooltip != nullptr)
+        {
+            imageTooltip->hide();
+            delete imageTooltip;
+            imageTooltip = nullptr;
+        }
+        return;
+    }
+    if(!QFileInfo::exists(link.toString())
+            ||!QFileInfo(link.toString()).isFile())
+    {
+        return;
+    }
+    int maxw, maxh;
+    maxw = maxh = 700;
+    QImage image;
+    image.load(link.toString());
+    if(image.width() < 64&&image.height() < 64)
+    {
+        return;
+    }
+    if(image.width() > maxw||image.height() > maxh)
+    {
+        if(image.width() * maxh < image.height() * maxw)
+        {
+            image = image.scaledToHeight(maxh);
+        }
+        else
+        {
+            image = image.scaledToWidth(maxw);
+        }
+    }
+    QPalette palette;
+    palette.setBrush(QPalette::Background, QBrush(QPixmap::fromImage(image)));
+    imageTooltip = new QWidget(nullptr, Qt::ToolTip);
+    imageTooltip->setPalette(palette);
+    imageTooltip->setAutoFillBackground(true);
+    imageTooltip->setGeometry(QCursor::pos().x(), QCursor::pos().y(),
+                              image.width(), image.height());
+    imageTooltip->show();
 }

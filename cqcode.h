@@ -16,9 +16,11 @@ public:
     static CacheManager *cacheManager;
 
     // 解析接收到的信息为可显示的格式
-    static QString ParseMessageFromString(QString messageString, QString groupID = "");
+    static QString ParseMessageFromString(QString messageString,
+                                          QString groupID = "");
     // 解析 CQ 码为可显示的格式
-    static QString ParseCQCodeFromString(QString cqcodeString, QString groupID = "");
+    static QString ParseCQCodeFromString(QString cqcodeString,
+                                         QString groupID = "");
     // 将原始消息中需要转义的字符进行转义
     static QString EncodeMessageToCQCodeText(QString messageString);
 

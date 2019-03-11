@@ -1,6 +1,7 @@
 #ifndef MESSAGEBROWSER_H
 #define MESSAGEBROWSER_H
 
+#include <QDesktopServices>
 #include <QTextBrowser>
 #include "cachemanager.h"
 #include "chatlist.h"
@@ -22,10 +23,15 @@ public:
     QString curChatID;
     Chat::Type curChatType;
 
+private slots:
+    void showClickedAnchor(const QUrl &link);
+    void showHighlighted(const QUrl &link);
+
 private:
     CacheManager *cacheManager;
     ChatManager *chatManager;
     ChatList *chatList;
+    QWidget *imageTooltip = nullptr;
 };
 
 #endif // MESSAGEBROWSER_H

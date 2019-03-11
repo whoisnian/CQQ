@@ -52,9 +52,9 @@ public:
     QList<int> configContactTabSplitterSizes;   // 主 TabWidget 的联系人 Tab 布局
 
 private:
-    QDialog *dialog;
-    QLineEdit *addressLineEdit;
-    QLineEdit *tokenLineEdit;
+    QDialog *dialog = nullptr;
+    QLineEdit *addressLineEdit = nullptr;
+    QLineEdit *tokenLineEdit = nullptr;
 };
 
 #endif // CONFIGMANAGER_H

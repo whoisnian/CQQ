@@ -50,7 +50,7 @@ protected:
 private:
     ConfigManager *CONFIG;
     WSConnection *WSConn;
-    ChatManager *chatManager;
+    ChatManager *chatManager = nullptr;
     CacheManager *cacheManager;
     QString *selfID;
     QString *selfNickname;

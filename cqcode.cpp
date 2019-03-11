@@ -141,7 +141,9 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        result += "<a href=\"" + url + "\"><img height=\"50\" src=\""
+        result += "<a href=\""
+                + cacheManager->getImage(file, url)
+                + "\"><img height=\"50\" src=\"file://"
                 + cacheManager->getImage(file, url)
                 + "\"/ ></a><br />";
     }
