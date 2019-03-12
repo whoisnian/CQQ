@@ -2,6 +2,7 @@
 #define MESSAGEBROWSER_H
 
 #include <QDesktopServices>
+#include <QScrollBar>
 #include <QTextBrowser>
 #include "cachemanager.h"
 #include "chatlist.h"
@@ -18,10 +19,19 @@ public:
     void setCacheManager(CacheManager *cacheManager);
     void setChatManager(ChatManager *chatManager);
     void setChatList(ChatList *chatList);
-    void updateContent();
 
     QString curChatID;
     Chat::Type curChatType;
+
+    enum ScrollType
+    {
+        ScrollToOld,
+        ScrollToAnchor,
+        ScrollToBottom
+    };
+
+public slots:
+    void updateContent();
 
 private slots:
     void resizeImage(QString filePath, QString url);

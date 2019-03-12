@@ -167,6 +167,8 @@ void MainWindow::init()
     {
         connect(WSConn, SIGNAL(getLoginInfoFinished(QString, QString)),
                 this, SLOT(updateLoginInfo(QString, QString)));
+        connect(WSConn, SIGNAL(newMessageReceived()),
+                messageBrowser, SLOT(updateContent()));
         WSConn->getLoginInfo();
         WSConn->getFriendList(friendList);
         WSConn->getGroupList(groupList);

@@ -32,43 +32,96 @@ void MessageBrowser::setChatList(ChatList *chatList)
 
 void MessageBrowser::updateContent()
 {
-    QString lastChatID = curChatID;
-    Chat::Type lastChatType = curChatType;
-    curChatID = chatManager->chatAt(chatList->currentRow())->chatID;
-    curChatType = chatManager->chatAt(chatList->currentRow())->type;
-    if(lastChatID == curChatID&&lastChatType == curChatType)
+    if(this->isHidden())
     {
         return;
     }
+    QString lastChatID = curChatID;
+    Chat::Type lastChatType = curChatType;
+    int oldScrollValue = 0;
+    ScrollType scrollType = ScrollType::ScrollToOld;
+    curChatID = chatManager->chatAt(chatList->currentRow())->chatID;
+    curChatType = chatManager->chatAt(chatList->currentRow())->type;
+    if(lastChatID == curChatID
+            &&lastChatType == curChatType
+            &&chatManager->chatAt(chatList->currentRow())->unreadNum == 0)
+    {
+        return;
+    }
+    if(lastChatID == curChatID&&lastChatType == curChatType)
+    {
+        oldScrollValue = this->verticalScrollBar()->value();
+        if(oldScrollValue == this->verticalScrollBar()->maximum())
+        {
+            scrollType = ScrollType::ScrollToBottom;
+        }
+    }
+    else
+    {
+        if(chatManager->chatAt(chatList->currentRow())->unreadNum == 0)
+        {
+            scrollType = ScrollType::ScrollToBottom;
+        }
+        else
+        {
+            scrollType = ScrollType::ScrollToAnchor;
+        }
+    }
     QString selfID = chatManager->selfID;
     QString temp = "";
-    for(auto it : chatManager->chatAt(chatList->currentRow())->messages)
+    auto it = chatManager->chatAt(chatList->currentRow())->messages.begin();
+    for(;it < chatManager->chatAt(chatList->currentRow())->messages.end();it++)
     {
-        if(it.senderID == selfID)
+        if(it - chatManager->chatAt(chatList->currentRow())->messages.begin()
+                == chatManager->chatAt(chatList->currentRow())->sumNum
+                - chatManager->chatAt(chatList->currentRow())->unreadNum
+                &&chatManager->chatAt(chatList->currentRow())->unreadNum > 1)
+        {
+            temp.append("<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+                                    "<a name=\"UnreadMessages\">⬤&nbsp;未读消息&nbsp;⬤</a>"
+                                    "</p><hr />");
+        }
+        if(it->senderID == selfID)
         {
             temp.append("<p align=\"right\" style=\" margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ffffff; background-color:#31363b;\">&nbsp;"
-                                          + it.senderName +
+                                          + it->senderName +
                                           "&nbsp;</span><img src=\""
-                                          + cacheManager->getAvatar(it.senderID, CacheManager::Friend, 100) +
+                                          + cacheManager->getAvatar(it->senderID, CacheManager::Friend, 100) +
                                           "\" width=\"30\" height=\"30\" style=\"vertical-align: top;\" /></p>");
             temp.append("<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:80px; margin-right:40px; -qt-block-indent:0; text-indent:0px;\">"
-                                          + CQCode::ParseMessageFromString(it.messageString, curChatID) +
+                                          + CQCode::ParseMessageFromString(it->messageString, curChatID) +
                                           "</p>");
         }
         else
         {
             temp.append("<p style=\" margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\""
-                                          + cacheManager->getAvatar(it.senderID, CacheManager::Friend, 100) +
+                                          + cacheManager->getAvatar(it->senderID, CacheManager::Friend, 100) +
                                           "\" width=\"30\" height=\"30\" style=\"vertical-align: top;\" /><span style=\" color:#ffffff; background-color:#31363b;\">&nbsp;"
-                                          + it.senderName +
+                                          + it->senderName +
                                           "&nbsp;</span></p>");
             temp.append("<p style=\" margin-top:0px; margin-bottom:0px; margin-left:40px; margin-right:80px; -qt-block-indent:0; text-indent:0px;\">"
-                                          + CQCode::ParseMessageFromString(it.messageString, curChatID) +
+                                          + CQCode::ParseMessageFromString(it->messageString, curChatID) +
                                           "</p>");
         }
         temp.append("<hr />");
     }
     this->setHtml(temp);
+    chatManager->chatAt(chatList->currentRow())->unreadNum = 0;
+    chatList->item(chatList->currentRow())->setText(
+                chatManager->chatAt(chatList->currentRow())->chatName);
+    if(scrollType == ScrollType::ScrollToOld)
+    {
+        this->verticalScrollBar()->setValue(oldScrollValue);
+    }
+    else if(scrollType == ScrollType::ScrollToAnchor)
+    {
+        this->scrollToAnchor("UnreadMessages");
+    }
+    else if(scrollType == ScrollType::ScrollToBottom)
+    {
+        this->verticalScrollBar()->setValue(
+                    this->verticalScrollBar()->maximum());
+    }
 }
 
 void MessageBrowser::resizeImage(QString, QString)

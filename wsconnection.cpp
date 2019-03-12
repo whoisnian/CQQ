@@ -135,7 +135,7 @@ void WSConnection::wsAPIDisconnected()
 
 void WSConnection::wsAPIReceived(const QString message)
 {
-    qDebug() << "wsAPI received:" << message;
+    qDebug() << "wsAPI received:";// << message;
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
     if(jsonDoc.isNull())
@@ -283,7 +283,7 @@ void WSConnection::wsEVENTDisconnected()
 
 void WSConnection::wsEVENTReceived(const QString message)
 {
-    qDebug() << "wsEVENT received:" << message;
+    qDebug() << "wsEVENT received:";// << message;
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
     if(jsonDoc.isNull())
@@ -506,6 +506,7 @@ void WSConnection::wsEVENTReceived(const QString message)
         {
             qDebug() << "unknown message_type";
         }
+        emit newMessageReceived();
     }
     else if(jsonDoc.object().value("post_type") == "notice")
     {
