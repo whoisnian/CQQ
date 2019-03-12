@@ -162,6 +162,7 @@ void MainWindow::init()
                               cacheManager,
                               chatManager,
                               chatList,
+                              messageBrowser,
                               this);
     if(WSConn->isConnected())
     {
@@ -182,23 +183,23 @@ void MainWindow::init()
 
 void MainWindow::insertFace(QString face)
 {
-    qDebug() << face;
     messageEdit->insertPlainText(face);
 }
 
 void MainWindow::sendImage(QString fileName)
 {
-    qDebug() << fileName;
+    WSConn->sendImage(fileName);
 }
 
 void MainWindow::sendScreenshot(QString fileName)
 {
-    qDebug() << fileName;
+    WSConn->sendScreenshot(fileName);
 }
 
 void MainWindow::sendMessage()
 {
-    qDebug() << "send" << messageEdit->toPlainText();
+    WSConn->sendMessage(messageEdit->toPlainText());
+    messageEdit->clear();
 }
 
 void MainWindow::changeChat(QListWidgetItem *)
@@ -231,6 +232,11 @@ void MainWindow::changeChat(QListWidgetItem *)
             messageEdit->setPlainText(it.editingMessage);
             break;
         }
+    }
+
+    if(messageBrowser->curChatType == Chat::Group)
+    {
+        cacheManager->getCard(messageBrowser->curChatID, *selfID);
     }
 }
 
@@ -327,6 +333,7 @@ void MainWindow::startGroupChat(QTreeWidgetItem *item, int)
                                 item->text(0),
                                 Chat::Group,
                                 Chat::SubNormal);
+        cacheManager->getCard(item->toolTip(1), *selfID);
         QString avatar;
         avatar = cacheManager->getAvatar(item->toolTip(1),
                                          CacheManager::Group,
@@ -350,6 +357,7 @@ void MainWindow::updateLoginInfo(QString id, QString nickname)
 {
     this->selfID = new QString(id);
     this->selfNickname = new QString(nickname);
+    chatManager->selfID = id;
     QString avatar;
     avatar = cacheManager->getAvatar(id,
                                      CacheManager::Friend,

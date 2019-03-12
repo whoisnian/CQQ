@@ -5,6 +5,7 @@ WSConnection::WSConnection(QString address,
                            CacheManager *cacheManager,
                            ChatManager *chatManager,
                            ChatList *chatList,
+                           MessageBrowser *messageBrowser,
                            QObject *parent)
 {
     this->address = address;
@@ -12,6 +13,7 @@ WSConnection::WSConnection(QString address,
     this->cacheManager = cacheManager;
     this->chatManager = chatManager;
     this->chatList = chatList;
+    this->messageBrowser = messageBrowser;
     this->setParent(parent);
     this->loop = new QEventLoop(this);
     this->heartbeatTimer = new QTimer(this);
@@ -102,6 +104,70 @@ void WSConnection::getGroupList(ContactList *groupList)
     addCommand(CommandType::get_group_list, content);
 }
 
+void WSConnection::sendImage(QString fileName)
+{
+    qDebug() << fileName;
+}
+
+void WSConnection::sendScreenshot(QString fileName)
+{
+    qDebug() << fileName;
+}
+
+void WSConnection::sendMessage(QString plainText)
+{
+    Message m;
+    m.senderID = chatManager->selfID;
+    m.senderName = cacheManager->nicknameMap[m.senderID];
+    m.messageString = CQCode::EncodeMessageToCQCodeText(plainText);
+    m.time = QDateTime::currentDateTime();
+    auto it = chatManager->chats.begin();
+    for(;it < chatManager->chats.end();it++)
+    {
+        if(it->chatID == messageBrowser->curChatID
+                &&it->type == messageBrowser->curChatType)
+        {
+            break;
+        }
+    }
+    if(it == chatManager->chats.end())
+    {
+        return;
+    }
+    it->sumNum += 1;
+    it->unreadNum += 1;
+    QString content;
+    QString jsonMessage = m.messageString;
+    jsonMessage.replace("\"", "\\\"");
+    jsonMessage.replace("\n", "\\n");
+    if(it->type == Chat::Private)
+    {
+        content = "{\"action\":\
+                        \"send_private_msg\",\
+                        \"params\":{\
+                            \"user_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+    }
+    else if(it->type == Chat::Group)
+    {
+        content = "{\"action\":\
+                        \"send_group_msg\",\
+                        \"params\":{\
+                            \"group_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+        m.senderName = cacheManager->getCard(it->chatID, m.senderID);
+    }
+    it->messages.push_back(m);
+    addCommand(CommandType::send_msg, content);
+    messageBrowser->updateContent();
+}
+
 void WSConnection::getGroupMemberInfo(QString groupID, QString userID)
 {
     QString content = "{\"action\":\
@@ -135,7 +201,7 @@ void WSConnection::wsAPIDisconnected()
 
 void WSConnection::wsAPIReceived(const QString message)
 {
-    qDebug() << "wsAPI received:";// << message;
+    qDebug() << "wsAPI received:" << message;
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
     if(jsonDoc.isNull())
@@ -425,6 +491,7 @@ void WSConnection::wsEVENTReceived(const QString message)
                                         chatName,
                                         Chat::Group,
                                         subType);
+                cacheManager->getCard(chatID, chatManager->selfID);
                 chatManager->chatAt(0)->addNewMessage(userID,
                                                       card,
                                                       messageString,
@@ -477,6 +544,7 @@ void WSConnection::wsEVENTReceived(const QString message)
                                         chatName,
                                         Chat::Group,
                                         subType);
+                cacheManager->getCard(chatID, chatManager->selfID);
                 chatManager->chatAt(0)->addNewMessage(userID,
                                                       nickname,
                                                       messageString,

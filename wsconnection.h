@@ -15,6 +15,8 @@
 #include "chatlist.h"
 #include "chatmanager.h"
 #include "contactlist.h"
+#include "cqcode.h"
+#include "messagebrowser.h"
 
 enum CommandType
 {
@@ -22,7 +24,8 @@ enum CommandType
     _get_friend_list,
     get_group_list,
     get_group_member_info,
-    get_status
+    get_status,
+    send_msg
 };
 
 struct Command
@@ -42,6 +45,7 @@ public:
                  CacheManager *cacheManager,
                  ChatManager *chatManager,
                  ChatList *chatList,
+                 MessageBrowser *messageBrowser,
                  QObject *parent = nullptr);
     ~WSConnection();
 
@@ -52,6 +56,9 @@ public:
     void getLoginInfo();
     void getFriendList(ContactList *friendList);
     void getGroupList(ContactList *groupList);
+    void sendImage(QString fileName);
+    void sendScreenshot(QString fileName);
+    void sendMessage(QString plainText);
 
 signals:
     void getLoginInfoFinished(QString id, QString nickname);
@@ -76,6 +83,7 @@ private:
     ChatManager *chatManager;
     ContactList *friendList;
     ContactList *groupList;
+    MessageBrowser *messageBrowser;
 
     QWebSocket wsAPI;
     QWebSocket wsEVENT;

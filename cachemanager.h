@@ -26,7 +26,7 @@ public:
     bool saveChatManager(ChatManager *chatManager);
     QString getAvatar(QString ID, AvatarType type, int size);
     QString getImage(QString file, QString url);
-    QString getCard(QString userID, QString groupID);
+    QString getCard(QString groupID, QString userID);
 
     QMap<QString, QString> nicknameMap;
     QMap<QString, QString> remarkMap;
