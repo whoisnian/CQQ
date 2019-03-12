@@ -178,10 +178,6 @@ void MainWindow::init()
     {
         this->statusBar()->showMessage("连接失败。");
     }
-
-    qDebug() << chatWidgetSplitter->sizes();
-    qDebug() << messageTabSplitter->sizes();
-    qDebug() << contactTabSplitter->sizes();
 }
 
 void MainWindow::insertFace(QString face)
@@ -240,7 +236,16 @@ void MainWindow::changeChat(QListWidgetItem *)
 
 void MainWindow::deleteChat(QListWidgetItem *item)
 {
-    qDebug() << "delete" << item->text();
+    if(messageBrowser->curChatID ==
+            chatManager->chatAt(chatList->currentRow())->chatID
+       &&messageBrowser->curChatType ==
+            chatManager->chatAt(chatList->currentRow())->type)
+    {
+        messageBrowser->hide();
+        editWidget->hide();
+    }
+    chatManager->chats.removeAt(chatList->currentRow());
+    delete item;
 }
 
 void MainWindow::showFriendInfo(QTreeWidgetItem *item, int)

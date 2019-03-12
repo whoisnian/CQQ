@@ -48,6 +48,7 @@ void MessageBrowser::updateContent()
     {
         return;
     }
+    bool showUnreadMark = true;
     if(lastChatID == curChatID&&lastChatType == curChatType)
     {
         oldScrollValue = this->verticalScrollBar()->value();
@@ -55,6 +56,7 @@ void MessageBrowser::updateContent()
         {
             scrollType = ScrollType::ScrollToBottom;
         }
+        showUnreadMark = false;
     }
     else
     {
@@ -75,33 +77,80 @@ void MessageBrowser::updateContent()
         if(it - chatManager->chatAt(chatList->currentRow())->messages.begin()
                 == chatManager->chatAt(chatList->currentRow())->sumNum
                 - chatManager->chatAt(chatList->currentRow())->unreadNum
-                &&chatManager->chatAt(chatList->currentRow())->unreadNum > 1)
+                &&showUnreadMark)
         {
-            temp.append("<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-                                    "<a name=\"UnreadMessages\">⬤&nbsp;未读消息&nbsp;⬤</a>"
-                                    "</p><hr />");
+            temp.append("<p align=\"center\""
+                        "style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:0px;"
+                        "margin-left:0px;"
+                        "margin-right:0px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\">"
+                        "<a name=\"UnreadMessages\">"
+                        "⬤&nbsp;未读消息&nbsp;⬤"
+                        "</a></p><hr />");
         }
         if(it->senderID == selfID)
         {
-            temp.append("<p align=\"right\" style=\" margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ffffff; background-color:#31363b;\">&nbsp;"
-                                          + it->senderName +
-                                          "&nbsp;</span><img src=\""
-                                          + cacheManager->getAvatar(it->senderID, CacheManager::Friend, 100) +
-                                          "\" width=\"30\" height=\"30\" style=\"vertical-align: top;\" /></p>");
-            temp.append("<p align=\"right\" style=\" margin-top:0px; margin-bottom:0px; margin-left:80px; margin-right:40px; -qt-block-indent:0; text-indent:0px;\">"
-                                          + CQCode::ParseMessageFromString(it->messageString, curChatID) +
-                                          "</p>");
+            temp.append("<p align=\"right\""
+                        "style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:10px;"
+                        "margin-left:0px;"
+                        "margin-right:0px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\">"
+                        "<span style=\" color:#ffffff;"
+                        "background-color:#31363b;\">&nbsp;"
+                        + it->senderName +
+                        "&nbsp;</span><img src=\""
+                        + cacheManager->getAvatar(it->senderID,
+                                                  CacheManager::Friend, 100)
+                        + "\" width=\"30\""
+                          "height=\"30\""
+                          "style=\"vertical-align: top;\" /></p>");
+            temp.append("<p align=\"right\""
+                        "style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:0px;"
+                        "margin-left:80px;"
+                        "margin-right:40px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\">"
+                        + CQCode::ParseMessageFromString(it->messageString,
+                                                         curChatID)
+                        + "</p>");
         }
         else
         {
-            temp.append("<p style=\" margin-top:0px; margin-bottom:10px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><img src=\""
-                                          + cacheManager->getAvatar(it->senderID, CacheManager::Friend, 100) +
-                                          "\" width=\"30\" height=\"30\" style=\"vertical-align: top;\" /><span style=\" color:#ffffff; background-color:#31363b;\">&nbsp;"
-                                          + it->senderName +
-                                          "&nbsp;</span></p>");
-            temp.append("<p style=\" margin-top:0px; margin-bottom:0px; margin-left:40px; margin-right:80px; -qt-block-indent:0; text-indent:0px;\">"
-                                          + CQCode::ParseMessageFromString(it->messageString, curChatID) +
-                                          "</p>");
+            temp.append("<p style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:10px;"
+                        "margin-left:0px;"
+                        "margin-right:0px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\"><img src=\""
+                        + cacheManager->getAvatar(it->senderID,
+                                                  CacheManager::Friend, 100)
+                        + "\" width=\"30\""
+                          "height=\"30\""
+                          "style=\"vertical-align: top;\" />"
+                          "<span style=\""
+                          "color:#ffffff;"
+                          "background-color:#31363b;\">&nbsp;"
+                          + it->senderName +
+                          "&nbsp;</span></p>");
+            temp.append("<p style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:0px;"
+                        "margin-left:40px;"
+                        "margin-right:80px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\">"
+                        + CQCode::ParseMessageFromString(it->messageString,
+                                                         curChatID)
+                        + "</p>");
         }
         temp.append("<hr />");
     }

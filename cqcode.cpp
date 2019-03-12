@@ -26,6 +26,7 @@ QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
     {
         result += messageString.mid(index);
     }
+    result.replace("\n", "<br />");
     return result;
 }
 

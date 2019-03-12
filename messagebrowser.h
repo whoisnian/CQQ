@@ -8,6 +8,7 @@
 #include "chatlist.h"
 #include "chatmanager.h"
 #include "cqcode.h"
+#include <QImageReader>
 
 // 聊天消息显示区域
 class MessageBrowser : public QTextBrowser
