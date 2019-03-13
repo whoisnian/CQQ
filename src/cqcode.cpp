@@ -3,7 +3,7 @@
 // 解析接收到的信息为可显示的格式
 QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
 {
-    QString result = "";
+    QString result = "", temp = "";
     // 匹配 CQ 码
     QRegularExpression regexp("\\[CQ:[\\s\\S]*?\\]");
     int index = 0;
@@ -13,7 +13,10 @@ QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
         // CQ 码之前混杂的文本消息
         if(match.capturedStart() > index)
         {
-            result += messageString.mid(index, match.capturedStart()-index);
+            temp = messageString.mid(index, match.capturedStart()-index);
+            temp.replace("<", "&lt;");
+            temp.replace(">", "&gt;");
+            result += temp;
         }
         // 解析匹配到的 CQ 码
         result += ParseCQCodeFromString(match.captured(), groupID);
@@ -24,7 +27,10 @@ QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
     // 匹配完 CQ 码之后剩余的部分
     if(messageString.length() > index)
     {
-        result += messageString.mid(index);
+        temp = messageString.mid(index);
+        temp.replace("<", "&lt;");
+        temp.replace(">", "&gt;");
+        result += temp;
     }
     result.replace("\n", "<br />");
     return result;
