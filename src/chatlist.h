@@ -13,12 +13,15 @@ class ChatList : public QListWidget
 
 public:
     ChatList(QWidget *parent = nullptr);
+    // 添加新聊天对象
     void addNewChatItem(QString avatar, QString chatID, QString chatName);
 
 signals:
+    // 删除聊天对象
     void deleteItem(QListWidgetItem *item);
 
 private slots:
+    // 右键菜单
     void showContextMenu(const QPoint &pos);
 };
 

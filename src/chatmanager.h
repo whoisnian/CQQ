@@ -6,7 +6,7 @@
 #include <QList>
 #include <QString>
 
-// 聊天数据存储
+// 聊天记录数据存储
 class Message
 {
 public:

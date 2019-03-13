@@ -25,7 +25,7 @@ class ConfigManager : public QObject
 public:
     ConfigManager(QWidget *parent = nullptr);
 
-    // 修改配置对话框
+    // 修改配置对话框（blocking表示是否阻塞）
     void changeConfig(bool blocking = false);
 
     // 加载配置文件

@@ -9,6 +9,7 @@ ChatList::ChatList(QWidget *parent)
             this, SLOT(showContextMenu(const QPoint &)));
 }
 
+// 添加新聊天对象
 void ChatList::addNewChatItem(QString avatar,
                               QString chatID,
                               QString chatName)
@@ -20,6 +21,7 @@ void ChatList::addNewChatItem(QString avatar,
     this->insertItem(0, item);
 }
 
+// 右键菜单
 void ChatList::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);

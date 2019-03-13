@@ -72,6 +72,7 @@ private slots:
     void wsEVENTDisconnected();
     void wsEVENTReceived(const QString message);
 
+    // 用来获取群名片
     void getGroupMemberInfo(QString groupID, QString userID);
     void sendHeartbeat();
 

@@ -34,8 +34,11 @@ public slots:
     void updateContent();
 
 private slots:
+    // 加载完图片之后重置图片宽度
     void resizeImage(QString filePath, QString url);
+    // 鼠标点击图片或链接后在对应程序内打开
     void showClickedAnchor(const QUrl &link);
+    // 鼠标移到图片上后显示预览图
     void showHighlighted(const QUrl &link);
 
 private:

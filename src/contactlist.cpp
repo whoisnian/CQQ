@@ -27,10 +27,12 @@ void ContactList::addChildItem(QString text, QString toolTip, QString extra,
     childItem->setToolTip(1, extra);
     if(parent != nullptr)
     {
+        // 如果指定parent，则作为分类的子项添加
         parent->addChild(childItem);
     }
     else
     {
+        // 如果未指定parent，则作为单独项目添加
         this->addTopLevelItem(childItem);
     }
 }

@@ -21,6 +21,7 @@ CacheManager::CacheManager(QObject *parent)
         dir.mkpath(cachePath + "/image/");
 }
 
+// 从缓存目录加载聊天记录缓存
 bool CacheManager::loadChatManager(ChatManager *chatManager)
 {
     QFile file(cachePath + "/chat/data");
@@ -39,6 +40,7 @@ bool CacheManager::loadChatManager(ChatManager *chatManager)
     return true;
 }
 
+// 保存聊天记录到缓存目录
 bool CacheManager::saveChatManager(ChatManager *chatManager)
 {
     QFile file(cachePath + "/chat/data");
@@ -58,9 +60,10 @@ bool CacheManager::saveChatManager(ChatManager *chatManager)
     return true;
 }
 
+// 获取头像
 QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
 {
-    // size 40 100 140 640
+    // size 可选值 40 100 140 640
     QUrl url;
     QString realPath = "";
 
@@ -82,10 +85,12 @@ QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
     if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
         return realPath;
 
+    // 添加下载任务
     downloadManager->addTask(url, realPath, TaskType::avatar);
     return realPath;
 }
 
+// 获取图片
 QString CacheManager::getImage(QString file, QString urlString)
 {
     QUrl url(urlString);
@@ -103,6 +108,7 @@ QString CacheManager::getImage(QString file, QString urlString)
     return realPath;
 }
 
+// 获取群名片
 QString CacheManager::getCard(QString groupID, QString userID)
 {
     if(!cardMap[groupID + "_" + userID].isEmpty())
@@ -114,11 +120,13 @@ QString CacheManager::getCard(QString groupID, QString userID)
     return userID + "(loading)";
 }
 
+// 将本地图片保存到缓存目录
 QString CacheManager::cacheImage(QString fileName)
 {
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly))
         return "";
+    // 以图片的MD5作为文件名
     QCryptographicHash imageMD5(QCryptographicHash::Md5);
     imageMD5.addData(file.readAll());
     QString result(imageMD5.result().toHex().toUpper().toStdString().c_str());

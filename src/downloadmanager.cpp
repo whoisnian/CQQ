@@ -25,6 +25,7 @@ void DownloadManager::addTask(QUrl url, QString path, TaskType type)
 
 void DownloadManager::startNextDownload()
 {
+    // 下载任务完成后从队列中删除对应项
     if(!newStart)
     {
         if(downloadQueue.head().type == TaskType::image)
@@ -43,6 +44,7 @@ void DownloadManager::startNextDownload()
 
     Task temp = downloadQueue.head();
 
+    // 准备开始下载任务时检测到文件已存在，则认为已下载过，开始下一次下载
     if(QFileInfo::exists(temp.path)&&QFileInfo(temp.path).isFile())
     {
         startNextDownload();

@@ -13,6 +13,7 @@ public:
     MessageEdit(QWidget *parent = nullptr);
 
 signals:
+    // Ctrl + Enter 发送快捷键
     void ctrlEnterPressed();
 
 protected:

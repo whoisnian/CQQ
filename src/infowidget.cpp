@@ -43,6 +43,9 @@ void InfoWidget::setInfo(QString avatar,
     }
     avatarLabel->setText(avatar);
     numberLabel->setText(number);
+    // 不提供remark时认为显示的是群组信息
+    // 提供remark时认为显示的是好友信息
+    // 提供的remark为空时认为显示的是不需要显示备注的好友信息
     if(remark.isNull())
     {
         nicknameLabel->setText("名称：" + nickname);
