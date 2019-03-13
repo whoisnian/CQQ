@@ -1,6 +1,7 @@
 #ifndef CACHEMANAGER_H
 #define CACHEMANAGER_H
 
+#include <QCryptographicHash>
 #include <QDebug>
 #include <QDir>
 #include <QMap>
@@ -27,6 +28,7 @@ public:
     QString getAvatar(QString ID, AvatarType type, int size);
     QString getImage(QString file, QString url);
     QString getCard(QString groupID, QString userID);
+    QString cacheImage(QString fileName);
 
     QMap<QString, QString> nicknameMap;
     QMap<QString, QString> remarkMap;

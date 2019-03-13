@@ -337,7 +337,6 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         {
             str = str.mid(str.indexOf(',') + 1);
             type = str.mid(0, str.indexOf('='));
-
             QString temp;
             if(str.contains(','))
             {
@@ -491,6 +490,16 @@ QString CQCode::EncodeMessageToCQCodeText(QString messageString)
     messageString.replace("]", "&#93;");
     messageString.replace(",", "&#44;");
     return messageString;
+}
+
+// 将图片转换为CQ码
+QString CQCode::EncodeImageToCQCodeText(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly))
+        return "";
+    QString imageBase64(file.readAll().toBase64().toStdString().c_str());
+        return "[CQ:image,file=base64://" + imageBase64 + "]";
 }
 
 // 表情 ID 与表情描述之间的对应关系

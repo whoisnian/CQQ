@@ -106,12 +106,61 @@ void WSConnection::getGroupList(ContactList *groupList)
 
 void WSConnection::sendImage(QString fileName)
 {
-    qDebug() << fileName;
+    Message m;
+    m.senderID = chatManager->selfID;
+    m.senderName = cacheManager->nicknameMap[m.senderID];
+    m.messageString = "[CQ:image,file="
+            + cacheManager->cacheImage(fileName)
+            + "]";
+    m.time = QDateTime::currentDateTime();
+    auto it = chatManager->chats.begin();
+    for(;it < chatManager->chats.end();it++)
+    {
+        if(it->chatID == messageBrowser->curChatID
+                &&it->type == messageBrowser->curChatType)
+        {
+            break;
+        }
+    }
+    if(it == chatManager->chats.end())
+    {
+        return;
+    }
+    it->sumNum += 1;
+    it->unreadNum += 1;
+    QString content;
+    QString jsonMessage = CQCode::EncodeImageToCQCodeText(fileName);
+    if(it->type == Chat::Private)
+    {
+        content = "{\"action\":\
+                        \"send_private_msg\",\
+                        \"params\":{\
+                            \"user_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+    }
+    else if(it->type == Chat::Group)
+    {
+        content = "{\"action\":\
+                        \"send_group_msg\",\
+                        \"params\":{\
+                            \"group_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+        m.senderName = cacheManager->getCard(it->chatID, m.senderID);
+    }
+    it->messages.push_back(m);
+    addCommand(CommandType::send_msg, content);
+    messageBrowser->updateContent();
 }
 
 void WSConnection::sendScreenshot(QString fileName)
 {
-    qDebug() << fileName;
+    sendImage(fileName);
 }
 
 void WSConnection::sendMessage(QString plainText)
@@ -201,7 +250,7 @@ void WSConnection::wsAPIDisconnected()
 
 void WSConnection::wsAPIReceived(const QString message)
 {
-    qDebug() << "wsAPI received:" << message;
+    qDebug() << "wsAPI received:";// << message;
     QJsonDocument jsonDoc;
     jsonDoc = QJsonDocument::fromJson(message.toLocal8Bit().data());
     if(jsonDoc.isNull())

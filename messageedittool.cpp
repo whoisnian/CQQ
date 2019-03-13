@@ -66,7 +66,7 @@ void MessageEditTool::imagePushButtonClicked()
                 this,
                 "选择要发送的图片",
                 QDir::home().path(),
-                "Images (*.png *.jpeg *.jpg)");
+                "Images (*.png *.jpeg *.jpg *.gif)");
     if(!fileName.isEmpty())
     {
         if(QFileInfo::exists(fileName)&&QFileInfo(fileName).isFile())

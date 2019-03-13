@@ -95,6 +95,10 @@ QString CacheManager::getImage(QString file, QString urlString)
     if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
         return realPath;
 
+    if(url.isEmpty())
+    {
+        return "";
+    }
     downloadManager->addTask(url, realPath, TaskType::image);
     return realPath;
 }
@@ -108,6 +112,19 @@ QString CacheManager::getCard(QString groupID, QString userID)
 
     emit getCardSignal(groupID, userID);
     return userID + "(loading)";
+}
+
+QString CacheManager::cacheImage(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly))
+        return "";
+    QCryptographicHash imageMD5(QCryptographicHash::Md5);
+    imageMD5.addData(file.readAll());
+    QString result(imageMD5.result().toHex().toUpper().toStdString().c_str());
+    result = result + "." + QFileInfo(fileName).suffix();
+    file.copy(cachePath + "/image/" + result);
+    return result;
 }
 
 void CacheManager::downloadImageFinished(QString filePath, QString url)

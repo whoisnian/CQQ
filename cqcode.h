@@ -24,6 +24,9 @@ public:
     // 将原始消息中需要转义的字符进行转义
     static QString EncodeMessageToCQCodeText(QString messageString);
 
+    // 将图片转换为CQ码
+    static QString EncodeImageToCQCodeText(QString fileName);
+
     // 表情 ID 与表情描述之间的对应关系
     static const QMap<QString, QString> faceIDToString;
     static const QMap<QString, QString> stringToFaceID;

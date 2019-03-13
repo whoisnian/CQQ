@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
         CONFIG->resetWindowSize();
         CONFIG->changeConfig(true);
     }
-    CONFIG->resetWindowSize();
 
     // 主窗口设置
     this->setWindowIcon(QIcon::fromTheme("im-qq"));
@@ -248,6 +247,7 @@ void MainWindow::deleteChat(QListWidgetItem *item)
             chatManager->chatAt(chatList->currentRow())->type)
     {
         messageBrowser->hide();
+        messageBrowser->clear();
         editWidget->hide();
     }
     chatManager->chats.removeAt(chatList->currentRow());
