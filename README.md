@@ -33,6 +33,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 新消息提醒
 * [ ] 托盘图标
 * [ ] 清空聊天对象的聊天消息
+* [ ] 测试浅色主题下表现
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
@@ -44,3 +45,8 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * 截图功能未实现，当前的截图按钮是发送剪切版中的文件名对应的图片，可以识别类似`/home/nian/test.png`或者`file:///home/nian/test.png`格式的路径。可以在系统默认截图工具中设置保存图片后复制路径到剪切版，搭配系统截图工具实现发送截图功能。
 * 图片预览需要放大，缩小，拖动，旋转功能，当前程序中调用系统默认图片查看器打开图片文件。
 * Qt的QNetworkAccessManager首次下载任务报`QNetworkReplyHttpImplPrivate::_q_startOperation was called more than once`，需要解决。
+
+## 截图
+![screenshot1.png](https://github.com/whoisnian/CQQ/raw/master/screenshots/screenshot1.png)
+
+![screenshot2.png](https://github.com/whoisnian/CQQ/raw/master/screenshots/screenshot2.png)
