@@ -47,6 +47,6 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * Qt的QNetworkAccessManager首次下载任务报`QNetworkReplyHttpImplPrivate::_q_startOperation was called more than once`，需要解决。
 
 ## 截图
-![screenshot1.png](https://github.com/whoisnian/CQQ/raw/master/screenshots/screenshot1.png)
+![screenshot1.png](screenshots/screenshot1.png)
 
-![screenshot2.png](https://github.com/whoisnian/CQQ/raw/master/screenshots/screenshot2.png)
+![screenshot2.png](screenshots/screenshot2.png)
