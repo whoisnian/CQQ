@@ -76,6 +76,7 @@ public:
                     QString chatName,
                     Chat::Type type,
                     Chat::SubType subType);
+    void clear();
 
     friend QDataStream& operator>>(QDataStream& input,
                                    ChatManager& data);

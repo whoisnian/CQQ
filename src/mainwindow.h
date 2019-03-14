@@ -4,6 +4,7 @@
 #include <QCloseEvent>
 #include <QHBoxLayout>
 #include <QMainWindow>
+#include <QMenuBar>
 #include <QSplitter>
 #include <QStatusBar>
 #include <QTabWidget>
@@ -47,6 +48,11 @@ private slots:
     void resizeChatWidgetSplitter(int pos, int index);
     void resizeMessageTabSplitter(int pos, int index);
     void resizeContactTabSplitter(int pos, int index);
+    // 菜单栏功能
+    void openCacheDir();
+    void clearCache();
+    void resetWindowSize();
+    void changeSetting();
 
 protected:
     void closeEvent(QCloseEvent *event);

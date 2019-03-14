@@ -72,6 +72,7 @@ void MessageBrowser::updateContent()
             scrollType = ScrollType::ScrollToAnchor;
         }
     }
+    qDebug() << chatManager->chatAt(chatList->currentRow())->sumNum;
     QString selfID = chatManager->selfID;
     QString temp = "";
     auto it = chatManager->chatAt(chatList->currentRow())->messages.begin();

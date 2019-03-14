@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
         CONFIG->changeConfig(true);
     }
 
+    chatManager = new ChatManager;
+    cacheManager = new CacheManager(this);
+
     // 主窗口设置
     this->setWindowIcon(QIcon::fromTheme("im-qq"));
     this->resize(CONFIG->configMainWindowWidth,
@@ -107,6 +110,48 @@ MainWindow::MainWindow(QWidget *parent)
     contactTabLayout->addWidget(contactTabSplitter);
     contactTab->setLayout(contactTabLayout);
 
+    // 菜单栏
+    QMenu *fileMenu = new QMenu("文件(&F)", this);
+    this->menuBar()->addMenu(fileMenu);
+    QMenu *viewMenu = new QMenu("视图(&V)", this);
+    this->menuBar()->addMenu(viewMenu);
+    QMenu *settingMenu = new QMenu("设置(&S)", this);
+    this->menuBar()->addMenu(settingMenu);
+    QMenu *helpMenu = new QMenu("帮助(&H)", this);
+    this->menuBar()->addMenu(helpMenu);
+
+    QAction *openCacheDirAction = new QAction(
+                QIcon::fromTheme("document-open"), "打开缓存目录", this);
+    openCacheDirAction->setStatusTip("打开缓存目录");
+    connect(openCacheDirAction, SIGNAL(triggered()),
+            this, SLOT(openCacheDir()));
+    fileMenu->addAction(openCacheDirAction);
+
+    QAction *clearCacheAction = new QAction(
+                QIcon::fromTheme("edit-clear-all"), "清空缓存", this);
+    clearCacheAction->setStatusTip("清空缓存");
+    connect(clearCacheAction, SIGNAL(triggered()),
+            this, SLOT(clearCache()));
+    fileMenu->addAction(clearCacheAction);
+
+    fileMenu->addSeparator();
+    fileMenu->addAction(QIcon::fromTheme("application-exit"),
+                        "退出", this, SLOT(close()), QKeySequence::Quit);
+
+    QAction *resetWindowSizeAction = new QAction(
+                QIcon::fromTheme("kt-restore-defaults"), "重置窗口布局", this);
+    resetWindowSizeAction->setStatusTip("重置窗口布局");
+    connect(resetWindowSizeAction, SIGNAL(triggered()),
+            this, SLOT(resetWindowSize()));
+    viewMenu->addAction(resetWindowSizeAction);
+
+    QAction *changeSettingAction = new QAction(
+                QIcon::fromTheme("settings-configure"), "修改设置", this);
+    changeSettingAction->setStatusTip("修改设置");
+    connect(changeSettingAction, SIGNAL(triggered()),
+            this, SLOT(changeSetting()));
+    settingMenu->addAction(changeSettingAction);
+
     connect(messageEditTool, SIGNAL(insertFace(QString)),
             this, SLOT(insertFace(QString)));
     connect(messageEditTool, SIGNAL(sendImage(QString)),
@@ -149,8 +194,6 @@ CacheManager *CQCode::cacheManager = nullptr;
 
 void MainWindow::init()
 {
-    chatManager = new ChatManager;
-    cacheManager = new CacheManager(this);
     CQCode::cacheManager = cacheManager;
 
     // 从缓存目录中加载之前的聊天记录
@@ -418,6 +461,46 @@ void MainWindow::resizeMessageTabSplitter(int, int)
 void MainWindow::resizeContactTabSplitter(int, int)
 {
     CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
+}
+
+void MainWindow::clearCache()
+{
+    cacheManager->clearCacheDir();
+    cacheManager->nicknameMap.clear();
+    cacheManager->remarkMap.clear();
+    cacheManager->groupnameMap.clear();
+    cacheManager->cardMap.clear();
+
+    chatList->clear();
+    chatManager->clear();
+
+    messageBrowser->clear();
+    messageEdit->clear();
+
+    WSConn->getLoginInfo();
+    WSConn->getFriendList(friendList);
+    WSConn->getGroupList(groupList);
+}
+
+void MainWindow::openCacheDir()
+{
+    cacheManager->openCacheDir();
+}
+
+void MainWindow::resetWindowSize()
+{
+    CONFIG->resetWindowSize();
+    this->resize(CONFIG->configMainWindowWidth,
+                 CONFIG->configMainWindowHeight);
+    chatWidgetSplitter->setSizes(CONFIG->configChatWidgetSplitterSizes);
+    messageTabSplitter->setSizes(CONFIG->configMessageTabSplitterSizes);
+    contactTabSplitter->setSizes(CONFIG->configContactTabSplitterSizes);
+}
+
+void MainWindow::changeSetting()
+{
+    CONFIG->changeConfig(false);
+    //NeedToBeDone: 重启应用后生效
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

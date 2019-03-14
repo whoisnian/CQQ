@@ -318,6 +318,7 @@ void WSConnection::wsAPIReceived(const QString message)
         qDebug() << "_get_friend_list";
         if(jsonDoc.object().value("data").isArray())
         {
+            friendList->clear();
             QJsonArray data = jsonDoc.object().value("data").toArray();
             for(int i = 0;i < data.size();i++)
             {
@@ -362,6 +363,7 @@ void WSConnection::wsAPIReceived(const QString message)
         qDebug() << "get_group_list";
         if(jsonDoc.object().value("data").isArray())
         {
+            groupList->clear();
             QJsonArray data = jsonDoc.object().value("data").toArray();
             for(int i = 0;i < data.size();i++)
             {

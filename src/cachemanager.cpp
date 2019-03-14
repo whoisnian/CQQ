@@ -136,6 +136,28 @@ QString CacheManager::cacheImage(QString fileName)
     return result;
 }
 
+void CacheManager::openCacheDir()
+{
+    QDesktopServices::openUrl(cachePath);
+}
+
+void CacheManager::clearCacheDir()
+{
+    QDir dir;
+    if(dir.exists(cachePath))
+        QDir(cachePath).removeRecursively();
+    if(!dir.exists(cachePath))
+        dir.mkpath(cachePath);
+    if(!dir.exists(cachePath + "/avatar/friend/"))
+        dir.mkpath(cachePath + "/avatar/friend/");
+    if(!dir.exists(cachePath + "/avatar/group/"))
+        dir.mkpath(cachePath + "/avatar/group/");
+    if(!dir.exists(cachePath + "/chat/"))
+        dir.mkpath(cachePath + "/chat/");
+    if(!dir.exists(cachePath + "/image/"))
+        dir.mkpath(cachePath + "/image/");
+}
+
 void CacheManager::downloadImageFinished(QString filePath, QString url)
 {
     emit getImageFinished(filePath, url);

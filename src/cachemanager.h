@@ -3,6 +3,7 @@
 
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDir>
 #include <QMap>
 #include <QObject>
@@ -35,6 +36,10 @@ public:
     QString getCard(QString groupID, QString userID);
     // 将本地图片保存到缓存目录
     QString cacheImage(QString fileName);
+    // 打开缓存目录
+    void openCacheDir();
+    // 清空缓存目录
+    void clearCacheDir();
 
     // 昵称，备注，群名片缓存
     QMap<QString, QString> nicknameMap;

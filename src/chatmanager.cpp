@@ -34,6 +34,11 @@ void ChatManager::addNewChat(QString chatID,
     this->chats.push_front(temp);
 }
 
+void ChatManager::clear()
+{
+    this->chats.clear();
+}
+
 void Chat::addNewMessage(QString senderID,
                          QString senderName,
                          QString messageString,
