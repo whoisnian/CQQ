@@ -319,7 +319,7 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
                 url = temp;
             }
         }
-        while(content.contains(','));
+        while(str.contains(','));
         if(title.isEmpty())
         {
             result += "<span style=\" color: #ffff66;\">[分享]</span><br />"

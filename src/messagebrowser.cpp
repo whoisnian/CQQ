@@ -5,12 +5,15 @@ MessageBrowser::MessageBrowser(QWidget *parent)
     this->setParent(parent);
     this->setReadOnly(true);
     this->setOpenLinks(false);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     curChatID = "";
     curChatType = Chat::Private;
     connect(this, SIGNAL(anchorClicked(const QUrl &)),
             this, SLOT(showClickedAnchor(const QUrl &)));
     connect(this, SIGNAL(highlighted(const QUrl &)),
             this, SLOT(showHighlighted(const QUrl &)));
+    connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(disableQScrollBar(int)));
 }
 
 void MessageBrowser::setCacheManager(CacheManager *cacheManager)
@@ -239,4 +242,10 @@ void MessageBrowser::showHighlighted(const QUrl &link)
     imageTooltip->setGeometry(QCursor::pos().x(), QCursor::pos().y(),
                               image.width(), image.height());
     imageTooltip->show();
+}
+
+// 锁定并隐藏横向滚动条
+void MessageBrowser::disableQScrollBar(int)
+{
+    this->horizontalScrollBar()->setValue(0);
 }

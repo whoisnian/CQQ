@@ -40,6 +40,8 @@ private slots:
     void showClickedAnchor(const QUrl &link);
     // 鼠标移到图片上后显示预览图
     void showHighlighted(const QUrl &link);
+    // 锁定并隐藏横向滚动条
+    void disableQScrollBar(int value);
 
 private:
     CacheManager *cacheManager;
