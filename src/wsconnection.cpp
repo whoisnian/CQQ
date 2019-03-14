@@ -212,6 +212,18 @@ void WSConnection::sendMessage(QString plainText)
                    }";
         m.senderName = cacheManager->getCard(it->chatID, m.senderID);
     }
+    else if(it->type == Chat::Discuss)
+    {
+        content = "{\"action\":\
+                        \"send_discuss_msg\",\
+                        \"params\":{\
+                            \"discuss_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+        m.senderName = cacheManager->nicknameMap[m.senderID];
+    }
     it->messages.push_back(m);
     addCommand(CommandType::send_msg, content);
     messageBrowser->updateContent();
@@ -262,6 +274,8 @@ void WSConnection::wsAPIReceived(const QString message)
     else if(jsonDoc.object().value("retcode").toInt() != 0)
     {
         qDebug() << "retry because of error retcode";
+        qDebug() << jsonDoc.object();
+        qDebug() << commandQueue.head().type << commandQueue.head().content;
         addCommand(commandQueue.head().type,
                    commandQueue.head().content);
         startNextCommand();
@@ -583,7 +597,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             time = QDateTime::fromTime_t(
                         uint(jsonDoc.object().value("time")
                              .toVariant().toLongLong()));
-            int index = chatManager->indexOf(chatID, Chat::Group);
+            int index = chatManager->indexOf(chatID, Chat::Discuss);
             if(index == -1)
             {
                 QString chatName, avatar;
@@ -591,9 +605,8 @@ void WSConnection::wsEVENTReceived(const QString message)
                 chatName = cacheManager->groupnameMap[chatID];
                 chatManager->addNewChat(chatID,
                                         chatName,
-                                        Chat::Group,
+                                        Chat::Discuss,
                                         subType);
-                cacheManager->getCard(chatID, chatManager->selfID);
                 chatManager->chatAt(0)->addNewMessage(userID,
                                                       nickname,
                                                       messageString,
