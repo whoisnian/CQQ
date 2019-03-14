@@ -9,6 +9,7 @@ CacheManager::CacheManager(QObject *parent)
     cachePath = QStandardPaths::writableLocation(
                 QStandardPaths::CacheLocation);
     QDir dir;
+    qDebug() << cachePath;
     if(!dir.exists(cachePath))
         dir.mkpath(cachePath);
     if(!dir.exists(cachePath + "/avatar/friend/"))

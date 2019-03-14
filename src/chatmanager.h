@@ -29,7 +29,8 @@ public:
     enum Type
     {
         Private,
-        Group
+        Group,
+        Discuss,
     };
 
     enum SubType
