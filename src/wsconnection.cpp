@@ -153,6 +153,17 @@ void WSConnection::sendImage(QString fileName)
                    }";
         m.senderName = cacheManager->getCard(it->chatID, m.senderID);
     }
+    else if(it->type == Chat::Discuss)
+    {
+        content = "{\"action\":\
+                        \"send_discuss_msg\",\
+                        \"params\":{\
+                            \"discuss_id\":" + it->chatID + ",\
+                            \"message\":\"" + jsonMessage + "\",\
+                            \"auto_escape\":false\
+                        }\
+                   }";
+    }
     it->messages.push_back(m);
     addCommand(CommandType::send_msg, content);
     messageBrowser->updateContent();
@@ -271,7 +282,8 @@ void WSConnection::wsAPIReceived(const QString message)
         startNextCommand();
         return;
     }
-    else if(jsonDoc.object().value("retcode").toInt() != 0)
+    else if(jsonDoc.object().value("retcode").toInt() == 104
+            ||jsonDoc.object().value("retcode").toInt() < 0)
     {
         qDebug() << "retry because of error retcode";
         qDebug() << jsonDoc.object();

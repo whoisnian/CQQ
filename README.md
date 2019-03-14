@@ -34,6 +34,9 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 托盘图标
 * [ ] 清空聊天对象的聊天消息
 * [ ] 测试浅色主题下表现
+* [ ] QSplitter调整保存有bug，hide后sizes会有影响
+* [ ] 重试机制修改
+* [ ] 加入 QQ face
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
