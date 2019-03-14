@@ -129,6 +129,12 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(showGroupInfo(QTreeWidgetItem *, int)));
     connect(groupList, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
             this, SLOT(startGroupChat(QTreeWidgetItem *, int)));
+    connect(chatWidgetSplitter, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(resizeChatWidgetSplitter(int, int)));
+    connect(messageTabSplitter, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(resizeMessageTabSplitter(int, int)));
+    connect(contactTabSplitter, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(resizeContactTabSplitter(int, int)));
 
     messageBrowser->hide();
     editWidget->hide();
@@ -399,14 +405,26 @@ void MainWindow::updateChatListFromChatManager()
     }
 }
 
+void MainWindow::resizeChatWidgetSplitter(int, int)
+{
+    CONFIG->configChatWidgetSplitterSizes = chatWidgetSplitter->sizes();
+}
+
+void MainWindow::resizeMessageTabSplitter(int, int)
+{
+    CONFIG->configMessageTabSplitterSizes = messageTabSplitter->sizes();
+}
+
+void MainWindow::resizeContactTabSplitter(int, int)
+{
+    CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
     CONFIG->configMainWindowWidth = this->width();
     CONFIG->configMainWindowHeight = this->height();
-    CONFIG->configChatWidgetSplitterSizes = chatWidgetSplitter->sizes();
-    CONFIG->configMessageTabSplitterSizes = messageTabSplitter->sizes();
-    CONFIG->configContactTabSplitterSizes = contactTabSplitter->sizes();
     CONFIG->saveConfig();
     cacheManager->saveChatManager(chatManager);
     delete chatManager;

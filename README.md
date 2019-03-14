@@ -34,7 +34,6 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 托盘图标
 * [ ] 清空聊天对象的聊天消息
 * [ ] 测试浅色主题下表现
-* [ ] QSplitter调整保存有bug，hide后sizes会有影响
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
 
