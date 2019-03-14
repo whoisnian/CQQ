@@ -452,6 +452,20 @@ void WSConnection::wsEVENTReceived(const QString message)
             userID = QString::number(jsonDoc.object().value("user_id")
                                      .toVariant().toLongLong());
             remark = cacheManager->remarkMap[userID];
+            if(remark.isEmpty())
+            {
+                remark = cacheManager->nicknameMap[userID];
+            }
+            if(remark.isEmpty())
+            {
+                remark = jsonDoc.object().value("sender")
+                        .toObject().value("nickname").toString();
+                cacheManager->nicknameMap[userID] = remark;
+            }
+            if(remark.isEmpty())
+            {
+                remark = "unknown person";
+            }
             messageString = jsonDoc.object().value("message")
                     .toString();
             time = QDateTime::fromTime_t(
@@ -533,6 +547,7 @@ void WSConnection::wsEVENTReceived(const QString message)
                 card = jsonDoc.object().value("sender")
                         .toObject().value("nickname")
                         .toString();
+                cacheManager->nicknameMap[userID] = card;
             }
             cacheManager->cardMap[chatID + "_" + userID] = card;
             messageString = jsonDoc.object().value("message")
@@ -546,6 +561,10 @@ void WSConnection::wsEVENTReceived(const QString message)
                 QString chatName, avatar;
                 Chat::SubType subType = Chat::SubNormal;
                 chatName = cacheManager->groupnameMap[chatID];
+                if(chatName.isEmpty())
+                {
+                    chatName = "unknown group";
+                }
                 if(jsonDoc.object().value("sub_type") == "normal")
                 {
                     subType = Chat::SubNormal;
@@ -603,6 +622,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             nickname = jsonDoc.object().value("sender")
                     .toObject().value("nickname")
                     .toString();
+            cacheManager->nicknameMap[userID] = nickname;
             cacheManager->cardMap[chatID + "_" + userID] = nickname;
             messageString = jsonDoc.object().value("message")
                     .toString();
@@ -615,6 +635,10 @@ void WSConnection::wsEVENTReceived(const QString message)
                 QString chatName, avatar;
                 Chat::SubType subType = Chat::SubNormal;
                 chatName = cacheManager->groupnameMap[chatID];
+                if(chatName.isEmpty())
+                {
+                    chatName = "unknown discuss";
+                }
                 chatManager->addNewChat(chatID,
                                         chatName,
                                         Chat::Discuss,
