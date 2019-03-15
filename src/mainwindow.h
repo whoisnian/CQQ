@@ -38,6 +38,7 @@ private slots:
     void sendMessage();
     void changeChat(QListWidgetItem *item);
     void deleteChat(QListWidgetItem *item);
+    void clearChat(QListWidgetItem *item);
     void showFriendInfo(QTreeWidgetItem *item, int column);
     void startPrivateChat(QTreeWidgetItem *item, int column);
     void showGroupInfo(QTreeWidgetItem *item, int column);

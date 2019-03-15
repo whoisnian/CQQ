@@ -190,6 +190,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(changeChat(QListWidgetItem *)));
     connect(chatList, SIGNAL(deleteItem(QListWidgetItem *)),
             this, SLOT(deleteChat(QListWidgetItem *)));
+    connect(chatList, SIGNAL(clearItem(QListWidgetItem *)),
+            this, SLOT(clearChat(QListWidgetItem *)));
     connect(friendList, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
             this, SLOT(showFriendInfo(QTreeWidgetItem *, int)));
     connect(friendList, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)),
@@ -323,6 +325,20 @@ void MainWindow::deleteChat(QListWidgetItem *item)
     }
     chatManager->chats.removeAt(chatList->currentRow());
     delete item;
+}
+
+void MainWindow::clearChat(QListWidgetItem *)
+{
+    if(messageBrowser->curChatID ==
+            chatManager->chatAt(chatList->currentRow())->chatID
+       &&messageBrowser->curChatType ==
+            chatManager->chatAt(chatList->currentRow())->type)
+    {
+        messageBrowser->clear();
+    }
+    chatManager->chats[chatList->currentRow()].messages.clear();
+    chatManager->chats[chatList->currentRow()].sumNum = 0;
+    chatManager->chats[chatList->currentRow()].unreadNum = 0;
 }
 
 void MainWindow::showFriendInfo(QTreeWidgetItem *item, int)

@@ -19,6 +19,8 @@ public:
 signals:
     // 删除聊天对象
     void deleteItem(QListWidgetItem *item);
+    // 清空单个聊天对象的聊天记录
+    void clearItem(QListWidgetItem *item);
 
 private slots:
     // 右键菜单
