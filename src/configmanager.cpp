@@ -51,7 +51,7 @@ void ConfigManager::changeConfig(bool blocking)
     dialog->setWindowIcon(QIcon::fromTheme("settings-configure"));
     dialog->setMinimumWidth(300);
     connect(dialog, SIGNAL(finished(int)),
-            this, SLOT(changeConfigFinished(int)));
+            this, SLOT(changeConfigDialogFinished(int)));
 
     if(blocking)
     {
@@ -146,12 +146,13 @@ void ConfigManager::resetWindowSize()
 }
 
 // 修改配置文件完成
-void ConfigManager::changeConfigFinished(int result)
+void ConfigManager::changeConfigDialogFinished(int result)
 {
     if(result == QDialog::Accepted)
     {
         this->configAddress = addressLineEdit->text();
         this->configToken = tokenLineEdit->text();
+        emit configChanged();
     }
 
     delete dialog;

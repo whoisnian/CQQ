@@ -53,6 +53,8 @@ private slots:
     void clearCache();
     void resetWindowSize();
     void changeSetting();
+    void clearAndRestart();
+    void about();
 
 protected:
     void closeEvent(QCloseEvent *event);

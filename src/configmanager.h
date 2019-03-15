@@ -37,8 +37,11 @@ public:
     // 重置窗口大小配置
     void resetWindowSize();
 
+signals:
+    void configChanged();
+
 private slots:
-    void changeConfigFinished(int result);
+    void changeConfigDialogFinished(int result);
 
 public:
     QString configAddress;          // COOLQ 服务器地址

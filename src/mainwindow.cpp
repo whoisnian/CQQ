@@ -136,7 +136,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     fileMenu->addSeparator();
     fileMenu->addAction(QIcon::fromTheme("application-exit"),
-                        "退出", this, SLOT(close()), QKeySequence::Quit);
+                        "退出", qApp, SLOT(closeAllWindows()),
+                        QKeySequence::Quit);
 
     QAction *resetWindowSizeAction = new QAction(
                 QIcon::fromTheme("kt-restore-defaults"), "重置窗口布局", this);
@@ -151,6 +152,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(changeSettingAction, SIGNAL(triggered()),
             this, SLOT(changeSetting()));
     settingMenu->addAction(changeSettingAction);
+
+    helpMenu->addAction(QIcon::fromTheme("help-about"),
+                        "关于", this, SLOT(about()));
 
     connect(messageEditTool, SIGNAL(insertFace(QString)),
             this, SLOT(insertFace(QString)));
@@ -500,7 +504,41 @@ void MainWindow::resetWindowSize()
 void MainWindow::changeSetting()
 {
     CONFIG->changeConfig(false);
-    //NeedToBeDone: 重启应用后生效
+    connect(CONFIG, SIGNAL(configChanged()),
+            this, SLOT(clearAndRestart()),
+            Qt::UniqueConnection);
+}
+
+void MainWindow::about()
+{
+    QMessageBox::about(this, "About",
+                 "<b>CQQ</b>"\
+                 "<p>Based on Qt Creator 4.8.2</p>"\
+                 "<p>Based on Qt 5.12.1 (GCC 8.2.1 20181127, 64 bit)</p>");
+}
+
+void MainWindow::clearAndRestart()
+{
+    qDebug() << "clear and restart";
+    cacheManager->clearCacheDir();
+    cacheManager->nicknameMap.clear();
+    cacheManager->remarkMap.clear();
+    cacheManager->groupnameMap.clear();
+    cacheManager->cardMap.clear();
+
+    chatList->clear();
+    chatManager->clear();
+
+    messageBrowser->clear();
+    messageEdit->clear();
+
+    CONFIG->configMainWindowWidth = this->width();
+    CONFIG->configMainWindowHeight = this->height();
+    CONFIG->saveConfig();
+    cacheManager->saveChatManager(chatManager);
+    delete chatManager;
+    chatManager = nullptr;
+    qApp->exit(233);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

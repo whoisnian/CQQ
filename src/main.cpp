@@ -4,9 +4,15 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    w.init();
+    int ret = 0;
+    do
+    {
+        MainWindow w;
+        w.show();
+        w.init();
+        ret = a.exec();
+    }
+    while(ret == 233);
 
-    return a.exec();
+    return ret;
 }
