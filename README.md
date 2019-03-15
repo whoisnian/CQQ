@@ -18,6 +18,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [x] 聊天消息框自动滚动
 * [x] 记录窗口大小调整
 * [x] 菜单选项：重置窗口布局，清空缓存，修改配置
+* [x] 深浅色不同主题下调整颜色
 
 ## 希望实现
 
@@ -31,7 +32,6 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 新消息提醒
 * [ ] 托盘图标
 * [ ] 清空聊天对象的聊天消息
-* [ ] 测试浅色主题下表现
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
 

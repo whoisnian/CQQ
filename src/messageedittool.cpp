@@ -9,7 +9,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
 
     facePushButton = new QPushButton(this);
     facePushButton->setFlat(true);
-    facePushButton->setIcon(QIcon::fromTheme("smiley-shape"));
+    facePushButton->setIcon(QIcon::fromTheme("symbols"));
     facePushButton->setIconSize(QSize(24, 24));
     facePushButton->setToolTip("插入表情");
     connect(facePushButton, SIGNAL(clicked()),

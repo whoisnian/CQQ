@@ -22,6 +22,8 @@ public:
 
     QString curChatID;
     Chat::Type curChatType;
+    QString nicknameColor;
+    QString nicknameBackgroundColor;
 
     enum ScrollType
     {

@@ -105,8 +105,10 @@ void MessageBrowser::updateContent()
                         "margin-right:0px;"
                         "-qt-block-indent:0;"
                         "text-indent:0px;\">"
-                        "<span style=\" color:#ffffff;"
-                        "background-color:#31363b;\">&nbsp;"
+                        "<span style=\" color:" + nicknameColor + ";"
+                        "background-color:"
+                        + nicknameBackgroundColor
+                        + ";\">&nbsp;"
                         + it->senderName +
                         "&nbsp;</span><img src=\""
                         + cacheManager->getAvatar(it->senderID,
@@ -141,8 +143,10 @@ void MessageBrowser::updateContent()
                           "height=\"30\""
                           "style=\"vertical-align: top;\" />"
                           "<span style=\""
-                          "color:#ffffff;"
-                          "background-color:#31363b;\">&nbsp;"
+                          "color:" + nicknameColor + ";"
+                          "background-color:"
+                          + nicknameBackgroundColor
+                          + ";\">&nbsp;"
                           + it->senderName +
                           "&nbsp;</span></p>");
             temp.append("<p style=\""

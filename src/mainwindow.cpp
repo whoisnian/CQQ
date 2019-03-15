@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 
+CacheManager *CQCode::cacheManager = nullptr;
+QString CQCode::messageHighlightColor;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -38,6 +41,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 聊天区域中的消息显示区域
     messageBrowser = new MessageBrowser(chatWidget);
+
+    // 根据主题是深色还是浅色调整显示
+    QColor windowColor = QApplication::palette().color(QPalette::Window);
+    qreal h, s, l;
+    windowColor.getHslF(&h, &s, &l);
+    if(l > 0.5)
+    {
+        messageBrowser->nicknameColor = "#000000";
+        messageBrowser->nicknameBackgroundColor = "#dddddd";
+        CQCode::messageHighlightColor = "#f67400";
+    }
+    else
+    {
+        messageBrowser->nicknameColor = "#ffffff";
+        messageBrowser->nicknameBackgroundColor = "#31363b";
+        CQCode::messageHighlightColor = "#f67400";
+    }
 
     // 聊天区域中的消息编辑区域
     editWidget = new QWidget(chatWidget);
@@ -193,8 +213,6 @@ MainWindow::~MainWindow()
 {
     qDebug() << "~MainWindow";
 }
-
-CacheManager *CQCode::cacheManager = nullptr;
 
 void MainWindow::init()
 {

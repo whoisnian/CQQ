@@ -75,7 +75,8 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        result += "<span style=\" color: #ffff66;\">/"
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">/"
                 + faceIDToString[id]
                 + "</span>";
     }
@@ -110,12 +111,14 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
     else if(type == "bface")
     {
         // 原创表情
-        result += "<span style=\" color: #ffff66;\">[原创表情]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[原创表情]</span>";
     }
     else if(type == "sface")
     {
         // 小表情
-        result += "<span style=\" color: #ffff66;\">[小表情]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[小表情]</span>";
     }
     else if(type == "image")
     {
@@ -157,7 +160,8 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
     else if(type == "record")
     {
         // 语音
-        result += "<span style=\" color: #ffff66;\">[语音消息]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[语音消息]</span>";
     }
     else if(type == "at")
     {
@@ -187,11 +191,13 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         while(str.contains(','));
         if(qq == "all")
         {
-            result += "<span style=\" color: #ffff66;\">@全体成员 </span>";
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">@全体成员 </span>";
         }
         else
         {
-            result += "<span style=\" color: #ffff66;\">@"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">@"
                     + cacheManager->getCard(groupID, qq)
                     + " </span>";
         }
@@ -199,22 +205,26 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
     else if(type == "rps")
     {
         // 猜拳魔法表情
-        result += "<span style=\" color: #ffff66;\">[猜拳魔法表情]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[猜拳魔法表情]</span>";
     }
     else if(type == "dice")
     {
         // 掷骰子魔法表情
-        result += "<span style=\" color: #ffff66;\">[掷骰子魔法表情]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[掷骰子魔法表情]</span>";
     }
     else if(type == "shake")
     {
         // 戳一戳
-        result += "<span style=\" color: #ffff66;\">[戳一戳]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[戳一戳]</span>";
     }
     else if(type == "anonymous")
     {
         // 匿名消息
-        result += "<span style=\" color: #ffff66;\">[匿名消息]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[匿名消息]</span>";
     }
     else if(type == "music")
     {
@@ -269,12 +279,14 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         while(str.contains(','));
         if(baseurl.isEmpty())
         {
-            result += "<span style=\" color: #ffff66;\">[音乐分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[音乐分享]</span><br />"
                     + from + "：" + id;
         }
         else
         {
-            result += "<span style=\" color: #ffff66;\">[音乐分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[音乐分享]</span><br />"
                     + from + "：<a href=\"" + baseurl + id + "\">"
                     + id + "</a>";
         }
@@ -322,13 +334,15 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         while(str.contains(','));
         if(title.isEmpty())
         {
-            result += "<span style=\" color: #ffff66;\">[分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[分享]</span><br />"
                     + QString("<a href=\"") + url + "\">"
                     + content + "</a>";
         }
         else
         {
-            result += "<span style=\" color: #ffff66;\">[分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[分享]</span><br />"
                     + QString("<a href=\"") + url + "\">"
                     + title  + "</a><br />"
                     + content;
@@ -375,7 +389,8 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
             }
         }
         while(str.contains(','));
-        result += "<span style=\" color: #ffff66;\">[联系人分享]</span><br />"
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[联系人分享]</span><br />"
                 + from + "：" + id;
     }
     else if(type == "location")
@@ -420,14 +435,16 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         while(str.contains(','));
         if(title == "位置分享")
         {
-            result += "<span style=\" color: #ffff66;\">[位置分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[位置分享]</span><br />"
                     + QString("<a href=\"https://www.google.com/maps/place/")
                     + lat + "," + lon + "/@" + lat + "," + lon + ",17z/\">"
                     + content + "</a>";
         }
         else
         {
-            result += "<span style=\" color: #ffff66;\">[位置分享]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[位置分享]</span><br />"
                     + QString("<a href=\"https://www.google.com/maps/place/")
                     + lat + "," + lon + "/@" + lat + "," + lon + ",17z/\">"
                     + content + title + "</a>";
@@ -436,12 +453,14 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
     else if(type == "show")
     {
         // 厘米秀
-        result += "<span style=\" color: #ffff66;\">[厘米秀]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[厘米秀]</span>";
     }
     else if(type == "sign")
     {
         // 签到
-        result += "<span style=\" color: #ffff66;\">[签到]</span>";
+        result += "<span style=\" color: "
+                + messageHighlightColor + ";\">[签到]</span>";
     }
     else if(type == "rich")
     {
@@ -476,12 +495,14 @@ QString CQCode::ParseCQCodeFromString(QString cqcodeString, QString groupID)
         while(str.contains(','));
         if(url.isEmpty())
         {
-            result += "<span style=\" color: #ffff66;\">[富媒体]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[富媒体]</span><br />"
                     + text;
         }
         else
         {
-            result += "<span style=\" color: #ffff66;\">[富媒体]</span><br />"
+            result += "<span style=\" color: "
+                    + messageHighlightColor + ";\">[富媒体]</span><br />"
                     + QString("<a href=\"") + url + "\">" + text  + "</a>";
         }
     }
