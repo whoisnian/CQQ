@@ -343,6 +343,7 @@ void WSConnection::wsAPIReceived(const QString message)
                     remark = friends.at(j)
                             .toObject().value("remark")
                             .toString();
+                    cacheManager->avatarNum++;
                     avatar = cacheManager->getAvatar(userID,
                                                      CacheManager::Friend,
                                                      100);
@@ -374,6 +375,7 @@ void WSConnection::wsAPIReceived(const QString message)
                 groupName = data.at(i)
                         .toObject().value("group_name")
                         .toString();
+                cacheManager->avatarNum++;
                 avatar = cacheManager->getAvatar(groupID,
                                                  CacheManager::Group,
                                                  100);

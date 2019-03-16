@@ -33,6 +33,11 @@ void DownloadManager::startNextDownload()
             emit downloadImageFinished(downloadQueue.head().path,
                                        downloadQueue.head().url.toString());
         }
+        else if(downloadQueue.head().type == TaskType::avatar)
+        {
+            emit downloadAvatarFinished(downloadQueue.head().path,
+                                        downloadQueue.head().url.toString());
+        }
         downloadQueue.dequeue();
     }
     newStart = false;

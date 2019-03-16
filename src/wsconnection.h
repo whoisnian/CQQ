@@ -74,6 +74,7 @@ private slots:
 
     // 用来获取群名片
     void getGroupMemberInfo(QString groupID, QString userID);
+
     void sendHeartbeat();
 
 private:

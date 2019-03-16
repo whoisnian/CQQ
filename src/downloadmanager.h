@@ -33,6 +33,7 @@ public:
 
 signals:
     void downloadImageFinished(QString filePath, QString url);
+    void downloadAvatarFinished(QString filePath, QString url);
 
 private slots:
     void startNextDownload();

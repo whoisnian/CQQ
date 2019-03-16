@@ -241,6 +241,10 @@ void MessageBrowser::showHighlighted(const QUrl &link)
     }
     QPalette palette;
     palette.setBrush(QPalette::Background, QBrush(QPixmap::fromImage(image)));
+    if(imageTooltip != nullptr)
+    {
+        delete imageTooltip;
+    }
     imageTooltip = new QWidget(nullptr, Qt::ToolTip);
     imageTooltip->setPalette(palette);
     imageTooltip->setAutoFillBackground(true);

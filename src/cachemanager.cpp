@@ -6,6 +6,8 @@ CacheManager::CacheManager(QObject *parent)
     downloadManager = new DownloadManager(this);
     connect(downloadManager, SIGNAL(downloadImageFinished(QString, QString)),
             this, SLOT(downloadImageFinished(QString, QString)));
+    connect(downloadManager, SIGNAL(downloadAvatarFinished(QString, QString)),
+            this, SLOT(downloadAvatarFinished(QString, QString)));
     cachePath = QStandardPaths::writableLocation(
                 QStandardPaths::CacheLocation);
     QDir dir;
@@ -70,21 +72,24 @@ QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
 
     if(type == AvatarType::Friend)
     {
-        url.setUrl("http://q1.qlogo.cn/g?b=qq&s="
+        url.setUrl("https://q1.qlogo.cn/g?b=qq&s="
                    + QString::number(size) + "&nk=" + ID);
         realPath = cachePath + "/avatar/friend/"
                 + ID + "_" + QString::number(size);
     }
     else if(type == AvatarType::Group)
     {
-        url.setUrl("http://p.qlogo.cn/gh/"
+        url.setUrl("https://p.qlogo.cn/gh/"
                    + ID + "/" + ID + "/" + QString::number(size));
         realPath = cachePath + "/avatar/group/"
                 + ID + "_" + QString::number(size);
     }
 
     if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
+    {
+        avatarNum--;
         return realPath;
+    }
 
     // 添加下载任务
     downloadManager->addTask(url, realPath, TaskType::avatar);
@@ -161,4 +166,13 @@ void CacheManager::clearCacheDir()
 void CacheManager::downloadImageFinished(QString filePath, QString url)
 {
     emit getImageFinished(filePath, url);
+}
+
+void CacheManager::downloadAvatarFinished(QString, QString)
+{
+    avatarNum--;
+    if(avatarNum == 0)
+    {
+        emit getAllAvatarFinished();
+    }
 }

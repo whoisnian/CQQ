@@ -46,13 +46,16 @@ public:
     QMap<QString, QString> remarkMap;
     QMap<QString, QString> groupnameMap;
     QMap<QString, QString> cardMap;
+    int avatarNum = 0;
 
 signals:
     void getCardSignal(QString groupID, QString userID);
     void getImageFinished(QString filePath, QString url);
+    void getAllAvatarFinished();
 
 private slots:
     void downloadImageFinished(QString filePath, QString url);
+    void downloadAvatarFinished(QString filePath, QString url);
 
 private:
     QString cachePath;

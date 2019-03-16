@@ -45,6 +45,7 @@ private slots:
     void startGroupChat(QTreeWidgetItem *item, int column);
     void updateLoginInfo(QString id, QString nickname);
     void updateChatListFromChatManager();
+    void reloadAvatar();
     // 记录窗口分割器 QSplitter 调整
     void resizeChatWidgetSplitter(int pos, int index);
     void resizeMessageTabSplitter(int pos, int index);

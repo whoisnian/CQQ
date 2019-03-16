@@ -160,11 +160,18 @@ MainWindow::MainWindow(QWidget *parent)
                         QKeySequence::Quit);
 
     QAction *resetWindowSizeAction = new QAction(
-                QIcon::fromTheme("kt-restore-defaults"), "重置窗口布局", this);
-    resetWindowSizeAction->setStatusTip("重置窗口布局");
+                QIcon::fromTheme("kt-restore-defaults"), "重置布局", this);
+    resetWindowSizeAction->setStatusTip("重置布局");
     connect(resetWindowSizeAction, SIGNAL(triggered()),
             this, SLOT(resetWindowSize()));
     viewMenu->addAction(resetWindowSizeAction);
+
+    QAction *reloadAvatarAction = new QAction(
+                QIcon::fromTheme("view-refresh"), "刷新头像", this);
+    reloadAvatarAction->setStatusTip("刷新头像");
+    connect(reloadAvatarAction, SIGNAL(triggered()),
+            this, SLOT(reloadAvatar()));
+    viewMenu->addAction(reloadAvatarAction);
 
     QAction *changeSettingAction = new QAction(
                 QIcon::fromTheme("settings-configure"), "修改设置", this);
@@ -242,7 +249,10 @@ void MainWindow::init()
                 this, SLOT(updateLoginInfo(QString, QString)));
         connect(WSConn, SIGNAL(newMessageReceived()),
                 messageBrowser, SLOT(updateContent()));
+        connect(cacheManager, SIGNAL(getAllAvatarFinished()),
+                this, SLOT(reloadAvatar()));
         WSConn->getLoginInfo();
+        cacheManager->avatarNum = 0;
         WSConn->getFriendList(friendList);
         WSConn->getGroupList(groupList);
         this->statusBar()->showMessage("连接成功。", 3000);
@@ -486,6 +496,34 @@ void MainWindow::updateChatListFromChatManager()
     }
 }
 
+void MainWindow::reloadAvatar()
+{
+    qDebug() << "reload avatar";
+    QTreeWidgetItemIterator it1(friendList);
+    while(*it1)
+    {
+        if(!(*it1)->toolTip(1).isEmpty())
+        {
+            (*it1)->setIcon(0, QIcon(
+                                cacheManager->getAvatar((*it1)->toolTip(1),
+                                CacheManager::Friend, 100)));
+        }
+        it1++;
+    }
+    QTreeWidgetItemIterator it2(groupList);
+    while(*it2)
+    {
+        if(!(*it2)->toolTip(1).isEmpty())
+        {
+            (*it2)->setIcon(0, QIcon(
+                                cacheManager->getAvatar((*it2)->toolTip(1),
+                                CacheManager::Group, 100)));
+        }
+        it2++;
+    }
+    updateChatListFromChatManager();
+}
+
 void MainWindow::resizeChatWidgetSplitter(int, int)
 {
     CONFIG->configChatWidgetSplitterSizes = chatWidgetSplitter->sizes();
@@ -516,6 +554,7 @@ void MainWindow::clearCache()
     messageEdit->clear();
 
     WSConn->getLoginInfo();
+    cacheManager->avatarNum = 0;
     WSConn->getFriendList(friendList);
     WSConn->getGroupList(groupList);
 }
@@ -559,6 +598,7 @@ void MainWindow::clearAndRestart()
     cacheManager->remarkMap.clear();
     cacheManager->groupnameMap.clear();
     cacheManager->cardMap.clear();
+    cacheManager->avatarNum = 0;
 
     chatList->clear();
     chatManager->clear();
