@@ -1,7 +1,8 @@
 #include "messagebrowser.h"
 
-MessageBrowser::MessageBrowser(QWidget *parent)
+MessageBrowser::MessageBrowser(QMainWindow *mainWindow, QWidget *parent)
 {
+    this->mainWindow = mainWindow;
     this->setParent(parent);
     this->setReadOnly(true);
     this->setOpenLinks(false);
@@ -55,7 +56,8 @@ void MessageBrowser::updateContent()
     if(lastChatID == curChatID&&lastChatType == curChatType)
     {
         oldScrollValue = this->verticalScrollBar()->value();
-        if(oldScrollValue == this->verticalScrollBar()->maximum())
+        if(oldScrollValue == this->verticalScrollBar()->maximum()
+                &&(!mainWindow->isMinimized()))
         {
             scrollType = ScrollType::ScrollToEndAnchor;
         }

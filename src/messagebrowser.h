@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QDesktopServices>
+#include <QMainWindow>
 #include <QScrollBar>
 #include <QTextBrowser>
 #include "cachemanager.h"
@@ -16,7 +17,7 @@ class MessageBrowser : public QTextBrowser
     Q_OBJECT
 
 public:
-    MessageBrowser(QWidget *parent = nullptr);
+    MessageBrowser(QMainWindow *mainWindow, QWidget *parent = nullptr);
     void setCacheManager(CacheManager *cacheManager);
     void setChatManager(ChatManager *chatManager);
     void setChatList(ChatList *chatList);
@@ -47,6 +48,7 @@ private slots:
     void disableQScrollBar(int value);
 
 private:
+    QMainWindow *mainWindow;
     CacheManager *cacheManager;
     ChatManager *chatManager;
     ChatList *chatList;

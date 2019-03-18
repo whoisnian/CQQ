@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *chatWidget = new QWidget(messageTab);
 
     // 聊天区域中的消息显示区域
-    messageBrowser = new MessageBrowser(chatWidget);
+    messageBrowser = new MessageBrowser(this, chatWidget);
 
     // 根据主题是深色还是浅色调整显示
     QColor windowColor = QApplication::palette().color(QPalette::Window);
