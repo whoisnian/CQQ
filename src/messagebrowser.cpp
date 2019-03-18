@@ -42,7 +42,7 @@ void MessageBrowser::updateContent()
     QString lastChatID = curChatID;
     Chat::Type lastChatType = curChatType;
     int oldScrollValue = 0;
-    ScrollType scrollType = ScrollType::ScrollToOld;
+    ScrollType scrollType = ScrollType::ScrollToOldPosition;
     curChatID = chatManager->chatAt(chatList->currentRow())->chatID;
     curChatType = chatManager->chatAt(chatList->currentRow())->type;
     if(lastChatID == curChatID
@@ -57,7 +57,7 @@ void MessageBrowser::updateContent()
         oldScrollValue = this->verticalScrollBar()->value();
         if(oldScrollValue == this->verticalScrollBar()->maximum())
         {
-            scrollType = ScrollType::ScrollToBottom;
+            scrollType = ScrollType::ScrollToEndAnchor;
         }
         showUnreadMark = false;
     }
@@ -65,11 +65,11 @@ void MessageBrowser::updateContent()
     {
         if(chatManager->chatAt(chatList->currentRow())->unreadNum == 0)
         {
-            scrollType = ScrollType::ScrollToBottom;
+            scrollType = ScrollType::ScrollToEndAnchor;
         }
         else
         {
-            scrollType = ScrollType::ScrollToAnchor;
+            scrollType = ScrollType::ScrollToUnreadAnchor;
         }
     }
     qDebug() << chatManager->chatAt(chatList->currentRow())->sumNum;
@@ -80,6 +80,7 @@ void MessageBrowser::updateContent()
     auto it = chatManager->chatAt(chatList->currentRow())->messages.begin();
     for(;it < chatManager->chatAt(chatList->currentRow())->messages.end();it++)
     {
+        // 未读消息标记
         if(it - chatManager->chatAt(chatList->currentRow())->messages.begin()
                 == chatManager->chatAt(chatList->currentRow())->sumNum
                 - chatManager->chatAt(chatList->currentRow())->unreadNum
@@ -97,6 +98,7 @@ void MessageBrowser::updateContent()
                         "⬤&nbsp;未读消息&nbsp;⬤"
                         "</a></p><hr />");
         }
+        // 时间戳标记
         if(it->time.secsTo(lastTime) <= -300)
         {
             QString timeString = "";
@@ -187,22 +189,22 @@ void MessageBrowser::updateContent()
         }
         temp.append("<hr />");
     }
+    temp.append("<a name=\"EndMessages\">&nbsp;</a>");
     this->setHtml(temp);
     chatManager->chatAt(chatList->currentRow())->unreadNum = 0;
     chatList->item(chatList->currentRow())->setText(
                 chatManager->chatAt(chatList->currentRow())->chatName);
-    if(scrollType == ScrollType::ScrollToOld)
+    if(scrollType == ScrollType::ScrollToOldPosition)
     {
         this->verticalScrollBar()->setValue(oldScrollValue);
     }
-    else if(scrollType == ScrollType::ScrollToAnchor)
+    else if(scrollType == ScrollType::ScrollToUnreadAnchor)
     {
         this->scrollToAnchor("UnreadMessages");
     }
-    else if(scrollType == ScrollType::ScrollToBottom)
+    else if(scrollType == ScrollType::ScrollToEndAnchor)
     {
-        this->verticalScrollBar()->setValue(
-                    this->verticalScrollBar()->maximum());
+        this->scrollToAnchor("EndMessages");
     }
 }
 

@@ -28,9 +28,9 @@ public:
 
     enum ScrollType
     {
-        ScrollToOld,
-        ScrollToAnchor,
-        ScrollToBottom
+        ScrollToOldPosition,
+        ScrollToUnreadAnchor,
+        ScrollToEndAnchor
     };
 
 public slots:

@@ -37,7 +37,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
-* 与单个聊天对象的聊天信息过多时，自动滚动会无法滚动到最底部，程序中的具体表现是`QTextBrowser`调用`setHtml()`后立即获取`verticalScrollBar()->maximum()`，得到的最大值不正确。推测可能是`QTextBrowser`渲染需要时间，渲染结束后才可以获得正确的值。
+* ~~与单个聊天对象的聊天信息过多时，自动滚动会无法滚动到最底部，程序中的具体表现是`QTextBrowser`调用`setHtml()`后立即获取`verticalScrollBar()->maximum()`，得到的最大值不正确。推测可能是`QTextBrowser`渲染需要时间，渲染结束后才可以获得正确的值。~~ 已使用`scrollToAnchor()`方法避免。
 * CoolQ HTTP API推送的消息中少数CQ码的图片url无法打开，表现为下载失败，手动复制链接出来访问时显示404，推测与CoolQ HTTP API缓存有关，需要进一步验证。
 * 离线消息由于CoolQ HTTP API的接口限制，可能需要特殊方法实现。
 * 发送图片时存在大小限制，需要进一步测试。
