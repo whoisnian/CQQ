@@ -75,6 +75,8 @@ void MessageBrowser::updateContent()
     qDebug() << chatManager->chatAt(chatList->currentRow())->sumNum;
     QString selfID = chatManager->selfID;
     QString temp = "";
+    QDateTime lastTime;
+    lastTime.setTime_t(0);
     auto it = chatManager->chatAt(chatList->currentRow())->messages.begin();
     for(;it < chatManager->chatAt(chatList->currentRow())->messages.end();it++)
     {
@@ -95,6 +97,29 @@ void MessageBrowser::updateContent()
                         "⬤&nbsp;未读消息&nbsp;⬤"
                         "</a></p><hr />");
         }
+        if(it->time.secsTo(lastTime) <= -300)
+        {
+            QString timeString = "";
+            if(it->time.daysTo(lastTime) <= -1)
+            {
+                timeString = it->time.toString("MM-dd hh:mm");
+            }
+            else
+            {
+                timeString = it->time.toString("hh:mm");
+            }
+            temp.append("<p align=\"center\""
+                        "style=\""
+                        "margin-top:0px;"
+                        "margin-bottom:0px;"
+                        "margin-left:0px;"
+                        "margin-right:0px;"
+                        "-qt-block-indent:0;"
+                        "text-indent:0px;\">"
+                        + timeString +
+                        "</p><hr />");
+        }
+        lastTime = it->time;
         if(it->senderID == selfID)
         {
             temp.append("<p align=\"right\""

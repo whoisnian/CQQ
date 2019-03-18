@@ -1,6 +1,7 @@
 #ifndef MESSAGEBROWSER_H
 #define MESSAGEBROWSER_H
 
+#include <QDateTime>
 #include <QDesktopServices>
 #include <QScrollBar>
 #include <QTextBrowser>
