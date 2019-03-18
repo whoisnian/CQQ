@@ -16,6 +16,8 @@ QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
             temp = messageString.mid(index, match.capturedStart()-index);
             temp.replace("<", "&lt;");
             temp.replace(">", "&gt;");
+            temp.replace(QRegExp("((?:https?|ftp)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"),
+                         "<a href=\"\\1\">\\1</a>");
             result += temp;
         }
         // 解析匹配到的 CQ 码
@@ -30,6 +32,8 @@ QString CQCode::ParseMessageFromString(QString messageString, QString groupID)
         temp = messageString.mid(index);
         temp.replace("<", "&lt;");
         temp.replace(">", "&gt;");
+        temp.replace(QRegExp("((?:https?|ftp)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|])"),
+                     "<a href=\"\\1\">\\1</a>");
         result += temp;
     }
     result.replace("\n", "<br />");
