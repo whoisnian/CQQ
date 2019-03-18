@@ -34,11 +34,15 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 托盘图标
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
+* [ ] 表情选择框性能优化
+* [ ] 细节优化：为鼠标指向图片显示预览增加延时，防止滚动消息时鼠标碰到图片而停下
+* [ ] 细节优化：增加滚动到底部按钮
+* [ ] 细节优化：自动清理下载图片失败后遗留的空文件
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
 * ~~与单个聊天对象的聊天信息过多时，自动滚动会无法滚动到最底部，程序中的具体表现是`QTextBrowser`调用`setHtml()`后立即获取`verticalScrollBar()->maximum()`，得到的最大值不正确。推测可能是`QTextBrowser`渲染需要时间，渲染结束后才可以获得正确的值。~~ 已使用`scrollToAnchor()`方法避免。
-* CoolQ HTTP API推送的消息中少数CQ码的图片url无法打开，表现为下载失败，手动复制链接出来访问时显示404，推测与CoolQ HTTP API缓存有关，需要进一步验证。
+* CoolQ HTTP API推送的消息中少数CQ码的图片url无法打开，表现为下载失败，手动复制链接出来访问时显示404，~~推测与CoolQ HTTP API缓存有关，需要进一步验证。~~ 未发现明显原因。
 * 离线消息由于CoolQ HTTP API的接口限制，可能需要特殊方法实现。
 * 发送图片时存在大小限制，需要进一步测试。
 * 插入emoji表情时的表格存在性能问题，拉伸选择emoji窗口时比较明显，需要换用其它方式进行选择。
