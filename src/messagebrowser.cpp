@@ -9,12 +9,39 @@ MessageBrowser::MessageBrowser(QMainWindow *mainWindow, QWidget *parent)
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     curChatID = "";
     curChatType = Chat::Private;
+
     connect(this, SIGNAL(anchorClicked(const QUrl &)),
             this, SLOT(showClickedAnchor(const QUrl &)));
     connect(this, SIGNAL(highlighted(const QUrl &)),
             this, SLOT(showHighlighted(const QUrl &)));
     connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)),
             this, SLOT(disableQScrollBar(int)));
+}
+
+void MessageBrowser::setColor(QString backgroundColor,
+                              QString foregroundColor)
+{
+    this->backgroundColor = backgroundColor;
+    this->foregroundColor = foregroundColor;
+
+    goDownButton = new QPushButton(QIcon::fromTheme("go-down"),
+                                   "",
+                                   this);
+    goDownButton->setStyleSheet("QPushButton{"
+                                "background-color:" + backgroundColor + ";"
+                                "color:" + foregroundColor + ";"
+                                "border-radius:18px;"
+                                "}"
+                                "QPushButton:pressed{"
+                                "background-color:#3daee9"
+                                "}");
+    goDownButton->setToolTip("滚动到底部");
+    goDownButton->hide();
+
+    connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)),
+            this, SLOT(displayGoDownButton(int)));
+    connect(goDownButton, SIGNAL(clicked()),
+            this, SLOT(scrollToBottom()));
 }
 
 void MessageBrowser::setCacheManager(CacheManager *cacheManager)
@@ -134,9 +161,9 @@ void MessageBrowser::updateContent()
                         "margin-right:0px;"
                         "-qt-block-indent:0;"
                         "text-indent:0px;\">"
-                        "<span style=\" color:" + nicknameColor + ";"
+                        "<span style=\" color:" + foregroundColor + ";"
                         "background-color:"
-                        + nicknameBackgroundColor
+                        + backgroundColor
                         + ";\">&nbsp;"
                         + it->senderName +
                         "&nbsp;</span><img src=\""
@@ -172,9 +199,9 @@ void MessageBrowser::updateContent()
                           "height=\"30\""
                           "style=\"vertical-align: top;\" />"
                           "<span style=\""
-                          "color:" + nicknameColor + ";"
+                          "color:" + foregroundColor + ";"
                           "background-color:"
-                          + nicknameBackgroundColor
+                          + backgroundColor
                           + ";\">&nbsp;"
                           + it->senderName +
                           "&nbsp;</span></p>");
@@ -308,4 +335,26 @@ void MessageBrowser::showHighlighted(const QUrl &link)
 void MessageBrowser::disableQScrollBar(int)
 {
     this->horizontalScrollBar()->setValue(0);
+}
+
+void MessageBrowser::displayGoDownButton(int value)
+{
+    if(value < this->verticalScrollBar()->maximum())
+    {
+        goDownButton->setGeometry(this->width()-64, this->height()-50,
+                                  36, 36);
+        goDownButton->show();
+    }
+    else
+    {
+        goDownButton->hide();
+    }
+    this->verticalScrollBar()->setValue(value);
+}
+
+void MessageBrowser::scrollToBottom()
+{
+    qDebug() << "scrollToBottom";
+    this->scrollToAnchor("EndMessages");
+    this->setFocus();
 }

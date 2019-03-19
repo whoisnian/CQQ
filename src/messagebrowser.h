@@ -6,6 +6,7 @@
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QMainWindow>
+#include <QPushButton>
 #include <QScrollBar>
 #include <QTextBrowser>
 #include "cachemanager.h"
@@ -20,14 +21,15 @@ class MessageBrowser : public QTextBrowser
 
 public:
     MessageBrowser(QMainWindow *mainWindow, QWidget *parent = nullptr);
+    void setColor(QString backgroundColor, QString foregroundColor);
     void setCacheManager(CacheManager *cacheManager);
     void setChatManager(ChatManager *chatManager);
     void setChatList(ChatList *chatList);
 
     QString curChatID;
     Chat::Type curChatType;
-    QString nicknameColor;
-    QString nicknameBackgroundColor;
+    QString foregroundColor;
+    QString backgroundColor;
 
     enum ScrollType
     {
@@ -48,9 +50,14 @@ private slots:
     void showHighlighted(const QUrl &link);
     // 锁定并隐藏横向滚动条
     void disableQScrollBar(int value);
+    // 判断并确定是否显示滚动到底部按钮
+    void displayGoDownButton(int value);
+    // 滚动到底部
+    void scrollToBottom();
 
 private:
     QMainWindow *mainWindow;
+    QPushButton *goDownButton;
     CacheManager *cacheManager;
     ChatManager *chatManager;
     ChatList *chatList;

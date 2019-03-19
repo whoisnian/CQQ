@@ -48,14 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
     windowColor.getHslF(&h, &s, &l);
     if(l > 0.5)
     {
-        messageBrowser->nicknameColor = "#000000";
-        messageBrowser->nicknameBackgroundColor = "#dddddd";
+        messageBrowser->setColor("#dddddd", "#000000");
         CQCode::messageHighlightColor = "#f67400";
     }
     else
     {
-        messageBrowser->nicknameColor = "#ffffff";
-        messageBrowser->nicknameBackgroundColor = "#31363b";
+        messageBrowser->setColor("#31363b", "#ffffff");
         CQCode::messageHighlightColor = "#f67400";
     }
 
