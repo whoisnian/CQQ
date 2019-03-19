@@ -253,10 +253,12 @@ void MessageBrowser::showHighlighted(const QUrl &link)
     maxw = maxh = 500;
     QImage image;
     image.load(link.toLocalFile());
+    // 小图片不需要预览图
     if(image.width() < 64&&image.height() < 64)
     {
         return;
     }
+    // 按最大宽高缩放预览图
     if(image.width() > maxw||image.height() > maxh)
     {
         if(image.width() * maxh < image.height() * maxw)
@@ -277,7 +279,27 @@ void MessageBrowser::showHighlighted(const QUrl &link)
     imageTooltip = new QWidget(nullptr, Qt::ToolTip);
     imageTooltip->setPalette(palette);
     imageTooltip->setAutoFillBackground(true);
-    imageTooltip->setGeometry(QCursor::pos().x(), QCursor::pos().y(),
+    // 判断预览图显示位置
+    int posX, posY;
+    if(QCursor::pos().x() + 1 + image.width()
+            <= QApplication::desktop()->width())
+    {
+        posX = QCursor::pos().x() + 1;
+    }
+    else
+    {
+        posX = QCursor::pos().x() - 1 - image.width();
+    }
+    if(QCursor::pos().y() + image.height()
+            <= QApplication::desktop()->height())
+    {
+        posY = QCursor::pos().y();
+    }
+    else
+    {
+        posY = QCursor::pos().y() - image.height();
+    }
+    imageTooltip->setGeometry(posX, posY,
                               image.width(), image.height());
     imageTooltip->show();
 }
