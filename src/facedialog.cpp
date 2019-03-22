@@ -31,46 +31,33 @@ FaceDialog::FaceDialog(QWidget *parent)
     this->setParent(parent, Qt::Dialog);
 
     // 7*23+2 = 163 = 13*13-6
-    // NeedToBeDone: 这里使用QTableWidget存在性能问题，需要优化
-    QHBoxLayout *faceDialogLayout = new QHBoxLayout(this);
-    QTableWidget *tableWidget = new QTableWidget(13, 13, this);
-    tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    tableWidget->horizontalHeader()->hide();
-    tableWidget->verticalHeader()->hide();
-    tableWidget->horizontalHeader()->setStretchLastSection(true);
-    faceDialogLayout->addWidget(tableWidget);
-
-    for(int i = 0;i < emojiList.length();i++)
-    {
-        QTableWidgetItem *temp = new QTableWidgetItem(emojiList.at(i));
-        temp->setTextAlignment(Qt::AlignCenter);
-        temp->setFlags(temp->flags()^Qt::ItemIsEditable);
-        tableWidget->setItem(i/13, i%13, temp);
-    }
-    int width = tableWidget->rowHeight(0);
-    for(int i = 0;i < 13;i++)
-    {
-        tableWidget->setColumnWidth(i, width);
-    }
-
-    int dialogWidth = tableWidget->horizontalHeader()->length()+4;
-    int dialogHeight = tableWidget->verticalHeader()->length()+4;
-    tableWidget->setFixedSize(dialogWidth, dialogHeight);
-
-    faceDialogLayout->setMargin(0);
-    faceDialogLayout->setSpacing(0);
-    this->setLayout(faceDialogLayout);
+    QGridLayout *faceDialogLayout = new QGridLayout(this);
+    //faceDialogLayout->setMargin(0);
+    //faceDialogLayout->setSpacing(0);
     this->setWindowTitle("emoji 表情");
     this->setWindowIcon(QIcon::fromTheme("smiley-shape"));
     this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    connect(tableWidget, SIGNAL(itemClicked(QTableWidgetItem *)),
-            this, SLOT(dialogFinish(QTableWidgetItem *)));
+
+    QLabel temp;
+    QFont font = temp.font();
+    font.setPointSize(20);
+    for(int i = 0;i < emojiList.length();i++)
+    {
+        QLabel *temp = new QLabel(emojiList.at(i), this);
+        temp->setToolTip(emojiList.at(i));
+        temp->setFont(font);
+        temp->setAlignment(Qt::AlignCenter);
+        faceDialogLayout->addWidget(temp, i/13, i%13);
+    }
 }
 
-void FaceDialog::dialogFinish(QTableWidgetItem *item)
+void FaceDialog::mousePressEvent(QMouseEvent *event)
 {
-    emit dialogFinished(item->text());
-    this->accept();
+    if(this->childAt(event->pos()) != nullptr)
+    {
+        emit dialogFinished(static_cast<QLabel *>(
+                                this->childAt(event->pos()))->text());
+        this->accept();
+    }
 }

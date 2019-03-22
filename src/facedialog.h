@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QLabel>
+#include <QMouseEvent>
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QWidget>
@@ -21,8 +23,8 @@ public:
 signals:
     void dialogFinished(QString face);
 
-private slots:
-    void dialogFinish(QTableWidgetItem *item);
+protected:
+    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // FACEDIALOG_H

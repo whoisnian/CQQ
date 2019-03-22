@@ -264,6 +264,7 @@ void MainWindow::init()
 void MainWindow::insertFace(QString face)
 {
     messageEdit->insertPlainText(face);
+    messageEdit->setFocus();
 }
 
 void MainWindow::sendImage(QString fileName)
