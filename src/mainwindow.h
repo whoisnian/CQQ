@@ -7,6 +7,7 @@
 #include <QMenuBar>
 #include <QSplitter>
 #include <QStatusBar>
+#include <QSystemTrayIcon>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include "chatlist.h"
@@ -56,6 +57,7 @@ private slots:
     void resetWindowSize();
     void changeSetting();
     void clearAndRestart();
+    void quitApp();
     void about();
 
 protected:

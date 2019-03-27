@@ -154,7 +154,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     fileMenu->addSeparator();
     fileMenu->addAction(QIcon::fromTheme("application-exit"),
-                        "退出", qApp, SLOT(closeAllWindows()),
+                        "退出", this, SLOT(quitApp()),
                         QKeySequence::Quit);
 
     QAction *resetWindowSizeAction = new QAction(
@@ -180,6 +180,32 @@ MainWindow::MainWindow(QWidget *parent)
 
     helpMenu->addAction(QIcon::fromTheme("help-about"),
                         "关于", this, SLOT(about()));
+
+    // 托盘图标菜单
+    QMenu *trayIconMenu = new QMenu(this);
+    //trayIconMenu->addMenu(Menu);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(QIcon::fromTheme("application-exit"),
+                            "退出", this, SLOT(quitApp()),
+                            QKeySequence::Quit);
+
+    // 托盘图标
+    QSystemTrayIcon *trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setToolTip("CQQ");
+    trayIcon->setIcon(QIcon::fromTheme("im-qq"));
+    trayIcon->setContextMenu(trayIconMenu);
+    connect(trayIcon, &QSystemTrayIcon::activated, this, [this](){
+        if(this->isVisible())
+        {
+            this->hide();
+        }
+        else
+        {
+            this->show();
+        }
+    });
+    trayIcon->setVisible(true);
+    trayIcon->show();
 
     connect(messageEditTool, SIGNAL(insertFace(QString)),
             this, SLOT(insertFace(QString)));
@@ -586,7 +612,7 @@ void MainWindow::about()
     QMessageBox::about(this, "About",
                  "<b>CQQ</b>"\
                  "<p>Based on Qt Creator 4.8.2</p>"\
-                 "<p>Based on Qt 5.12.1 (GCC 8.2.1 20181127, 64 bit)</p>");
+                 "<p>Based on Qt 5.12.2 (GCC 8.2.1 20181127, 64 bit)</p>");
 }
 
 void MainWindow::clearAndRestart()
@@ -614,14 +640,19 @@ void MainWindow::clearAndRestart()
     qApp->exit(233);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::quitApp()
 {
-    qDebug() << "closeEvent";
     CONFIG->configMainWindowWidth = this->width();
     CONFIG->configMainWindowHeight = this->height();
     CONFIG->saveConfig();
     cacheManager->saveChatManager(chatManager);
     delete chatManager;
     chatManager = nullptr;
-    event->accept();
+    qApp->exit(0);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    this->hide();
+    event->ignore();
 }
