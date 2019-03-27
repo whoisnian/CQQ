@@ -128,15 +128,11 @@ MainWindow::MainWindow(QWidget *parent)
     contactTabLayout->addWidget(contactTabSplitter);
     contactTab->setLayout(contactTabLayout);
 
-    // 菜单栏
-    QMenu *fileMenu = new QMenu("文件(&F)", this);
-    this->menuBar()->addMenu(fileMenu);
-    QMenu *viewMenu = new QMenu("视图(&V)", this);
-    this->menuBar()->addMenu(viewMenu);
-    QMenu *settingMenu = new QMenu("设置(&S)", this);
-    this->menuBar()->addMenu(settingMenu);
-    QMenu *helpMenu = new QMenu("帮助(&H)", this);
-    this->menuBar()->addMenu(helpMenu);
+    // 菜单
+    QMenu *fileMenu = new QMenu("文件", this);
+    QMenu *viewMenu = new QMenu("视图", this);
+    QMenu *settingMenu = new QMenu("设置", this);
+    QMenu *helpMenu = new QMenu("帮助", this);
 
     QAction *openCacheDirAction = new QAction(
                 QIcon::fromTheme("document-open"), "打开缓存目录", this);
@@ -151,11 +147,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(clearCacheAction, SIGNAL(triggered()),
             this, SLOT(clearCache()));
     fileMenu->addAction(clearCacheAction);
-
-    fileMenu->addSeparator();
-    fileMenu->addAction(QIcon::fromTheme("application-exit"),
-                        "退出", this, SLOT(quitApp()),
-                        QKeySequence::Quit);
 
     QAction *resetWindowSizeAction = new QAction(
                 QIcon::fromTheme("kt-restore-defaults"), "重置布局", this);
@@ -183,14 +174,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 托盘图标菜单
     QMenu *trayIconMenu = new QMenu(this);
-    //trayIconMenu->addMenu(Menu);
+    trayIconMenu->addMenu(fileMenu);
+    trayIconMenu->addMenu(viewMenu);
+    trayIconMenu->addMenu(settingMenu);
+    trayIconMenu->addMenu(helpMenu);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(QIcon::fromTheme("application-exit"),
-                            "退出", this, SLOT(quitApp()),
-                            QKeySequence::Quit);
+                            "退出", this, SLOT(quitApp()));
 
     // 托盘图标
-    QSystemTrayIcon *trayIcon = new QSystemTrayIcon(this);
+    trayIcon = new QSystemTrayIcon(this);
     trayIcon->setToolTip("CQQ");
     trayIcon->setIcon(QIcon::fromTheme("im-qq"));
     trayIcon->setContextMenu(trayIconMenu);
@@ -202,6 +195,7 @@ MainWindow::MainWindow(QWidget *parent)
         else
         {
             this->show();
+            this->activateWindow();
         }
     });
     trayIcon->setVisible(true);

@@ -84,6 +84,8 @@ private:
     QSplitter *chatWidgetSplitter;
     QSplitter *messageTabSplitter;
     QSplitter *contactTabSplitter;
+
+    QSystemTrayIcon *trayIcon;
 };
 
 #endif // MAINWINDOW_H

@@ -27,6 +27,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [x] 细节优化：为鼠标指向图片显示预览增加偏移，防止滚动消息时鼠标碰到图片而停下，同时根据屏幕左右剩余宽度确定预览图放置位置
 * [x] 细节优化：增加滚动到底部按钮
 * [x] 表情选择框优化
+* [x] 托盘图标
 
 ## 希望实现
 
@@ -34,10 +35,12 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 撤回消息
 * [ ] at 群组成员
 * [ ] 新消息提醒
-* [ ] 托盘图标
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
+* [ ] 活跃聊天对象自动前置
 * [ ] 细节优化：自动清理下载图片失败后遗留的空文件
+* [ ] 细节优化：隐藏至托盘区后消息框暂停自动滚动
+* [ ] 关闭通知功能
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
