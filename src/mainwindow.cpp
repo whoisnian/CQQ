@@ -258,6 +258,8 @@ void MainWindow::init()
                 this, SLOT(updateLoginInfo(QString, QString)));
         connect(WSConn, SIGNAL(newMessageReceived()),
                 messageBrowser, SLOT(updateContent()));
+        connect(WSConn, SIGNAL(notifyMessage(QString, QString, QIcon)),
+                this, SLOT(notifyMessage(QString, QString, QIcon)));
         connect(cacheManager, SIGNAL(getAllAvatarFinished()),
                 this, SLOT(reloadAvatar()));
         WSConn->getLoginInfo();
@@ -618,6 +620,12 @@ void MainWindow::trayIconClicked()
         this->activateWindow();
         qDebug() << this->oldPos << this->pos();
     }
+}
+
+void MainWindow::notifyMessage(QString title, QString message, QIcon icon)
+{
+    if(this->isHidden()||this->isMinimized())
+        trayIcon->showMessage(title, message, icon);
 }
 
 void MainWindow::clearAndRestart()

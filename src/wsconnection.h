@@ -63,6 +63,7 @@ public:
 signals:
     void getLoginInfoFinished(QString id, QString nickname);
     void newMessageReceived();
+    void notifyMessage(QString title, QString message, QIcon icon);
 
 private slots:
     void wsAPIConnected();

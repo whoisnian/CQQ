@@ -30,13 +30,13 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [x] 托盘图标
 * [x] 细节优化：隐藏至托盘区后消息框暂停自动滚动
 * [x] 细节优化：自动清理下载图片失败后遗留的空文件
+* [x] 简单的新消息提醒
 
 ## 希望实现
 
 * [ ] 消息部分加载
 * [ ] 撤回消息
 * [ ] at 群组成员
-* [ ] 新消息提醒
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
 * [ ] 活跃聊天对象自动前置
@@ -48,10 +48,10 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * CoolQ HTTP API推送的消息中少数CQ码的图片url无法打开，表现为下载失败，手动复制链接出来访问时显示404，~~推测与CoolQ HTTP API缓存有关，需要进一步验证。~~ 未发现明显原因。
 * 离线消息由于CoolQ HTTP API的接口限制，可能需要特殊方法实现。
 * 发送图片时存在大小限制，需要进一步测试。
-* 插入emoji表情时的表格存在性能问题，拉伸选择emoji窗口时比较明显，需要换用其它方式进行选择。
+* ~~插入emoji表情时的表格存在性能问题，拉伸选择emoji窗口时比较明显，需要换用其它方式进行选择。~~ 已换用QGridLayout+QLabel
 * 截图功能未实现，当前的截图按钮是发送剪切版中的文件名对应的图片，可以识别类似`/home/nian/test.png`或者`file:///home/nian/test.png`格式的路径。可以在系统默认截图工具中设置保存图片后复制路径到剪切版，搭配系统截图工具实现发送截图功能。
 * 图片预览需要放大，缩小，拖动，旋转功能，当前程序中调用系统默认图片查看器打开图片文件。
-* Qt的QNetworkAccessManager首次下载任务报`QNetworkReplyHttpImplPrivate::_q_startOperation was called more than once`，需要解决。
+* ~~Qt的QNetworkAccessManager首次下载任务报`QNetworkReplyHttpImplPrivate::_q_startOperation was called more than once`，需要解决。~~ 更新Qt后尚未出现
 
 ## 截图
 ![screenshot1.png](screenshots/screenshot1.png)

@@ -61,6 +61,7 @@ private slots:
     void about();
 
     void trayIconClicked();
+    void notifyMessage(QString title, QString message, QIcon icon);
 
 protected:
     void closeEvent(QCloseEvent *event);
