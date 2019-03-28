@@ -85,7 +85,10 @@ QString CacheManager::getAvatar(QString ID, AvatarType type, int size)
                 + ID + "_" + QString::number(size);
     }
 
-    if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
+    // 图片文件存在且不为空
+    if(QFileInfo::exists(realPath)
+            &&QFileInfo(realPath).isFile()
+            &&QFileInfo(realPath).size() > 10)
     {
         avatarNum--;
         return realPath;
@@ -103,7 +106,10 @@ QString CacheManager::getImage(QString file, QString urlString)
     QString realPath = "";
     realPath = cachePath + "/image/" + file;
 
-    if(QFileInfo::exists(realPath)&&QFileInfo(realPath).isFile())
+    // 图片文件存在且不为空
+    if(QFileInfo::exists(realPath)
+            &&QFileInfo(realPath).isFile()
+            &&QFileInfo(realPath).size() > 10)
         return realPath;
 
     if(url.isEmpty())

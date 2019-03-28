@@ -29,6 +29,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [x] 表情选择框优化
 * [x] 托盘图标
 * [x] 细节优化：隐藏至托盘区后消息框暂停自动滚动
+* [x] 细节优化：自动清理下载图片失败后遗留的空文件
 
 ## 希望实现
 
@@ -39,7 +40,6 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
 * [ ] 活跃聊天对象自动前置
-* [ ] 细节优化：自动清理下载图片失败后遗留的空文件
 * [ ] 关闭通知功能
 
 ## 说明

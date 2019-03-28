@@ -49,8 +49,10 @@ void DownloadManager::startNextDownload()
 
     Task temp = downloadQueue.head();
 
-    // 准备开始下载任务时检测到文件已存在，则认为已下载过，开始下一次下载
-    if(QFileInfo::exists(temp.path)&&QFileInfo(temp.path).isFile())
+    // 准备开始下载任务时检测到文件已存在且不为空，则认为已下载过，开始下一次下载
+    if(QFileInfo::exists(temp.path)
+            &&QFileInfo(temp.path).isFile()
+            &&QFileInfo(temp.path).size() > 10)
     {
         startNextDownload();
         return;
