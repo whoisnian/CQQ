@@ -130,9 +130,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 菜单
     QMenu *fileMenu = new QMenu("文件", this);
+    fileMenu->setIcon(QIcon::fromTheme("document-page-setup-symbolic"));
     QMenu *viewMenu = new QMenu("视图", this);
+    viewMenu->setIcon(QIcon::fromTheme("view-visible"));
     QMenu *settingMenu = new QMenu("设置", this);
+    settingMenu->setIcon(QIcon::fromTheme("practice-setup"));
     QMenu *helpMenu = new QMenu("帮助", this);
+    helpMenu->setIcon(QIcon::fromTheme("help-contents"));
 
     QAction *openCacheDirAction = new QAction(
                 QIcon::fromTheme("document-open"), "打开缓存目录", this);
