@@ -84,7 +84,8 @@ void MessageBrowser::updateContent()
     {
         oldScrollValue = this->verticalScrollBar()->value();
         if(oldScrollValue == this->verticalScrollBar()->maximum()
-                &&(!mainWindow->isMinimized()))
+                &&(!mainWindow->isMinimized())
+                &&(!mainWindow->isHidden()))
         {
             scrollType = ScrollType::ScrollToEndAnchor;
         }

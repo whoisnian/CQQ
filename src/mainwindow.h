@@ -60,6 +60,8 @@ private slots:
     void quitApp();
     void about();
 
+    void trayIconClicked();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
@@ -70,6 +72,7 @@ private:
     CacheManager *cacheManager;
     QString *selfID;
     QString *selfNickname;
+    QPoint oldPos;
 
     QTabWidget *mainTabWidget;
     ChatList *chatList;

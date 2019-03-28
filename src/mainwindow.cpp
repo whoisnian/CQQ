@@ -187,17 +187,8 @@ MainWindow::MainWindow(QWidget *parent)
     trayIcon->setToolTip("CQQ");
     trayIcon->setIcon(QIcon::fromTheme("im-qq"));
     trayIcon->setContextMenu(trayIconMenu);
-    connect(trayIcon, &QSystemTrayIcon::activated, this, [this](){
-        if(this->isVisible())
-        {
-            this->hide();
-        }
-        else
-        {
-            this->show();
-            this->activateWindow();
-        }
-    });
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(trayIconClicked()));
     trayIcon->setVisible(true);
     trayIcon->show();
 
@@ -609,6 +600,26 @@ void MainWindow::about()
                  "<p>Based on Qt 5.12.2 (GCC 8.2.1 20181127, 64 bit)</p>");
 }
 
+void MainWindow::trayIconClicked()
+{
+    if(this->isVisible())
+    {
+        oldPos = this->pos();
+        this->hide();
+        qDebug() << this->oldPos;
+    }
+    else
+    {
+        // hide() 和 show() 之间move有bug，相同位置move会被忽略
+        // https://bugreports.qt.io/browse/QTBUG-56579
+        this->move(oldPos.x()+1, oldPos.y());
+        this->show();
+        this->move(oldPos);
+        this->activateWindow();
+        qDebug() << this->oldPos << this->pos();
+    }
+}
+
 void MainWindow::clearAndRestart()
 {
     qDebug() << "clear and restart";
@@ -647,6 +658,7 @@ void MainWindow::quitApp()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    oldPos = this->pos();
     this->hide();
     event->ignore();
 }
