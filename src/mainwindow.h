@@ -2,9 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QCloseEvent>
+#include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QScreen>
 #include <QSplitter>
 #include <QStatusBar>
 #include <QSystemTrayIcon>

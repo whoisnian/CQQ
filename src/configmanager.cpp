@@ -84,6 +84,7 @@ bool ConfigManager::loadConfig()
     QDataStream ds(&configFile);
     ds >> this->configAddress
        >> this->configToken
+       >> this->configPos
        >> this->configMainWindowWidth
        >> this->configMainWindowHeight
        >> this->configChatWidgetSplitterSizes
@@ -118,6 +119,7 @@ void ConfigManager::saveConfig()
     QDataStream ds(&configFile);
     ds << this->configAddress
        << this->configToken
+       << this->configPos
        << this->configMainWindowWidth
        << this->configMainWindowHeight
        << this->configChatWidgetSplitterSizes

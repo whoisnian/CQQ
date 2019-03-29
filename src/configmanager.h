@@ -47,6 +47,7 @@ public:
     QString configAddress;          // COOLQ 服务器地址
     QString configToken;            // COOLQ Token
 
+    QPoint configPos;               // 主窗口位置
     int configMainWindowWidth;      // 主窗口宽度
     int configMainWindowHeight;     // 主窗口高度
 

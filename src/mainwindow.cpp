@@ -12,6 +12,12 @@ MainWindow::MainWindow(QWidget *parent)
     {
         CONFIG->resetWindowSize();
         CONFIG->changeConfig(true);
+        CONFIG->configPos.rx() =
+                (QGuiApplication::primaryScreen()->availableSize().width()
+                 - CONFIG->configMainWindowWidth)/2;
+        CONFIG->configPos.ry() =
+                (QGuiApplication::primaryScreen()->availableSize().height()
+                 - CONFIG->configMainWindowHeight)/2;
     }
 
     chatManager = new ChatManager;
@@ -19,8 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 主窗口设置
     this->setWindowIcon(QIcon::fromTheme("im-qq"));
-    this->resize(CONFIG->configMainWindowWidth,
-                 CONFIG->configMainWindowHeight);
+    this->setGeometry(CONFIG->configPos.x(),
+                      CONFIG->configPos.y(),
+                      CONFIG->configMainWindowWidth,
+                      CONFIG->configMainWindowHeight);
     this->statusBar()->clearMessage();
 
     // 主 TabWidget
@@ -628,6 +636,9 @@ void MainWindow::trayIconClicked()
 
 void MainWindow::notifyMessage(QString title, QString message, QIcon icon)
 {
+    if(true)
+        return;
+    // 窗口最小化或者隐藏时才显示通知
     if(this->isHidden()||this->isMinimized())
         trayIcon->showMessage(title, message, icon);
 }
@@ -659,6 +670,7 @@ void MainWindow::clearAndRestart()
 
 void MainWindow::quitApp()
 {
+    CONFIG->configPos = this->pos();
     CONFIG->configMainWindowWidth = this->width();
     CONFIG->configMainWindowHeight = this->height();
     CONFIG->saveConfig();
