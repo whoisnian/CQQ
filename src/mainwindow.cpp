@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
         CONFIG->configPos.ry() =
                 (QGuiApplication::primaryScreen()->availableSize().height()
                  - CONFIG->configMainWindowHeight)/2;
+        CONFIG->configEnableNotify = true;
     }
 
     chatManager = new ChatManager;
@@ -173,6 +174,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(reloadAvatarAction, SIGNAL(triggered()),
             this, SLOT(reloadAvatar()));
     viewMenu->addAction(reloadAvatarAction);
+
+    QAction *changeNotifyAction = new QAction(
+                QIcon::fromTheme("message-new"), "允许通知", this);
+    changeNotifyAction->setStatusTip("允许通知");
+    changeNotifyAction->setCheckable(true);
+    changeNotifyAction->setChecked(CONFIG->configEnableNotify);
+    connect(changeNotifyAction, SIGNAL(toggled(bool)),
+            this, SLOT(changeNotify(bool)));
+    settingMenu->addAction(changeNotifyAction);
 
     QAction *changeSettingAction = new QAction(
                 QIcon::fromTheme("settings-configure"), "修改设置", this);
@@ -606,6 +616,11 @@ void MainWindow::changeSetting()
             Qt::UniqueConnection);
 }
 
+void MainWindow::changeNotify(bool checked)
+{
+    CONFIG->configEnableNotify = checked;
+}
+
 void MainWindow::about()
 {
     QMessageBox::about(this, "About",
@@ -636,7 +651,7 @@ void MainWindow::trayIconClicked()
 
 void MainWindow::notifyMessage(QString title, QString message, QIcon icon)
 {
-    if(true)
+    if(!CONFIG->configEnableNotify)
         return;
     // 窗口最小化或者隐藏时才显示通知
     if(this->isHidden()||this->isMinimized())

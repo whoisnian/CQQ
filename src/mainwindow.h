@@ -58,6 +58,7 @@ private slots:
     void clearCache();
     void resetWindowSize();
     void changeSetting();
+    void changeNotify(bool checked);
     void clearAndRestart();
     void quitApp();
     void about();

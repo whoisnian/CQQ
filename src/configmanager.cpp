@@ -87,6 +87,7 @@ bool ConfigManager::loadConfig()
        >> this->configPos
        >> this->configMainWindowWidth
        >> this->configMainWindowHeight
+       >> this->configEnableNotify
        >> this->configChatWidgetSplitterSizes
        >> this->configMessageTabSplitterSizes
        >> this->configContactTabSplitterSizes;
@@ -122,6 +123,7 @@ void ConfigManager::saveConfig()
        << this->configPos
        << this->configMainWindowWidth
        << this->configMainWindowHeight
+       << this->configEnableNotify
        << this->configChatWidgetSplitterSizes
        << this->configMessageTabSplitterSizes
        << this->configContactTabSplitterSizes;

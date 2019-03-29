@@ -51,6 +51,8 @@ public:
     int configMainWindowWidth;      // 主窗口宽度
     int configMainWindowHeight;     // 主窗口高度
 
+    bool configEnableNotify;        // 允许通知
+
     QList<int> configChatWidgetSplitterSizes;   // 消息 Tab 中的聊天区域布局
     QList<int> configMessageTabSplitterSizes;   // 主 TabWidget 的消息 Tab 布局
     QList<int> configContactTabSplitterSizes;   // 主 TabWidget 的联系人 Tab 布局

@@ -31,6 +31,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [x] 细节优化：隐藏至托盘区后消息框暂停自动滚动
 * [x] 细节优化：自动清理下载图片失败后遗留的空文件
 * [x] 简单的新消息提醒
+* [x] 关闭通知功能
 
 ## 希望实现
 
@@ -40,7 +41,6 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * [ ] 重试机制修改
 * [ ] 加入 QQ face
 * [ ] 活跃聊天对象自动前置
-* [ ] 关闭通知功能
 
 ## 说明
 * Websocket需要使用心跳来维持连接，wsEVENT接口由服务端发送[心跳事件](https://cqhttp.cc/docs/4.8/#/Post?id=%E5%BF%83%E8%B7%B3)，wsAPI接口由客户端每15s（模仿服务端心跳间隔）发送一次`get_status`请求。
