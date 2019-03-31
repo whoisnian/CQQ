@@ -5,6 +5,8 @@ ChatList::ChatList(QWidget *parent)
 {
     this->setParent(parent);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->setTextElideMode(Qt::ElideMiddle);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showContextMenu(const QPoint &)));
 }
