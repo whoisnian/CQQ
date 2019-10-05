@@ -35,12 +35,12 @@ MainWindow::MainWindow(QWidget *parent)
     // 主 TabWidget
     mainTabWidget = new QTabWidget(this);
     mainTabWidget->setFocusPolicy(Qt::NoFocus);
-    mainTabWidget->setIconSize(QSize(64, 16));
+    mainTabWidget->setIconSize(QSize(16, 16));
     this->setCentralWidget(mainTabWidget);
 
     // 主 TabWidget 的消息 Tab
     QWidget *messageTab = new QWidget(mainTabWidget);
-    mainTabWidget->addTab(messageTab, QIcon::fromTheme("message-new"), "");
+    mainTabWidget->addTab(messageTab, QIcon::fromTheme("message-new"), "聊天");
 
     // 消息 Tab 中的聊天列表
     chatList = new ChatList(messageTab);
@@ -109,7 +109,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 主 TabWidget 的联系人 Tab
     QWidget *contactTab = new QWidget(mainTabWidget);
-    mainTabWidget->addTab(contactTab, QIcon::fromTheme("group"), "");
+    mainTabWidget->addTab(contactTab, QIcon::fromTheme("group"), "联系人");
 
     // 联系人 Tab 中的好友群组 TabWidget
     QTabWidget *contactTabWidget = new QTabWidget(contactTab);
