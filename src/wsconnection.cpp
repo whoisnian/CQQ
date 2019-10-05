@@ -47,11 +47,12 @@ bool WSConnection::isConnected()
     return false;
 }
 
-void WSConnection::addCommand(CommandType type, QString content)
+void WSConnection::addCommand(CommandType type, QString content, int retryCount)
 {
     Command temp;
     temp.content = content;
     temp.type = type;
+    temp.retryCount = retryCount;
     if(commandQueue.isEmpty())
     {
         commandQueue.enqueue(temp);
@@ -285,11 +286,15 @@ void WSConnection::wsAPIReceived(const QString message)
     else if(jsonDoc.object().value("retcode").toInt() == 104
             ||jsonDoc.object().value("retcode").toInt() < 0)
     {
-        qDebug() << "retry because of error retcode";
-        qDebug() << jsonDoc.object();
-        qDebug() << commandQueue.head().type << commandQueue.head().content;
-        addCommand(commandQueue.head().type,
-                   commandQueue.head().content);
+        if(commandQueue.head().retryCount < 3)
+        {
+            qDebug() << "retry" << commandQueue.head().retryCount+1 << "because of error retcode";
+            qDebug() << jsonDoc.object();
+            qDebug() << commandQueue.head().type << commandQueue.head().content;
+            addCommand(commandQueue.head().type,
+                       commandQueue.head().content,
+                       commandQueue.head().retryCount+1);
+        }
         startNextCommand();
         return;
     }

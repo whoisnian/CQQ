@@ -32,6 +32,7 @@ struct Command
 {
     QString content;
     CommandType type;
+    int retryCount;
 };
 
 // 处理 WebSocket 连接
@@ -50,7 +51,7 @@ public:
     ~WSConnection();
 
     bool isConnected();
-    void addCommand(CommandType type, QString content);
+    void addCommand(CommandType type, QString content, int retryCount = 0);
     void startNextCommand();
 
     void getLoginInfo();
