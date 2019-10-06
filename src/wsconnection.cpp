@@ -50,7 +50,7 @@ bool WSConnection::isConnected()
 void WSConnection::addCommand(CommandType type, QString content, int retryCount)
 {
     Command temp;
-    temp.content = content;
+    temp.content = content.simplified();
     temp.type = type;
     temp.retryCount = retryCount;
     if(commandQueue.isEmpty())
