@@ -184,6 +184,13 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(changeNotify(bool)));
     settingMenu->addAction(changeNotifyAction);
 
+    QAction *fetchFriendsAction = new QAction(
+                QIcon::fromTheme("download"), "抓取好友", this);
+    fetchFriendsAction->setStatusTip("抓取好友");
+    connect(fetchFriendsAction, SIGNAL(triggered()),
+            this, SLOT(fetchFriends()));
+    settingMenu->addAction(fetchFriendsAction);
+
     QAction *changeSettingAction = new QAction(
                 QIcon::fromTheme("settings-configure"), "修改设置", this);
     changeSettingAction->setStatusTip("修改设置");
@@ -606,6 +613,12 @@ void MainWindow::resetWindowSize()
     chatWidgetSplitter->setSizes(CONFIG->configChatWidgetSplitterSizes);
     messageTabSplitter->setSizes(CONFIG->configMessageTabSplitterSizes);
     contactTabSplitter->setSizes(CONFIG->configContactTabSplitterSizes);
+}
+
+void MainWindow::fetchFriends()
+{
+    QQMailLoginPage *qqMailLoginPage = new QQMailLoginPage();
+    qqMailLoginPage->run(friendList);
 }
 
 void MainWindow::changeSetting()

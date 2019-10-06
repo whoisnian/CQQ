@@ -17,6 +17,7 @@
 #include "configmanager.h"
 #include "contactlist.h"
 #include "cqcode.h"
+#include "fetchfriends.h"
 #include "infowidget.h"
 #include "messagebrowser.h"
 #include "messageedit.h"
@@ -57,6 +58,7 @@ private slots:
     void openCacheDir();
     void clearCache();
     void resetWindowSize();
+    void fetchFriends();
     void changeSetting();
     void changeNotify(bool checked);
     void clearAndRestart();
