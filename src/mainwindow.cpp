@@ -618,7 +618,7 @@ void MainWindow::resetWindowSize()
 void MainWindow::fetchFriends()
 {
     QQMailLoginPage *qqMailLoginPage = new QQMailLoginPage();
-    qqMailLoginPage->run(friendList);
+    qqMailLoginPage->run(cacheManager, friendList);
 }
 
 void MainWindow::changeSetting()

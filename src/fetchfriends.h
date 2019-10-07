@@ -1,13 +1,18 @@
 #ifndef FETCHFRIENDS_H
 #define FETCHFRIENDS_H
 
-#include <QObject>
 #include <QWebEnginePage>
 #include <QWebEngineProfile>
 #include <QWebEngineCookieStore>
 #include <QWebEngineUrlRequestInterceptor>
 #include <QWebEngineView>
 #include <QTimer>
+#include <QTextDocument>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QMap>
+#include "cachemanager.h"
 #include "contactlist.h"
 
 class QQMailLoginPage : public QWebEngineView
@@ -16,7 +21,7 @@ class QQMailLoginPage : public QWebEngineView
 
 public:
     QQMailLoginPage(QWidget *parent = nullptr);
-    void run(ContactList *friendList);
+    void run(CacheManager *cacheManager, ContactList *friendList);
 
 private slots:
     void urlChangedSlot(const QUrl &url);
@@ -24,6 +29,7 @@ private slots:
     void getContentSlot();
 
 private:
+    CacheManager *cacheManager;
     ContactList *friendList;
 };
 
