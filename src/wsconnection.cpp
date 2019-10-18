@@ -91,11 +91,8 @@ void WSConnection::getLoginInfo()
 void WSConnection::getFriendList(ContactList *friendList)
 {
     this->friendList = friendList;
-    QString content = "{\"action\":\
-                            \"_get_friend_list\",\
-                            \"params\":{\"flat\":false}\
-                       }";
-    addCommand(CommandType::_get_friend_list, content);
+    QString content = "{\"action\":\"get_friend_list\"}";
+    addCommand(CommandType::get_friend_list, content);
 }
 
 void WSConnection::getGroupList(ContactList *groupList)
@@ -318,49 +315,37 @@ void WSConnection::wsAPIReceived(const QString message)
         cacheManager->nicknameMap[ID] = Nickname;
         emit getLoginInfoFinished(ID, Nickname);
     }
-    else if(commandQueue.head().type == CommandType::_get_friend_list)
+    else if(commandQueue.head().type == CommandType::get_friend_list)
     {
-        qDebug() << "_get_friend_list";
+        qDebug() << "get_friend_list";
         if(jsonDoc.object().value("data").isArray())
         {
             friendList->clear();
             QJsonArray data = jsonDoc.object().value("data").toArray();
             for(int i = 0;i < data.size();i++)
             {
-                QTreeWidgetItem *topItem;
-                QString friendGroupName;
-                friendGroupName = data.at(i)
-                        .toObject().value("friend_group_name")
+                QString userID, nickname, remark, avatar;
+                userID = QString::number(data.at(i)
+                                         .toObject().value("user_id")
+                                         .toVariant().toLongLong());
+                nickname = data.at(i)
+                        .toObject().value("nickname")
                         .toString();
-                topItem = friendList->addTopItem(friendGroupName);
-                QJsonArray friends = data.at(i)
-                        .toObject().value("friends")
-                        .toArray();
-                for(int j = 0;j < friends.size();j++)
+                remark = data.at(i)
+                        .toObject().value("remark")
+                        .toString();
+                cacheManager->avatarNum++;
+                avatar = cacheManager->getAvatar(userID,
+                                                 CacheManager::Friend,
+                                                 100);
+                if(remark.isEmpty())
                 {
-                    QString userID, nickname, remark, avatar;
-                    userID = QString::number(friends.at(j)
-                                             .toObject().value("user_id")
-                                             .toVariant().toLongLong());
-                    nickname = friends.at(j)
-                            .toObject().value("nickname")
-                            .toString();
-                    remark = friends.at(j)
-                            .toObject().value("remark")
-                            .toString();
-                    cacheManager->avatarNum++;
-                    avatar = cacheManager->getAvatar(userID,
-                                                     CacheManager::Friend,
-                                                     100);
-                    if(remark.isEmpty())
-                    {
-                        remark = nickname;
-                    }
-                    cacheManager->nicknameMap[userID] = nickname;
-                    cacheManager->remarkMap[userID] = remark;
-                    friendList->addChildItem(remark, nickname, userID,
-                                             topItem, avatar);
+                    remark = nickname;
                 }
+                cacheManager->nicknameMap[userID] = nickname;
+                cacheManager->remarkMap[userID] = remark;
+                friendList->addChildItem(remark, nickname, userID,
+                                         nullptr, avatar);
             }
         }
     }

@@ -21,7 +21,7 @@
 enum CommandType
 {
     get_login_info,
-    _get_friend_list,
+    get_friend_list,
     get_group_list,
     get_group_member_info,
     get_status,
