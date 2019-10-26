@@ -71,7 +71,6 @@ bool ConfigManager::loadConfig()
     QString configPath = QStandardPaths::writableLocation(
                 QStandardPaths::AppConfigLocation);
     QDir dir;
-    qDebug() << configPath;
     if(!dir.exists(configPath))
     {
         dir.mkpath(configPath);

@@ -11,7 +11,6 @@ CacheManager::CacheManager(QObject *parent)
     cachePath = QStandardPaths::writableLocation(
                 QStandardPaths::CacheLocation);
     QDir dir;
-    qDebug() << cachePath;
     if(!dir.exists(cachePath))
         dir.mkpath(cachePath);
     if(!dir.exists(cachePath + "/avatar/friend/"))
@@ -149,7 +148,7 @@ QString CacheManager::cacheImage(QString fileName)
 
 void CacheManager::openCacheDir()
 {
-    QDesktopServices::openUrl(cachePath);
+    QDesktopServices::openUrl("file://" + cachePath);
 }
 
 void CacheManager::clearCacheDir()

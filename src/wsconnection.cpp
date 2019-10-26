@@ -287,7 +287,7 @@ void WSConnection::wsAPIReceived(const QString message)
         {
             qDebug() << "retry" << commandQueue.head().retryCount+1 << "because of error retcode";
             qDebug() << jsonDoc.object();
-            qDebug() << commandQueue.head().type << commandQueue.head().content;
+            qDebug() << commandQueue.head().type << commandQueue.head().content.mid(0, 500);
             addCommand(commandQueue.head().type,
                        commandQueue.head().content,
                        commandQueue.head().retryCount+1);
