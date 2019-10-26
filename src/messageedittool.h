@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QWidget>
 #include "facedialog.h"
+#include "unifiedicon.h"
 
 // 聊天消息编辑工具栏
 class MessageEditTool : public QWidget

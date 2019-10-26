@@ -17,6 +17,7 @@
 #include "contactlist.h"
 #include "cqcode.h"
 #include "messagebrowser.h"
+#include "unifiedicon.h"
 
 enum CommandType
 {

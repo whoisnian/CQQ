@@ -24,7 +24,7 @@ void MessageBrowser::setColor(QString backgroundColor,
     this->backgroundColor = backgroundColor;
     this->foregroundColor = foregroundColor;
 
-    goDownButton = new QPushButton(QIcon::fromTheme("go-down"),
+    goDownButton = new QPushButton(UnifiedIcon::getIcon("down"),
                                    "",
                                    this);
     goDownButton->setStyleSheet("QPushButton{"

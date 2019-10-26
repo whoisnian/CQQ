@@ -24,8 +24,23 @@ MainWindow::MainWindow(QWidget *parent)
     chatManager = new ChatManager;
     cacheManager = new CacheManager(this);
 
+    // 根据主题是深色还是浅色调整显示
+    QColor windowColor = QApplication::palette().color(QPalette::Window);
+    qreal h, s, l;
+    windowColor.getHslF(&h, &s, &l);
+    if(l > 0.5)
+    {
+        CQCode::messageHighlightColor = "#f67400";
+        UnifiedIcon::setStyle("light");
+    }
+    else
+    {
+        CQCode::messageHighlightColor = "#f67400";
+        UnifiedIcon::setStyle("dark");
+    }
+
     // 主窗口设置
-    this->setWindowIcon(QIcon::fromTheme("im-qq"));
+    this->setWindowIcon(UnifiedIcon::getIcon("cqq"));
     this->setGeometry(CONFIG->configPos.x(),
                       CONFIG->configPos.y(),
                       CONFIG->configMainWindowWidth,
@@ -40,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 主 TabWidget 的消息 Tab
     QWidget *messageTab = new QWidget(mainTabWidget);
-    mainTabWidget->addTab(messageTab, QIcon::fromTheme("message-new"), "聊天");
+    mainTabWidget->addTab(messageTab, UnifiedIcon::getIcon("chat"), "聊天");
 
     // 消息 Tab 中的聊天列表
     chatList = new ChatList(messageTab);
@@ -50,21 +65,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 聊天区域中的消息显示区域
     messageBrowser = new MessageBrowser(this, chatWidget);
-
-    // 根据主题是深色还是浅色调整显示
-    QColor windowColor = QApplication::palette().color(QPalette::Window);
-    qreal h, s, l;
-    windowColor.getHslF(&h, &s, &l);
-    if(l > 0.5)
-    {
+    if(UnifiedIcon::getStyle() == "light")
         messageBrowser->setColor("#dddddd", "#000000");
-        CQCode::messageHighlightColor = "#f67400";
-    }
     else
-    {
         messageBrowser->setColor("#31363b", "#ffffff");
-        CQCode::messageHighlightColor = "#f67400";
-    }
 
     // 聊天区域中的消息编辑区域
     editWidget = new QWidget(chatWidget);
@@ -109,7 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 主 TabWidget 的联系人 Tab
     QWidget *contactTab = new QWidget(mainTabWidget);
-    mainTabWidget->addTab(contactTab, QIcon::fromTheme("group"), "联系人");
+    mainTabWidget->addTab(contactTab, UnifiedIcon::getIcon("contact"), "联系人");
 
     // 联系人 Tab 中的好友群组 TabWidget
     QTabWidget *contactTabWidget = new QTabWidget(contactTab);
@@ -139,44 +143,44 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 菜单
     QMenu *fileMenu = new QMenu("文件", this);
-    fileMenu->setIcon(QIcon::fromTheme("document-page-setup-symbolic"));
+    fileMenu->setIcon(UnifiedIcon::getIcon("folder"));
     QMenu *viewMenu = new QMenu("视图", this);
-    viewMenu->setIcon(QIcon::fromTheme("view-visible"));
+    viewMenu->setIcon(UnifiedIcon::getIcon("view"));
     QMenu *settingMenu = new QMenu("设置", this);
-    settingMenu->setIcon(QIcon::fromTheme("practice-setup"));
+    settingMenu->setIcon(UnifiedIcon::getIcon("setup"));
     QMenu *helpMenu = new QMenu("帮助", this);
-    helpMenu->setIcon(QIcon::fromTheme("help-contents"));
+    helpMenu->setIcon(UnifiedIcon::getIcon("help"));
 
     QAction *openCacheDirAction = new QAction(
-                QIcon::fromTheme("document-open"), "打开缓存目录", this);
+                UnifiedIcon::getIcon("open"), "打开缓存目录", this);
     openCacheDirAction->setStatusTip("打开缓存目录");
     connect(openCacheDirAction, SIGNAL(triggered()),
             this, SLOT(openCacheDir()));
     fileMenu->addAction(openCacheDirAction);
 
     QAction *clearCacheAction = new QAction(
-                QIcon::fromTheme("edit-clear-all"), "清空缓存", this);
+                UnifiedIcon::getIcon("clear"), "清空缓存", this);
     clearCacheAction->setStatusTip("清空缓存");
     connect(clearCacheAction, SIGNAL(triggered()),
             this, SLOT(clearCache()));
     fileMenu->addAction(clearCacheAction);
 
     QAction *resetWindowSizeAction = new QAction(
-                QIcon::fromTheme("kt-restore-defaults"), "重置布局", this);
+                UnifiedIcon::getIcon("layout"), "重置布局", this);
     resetWindowSizeAction->setStatusTip("重置布局");
     connect(resetWindowSizeAction, SIGNAL(triggered()),
             this, SLOT(resetWindowSize()));
     viewMenu->addAction(resetWindowSizeAction);
 
     QAction *reloadAvatarAction = new QAction(
-                QIcon::fromTheme("view-refresh"), "刷新头像", this);
+                UnifiedIcon::getIcon("refresh"), "刷新头像", this);
     reloadAvatarAction->setStatusTip("刷新头像");
     connect(reloadAvatarAction, SIGNAL(triggered()),
             this, SLOT(reloadAvatar()));
     viewMenu->addAction(reloadAvatarAction);
 
     QAction *changeNotifyAction = new QAction(
-                QIcon::fromTheme("message-new"), "允许通知", this);
+                UnifiedIcon::getIcon("notify"), "允许通知", this);
     changeNotifyAction->setStatusTip("允许通知");
     changeNotifyAction->setCheckable(true);
     changeNotifyAction->setChecked(CONFIG->configEnableNotify);
@@ -185,20 +189,20 @@ MainWindow::MainWindow(QWidget *parent)
     settingMenu->addAction(changeNotifyAction);
 
     QAction *fetchFriendsAction = new QAction(
-                QIcon::fromTheme("download"), "抓取好友", this);
+                UnifiedIcon::getIcon("download"), "抓取好友", this);
     fetchFriendsAction->setStatusTip("抓取好友");
     connect(fetchFriendsAction, SIGNAL(triggered()),
             this, SLOT(fetchFriends()));
     settingMenu->addAction(fetchFriendsAction);
 
     QAction *changeSettingAction = new QAction(
-                QIcon::fromTheme("settings-configure"), "修改设置", this);
+                UnifiedIcon::getIcon("build"), "修改设置", this);
     changeSettingAction->setStatusTip("修改设置");
     connect(changeSettingAction, SIGNAL(triggered()),
             this, SLOT(changeSetting()));
     settingMenu->addAction(changeSettingAction);
 
-    helpMenu->addAction(QIcon::fromTheme("help-about"),
+    helpMenu->addAction(UnifiedIcon::getIcon("about"),
                         "关于", this, SLOT(about()));
 
     // 托盘图标菜单
@@ -208,13 +212,13 @@ MainWindow::MainWindow(QWidget *parent)
     trayIconMenu->addMenu(settingMenu);
     trayIconMenu->addMenu(helpMenu);
     trayIconMenu->addSeparator();
-    trayIconMenu->addAction(QIcon::fromTheme("application-exit"),
+    trayIconMenu->addAction(UnifiedIcon::getIcon("exit"),
                             "退出", this, SLOT(quitApp()));
 
     // 托盘图标
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setToolTip("CQQ");
-    trayIcon->setIcon(QIcon::fromTheme("im-qq"));
+    trayIcon->setIcon(UnifiedIcon::getIcon("cqq"));
     trayIcon->setContextMenu(trayIconMenu);
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(trayIconClicked()));

@@ -9,7 +9,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
 
     facePushButton = new QPushButton(this);
     facePushButton->setFlat(true);
-    facePushButton->setIcon(QIcon::fromTheme("symbols"));
+    facePushButton->setIcon(UnifiedIcon::getIcon("face"));
     facePushButton->setIconSize(QSize(24, 24));
     facePushButton->setToolTip("插入表情");
     connect(facePushButton, SIGNAL(clicked()),
@@ -18,7 +18,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
 
     imagePushButton = new QPushButton(this);
     imagePushButton->setFlat(true);
-    imagePushButton->setIcon(QIcon::fromTheme("emblem-photos-symbolic"));
+    imagePushButton->setIcon(UnifiedIcon::getIcon("photo"));
     imagePushButton->setIconSize(QSize(24, 24));
     imagePushButton->setToolTip("发送图片");
     connect(imagePushButton, SIGNAL(clicked()),
@@ -27,7 +27,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
 
     screenshotPushButton = new QPushButton(this);
     screenshotPushButton->setFlat(true);
-    screenshotPushButton->setIcon(QIcon::fromTheme("edit-cut-symbolic"));
+    screenshotPushButton->setIcon(UnifiedIcon::getIcon("camera"));
     screenshotPushButton->setIconSize(QSize(24, 24));
     screenshotPushButton->setToolTip("发送剪切版中的图片");
     connect(screenshotPushButton, SIGNAL(clicked()),
@@ -37,7 +37,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     messageEditToolLayout->addStretch(1);
 
     sendMessagePushButton = new QPushButton(this);
-    sendMessagePushButton->setIcon(QIcon::fromTheme("document-send"));
+    sendMessagePushButton->setIcon(UnifiedIcon::getIcon("send"));
     sendMessagePushButton->setText("发送");
     sendMessagePushButton->setToolTip("发送（Ctrl + Enter）");
     connect(sendMessagePushButton, SIGNAL(clicked()),

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui websockets webenginewidgets network
+QT       += core gui websockets webenginewidgets network svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,6 +28,7 @@ SOURCES += \
     fetchfriends.cpp \
         main.cpp \
         mainwindow.cpp \
+    unifiedicon.cpp \
     wsconnection.cpp \
     cachemanager.cpp \
     chatmanager.cpp \
@@ -45,6 +46,7 @@ SOURCES += \
 HEADERS += \
     fetchfriends.h \
         mainwindow.h \
+    unifiedicon.h \
     wsconnection.h \
     cachemanager.h \
     chatmanager.h \

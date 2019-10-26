@@ -27,11 +27,11 @@ void ConfigManager::changeConfig(bool blocking)
 
     QWidget *buttonWidget = new QWidget(dialog);
     QHBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget);
-    QPushButton *ok = new QPushButton(QIcon::fromTheme("dialog-ok"),
+    QPushButton *ok = new QPushButton(UnifiedIcon::getIcon("check"),
                                       "确定",
                                       buttonWidget);
     connect(ok, SIGNAL(clicked()), dialog, SLOT(accept()));
-    QPushButton *cancel = new QPushButton(QIcon::fromTheme("dialog-cancel"),
+    QPushButton *cancel = new QPushButton(UnifiedIcon::getIcon("close"),
                                           "取消",
                                           buttonWidget);
     connect(cancel, SIGNAL(clicked()), dialog, SLOT(reject()));
@@ -48,7 +48,7 @@ void ConfigManager::changeConfig(bool blocking)
     dialogLayout->addWidget(buttonWidget);
     dialog->setLayout(dialogLayout);
     dialog->setWindowTitle("CQQ 设置");
-    dialog->setWindowIcon(QIcon::fromTheme("settings-configure"));
+    dialog->setWindowIcon(UnifiedIcon::getIcon("build"));
     dialog->setMinimumWidth(300);
     connect(dialog, SIGNAL(finished(int)),
             this, SLOT(changeConfigDialogFinished(int)));
@@ -71,6 +71,7 @@ bool ConfigManager::loadConfig()
     QString configPath = QStandardPaths::writableLocation(
                 QStandardPaths::AppConfigLocation);
     QDir dir;
+    qDebug() << configPath;
     if(!dir.exists(configPath))
     {
         dir.mkpath(configPath);
@@ -110,7 +111,7 @@ void ConfigManager::saveConfig()
     {
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::NoIcon);
-        msgBox.setWindowIcon(QIcon::fromTheme("dialog-warning-symbolic"));
+        msgBox.setWindowIcon(UnifiedIcon::getIcon("warn"));
         msgBox.setStyleSheet("QLabel{min-width:250px;}");
         msgBox.setText("配置文件保存失败");
         msgBox.setInformativeText(configFile.errorString());

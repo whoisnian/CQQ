@@ -35,7 +35,7 @@ FaceDialog::FaceDialog(QWidget *parent)
     //faceDialogLayout->setMargin(0);
     //faceDialogLayout->setSpacing(0);
     this->setWindowTitle("emoji 表情");
-    this->setWindowIcon(QIcon::fromTheme("smiley-shape"));
+    this->setWindowIcon(UnifiedIcon::getIcon("face"));
     this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
 

@@ -468,7 +468,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             int index = chatManager->indexOf(userID, Chat::Private);
             emit notifyMessage("私聊消息",
                                remark + " 给你发送了一条新消息",
-                               QIcon::fromTheme("im-user"));
+                               UnifiedIcon::getIcon("person"));
             if(index == -1)
             {
                 QString chatID, chatName, avatar;
@@ -556,7 +556,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             emit notifyMessage("群消息",
                                cacheManager->groupnameMap[chatID]
                                + " 内有新消息",
-                               QIcon::fromTheme("group"));
+                               UnifiedIcon::getIcon("group"));
             if(index == -1)
             {
                 QString chatName, avatar;
@@ -633,7 +633,7 @@ void WSConnection::wsEVENTReceived(const QString message)
             int index = chatManager->indexOf(chatID, Chat::Discuss);
             emit notifyMessage("讨论组消息",
                                nickname + " 在讨论组中发送了一条新消息",
-                               QIcon::fromTheme("group"));
+                               UnifiedIcon::getIcon("group"));
             if(index == -1)
             {
                 QString chatName, avatar;

@@ -28,8 +28,8 @@ void ChatList::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = this->mapToGlobal(pos);
     QMenu contextMenu;
-    contextMenu.addAction(QIcon::fromTheme("edit-clear-all"), "清空");
-    contextMenu.addAction(QIcon::fromTheme("delete"), "删除");
+    contextMenu.addAction(UnifiedIcon::getIcon("clear"), "清空");
+    contextMenu.addAction(UnifiedIcon::getIcon("delete"), "删除");
     QAction *res = contextMenu.exec(globalPos);
     if(res&&res->text()=="删除")
     {

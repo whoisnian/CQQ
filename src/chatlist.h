@@ -5,6 +5,7 @@
 #include <QListWidgetItem>
 #include <QMenu>
 #include "chatmanager.h"
+#include "unifiedicon.h"
 
 // 主界面上的聊天列表
 class ChatList : public QListWidget

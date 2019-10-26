@@ -16,6 +16,7 @@
 #include <QStandardPaths>
 #include <QString>
 #include <QVBoxLayout>
+#include "unifiedicon.h"
 
 // 配置信息存储
 class ConfigManager : public QObject

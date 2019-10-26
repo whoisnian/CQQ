@@ -9,6 +9,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QWidget>
+#include "unifiedicon.h"
 
 // 表情选择对话框（emoji）
 class FaceDialog : public QDialog

@@ -23,6 +23,7 @@
 #include "messageedit.h"
 #include "messageedittool.h"
 #include "wsconnection.h"
+#include "unifiedicon.h"
 
 // 主界面
 class MainWindow : public QMainWindow
