@@ -154,9 +154,11 @@ void ConfigManager::changeConfigDialogFinished(int result)
 {
     if(result == QDialog::Accepted)
     {
-        this->configAddress = addressLineEdit->text();
-        this->configToken = tokenLineEdit->text();
-        emit configChanged();
+        QString newConfigAddress = addressLineEdit->text();
+        QString newConfigToken = tokenLineEdit->text();
+        if(this->configAddress != newConfigAddress
+                || this->configToken != newConfigToken)
+            emit configChanged();
     }
 
     delete dialog;
