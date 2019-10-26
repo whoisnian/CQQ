@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     #if defined(Q_OS_MACOS)
         QApplication::setFont(QFont("PingFang"));
         QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+        QApplication::setQuitOnLastWindowClosed(false);
     #endif
     int ret = 0;
     do
