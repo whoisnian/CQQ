@@ -8,6 +8,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     messageEditToolLayout->setSpacing(0);
 
     facePushButton = new QPushButton(this);
+    facePushButton->setStyleSheet("padding: 0px");
     facePushButton->setFlat(true);
     facePushButton->setIcon(UnifiedIcon::getIcon("face"));
     facePushButton->setIconSize(QSize(24, 24));
@@ -17,6 +18,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     messageEditToolLayout->addWidget(facePushButton);
 
     imagePushButton = new QPushButton(this);
+    imagePushButton->setStyleSheet("padding: 0px");
     imagePushButton->setFlat(true);
     imagePushButton->setIcon(UnifiedIcon::getIcon("photo"));
     imagePushButton->setIconSize(QSize(24, 24));
@@ -26,6 +28,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     messageEditToolLayout->addWidget(imagePushButton);
 
     screenshotPushButton = new QPushButton(this);
+    screenshotPushButton->setStyleSheet("padding: 0px");
     screenshotPushButton->setFlat(true);
     screenshotPushButton->setIcon(UnifiedIcon::getIcon("camera"));
     screenshotPushButton->setIconSize(QSize(24, 24));

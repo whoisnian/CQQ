@@ -652,9 +652,7 @@ void MainWindow::about()
 
 void MainWindow::trayIconClicked()
 {
-    #if defined(Q_OS_MACOS)
-    // only show contextMenu
-    #else
+    #if not defined(Q_OS_MACOS)
     if(this->isVisible())
     {
         oldPos = this->pos();
@@ -676,11 +674,8 @@ void MainWindow::trayIconClicked()
 
 void MainWindow::showMainWindow()
 {
-    if(this->isHidden())
-    {
-        this->show();
-        this->activateWindow();
-    }
+    this->show();
+    this->raise();
 }
 
 void MainWindow::notifyMessage(QString title, QString message, QIcon icon)
