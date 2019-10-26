@@ -67,6 +67,7 @@ private slots:
     void about();
 
     void trayIconClicked();
+    void showMainWindow();
     void notifyMessage(QString title, QString message, QIcon icon);
 
 protected:

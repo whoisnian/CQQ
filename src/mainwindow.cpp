@@ -212,6 +212,10 @@ MainWindow::MainWindow(QWidget *parent)
     trayIconMenu->addMenu(settingMenu);
     trayIconMenu->addMenu(helpMenu);
     trayIconMenu->addSeparator();
+    #if defined(Q_OS_MACOS)
+    trayIconMenu->addAction(UnifiedIcon::getIcon("display"),
+                            "显示", this, SLOT(showMainWindow()));
+    #endif
     trayIconMenu->addAction(UnifiedIcon::getIcon("exit"),
                             "退出", this, SLOT(quitApp()));
 
@@ -648,6 +652,9 @@ void MainWindow::about()
 
 void MainWindow::trayIconClicked()
 {
+    #if defined(Q_OS_MACOS)
+    // only show contextMenu
+    #else
     if(this->isVisible())
     {
         oldPos = this->pos();
@@ -663,6 +670,16 @@ void MainWindow::trayIconClicked()
         this->move(oldPos);
         this->activateWindow();
         qDebug() << this->oldPos << this->pos();
+    }
+    #endif
+}
+
+void MainWindow::showMainWindow()
+{
+    if(this->isHidden())
+    {
+        this->show();
+        this->activateWindow();
     }
 }
 

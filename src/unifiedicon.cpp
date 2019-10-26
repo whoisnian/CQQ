@@ -66,6 +66,8 @@ QIcon UnifiedIcon::getIcon(QString name)
         return generateIcon("<svg xmlns='http://www.w3.org/2000/svg'><path d='M0 0h24v24H0z' fill='none'/><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z' fill='"+iconColor+"'/></svg>");
     else if(name == "exit")
         return generateIcon("<svg xmlns='http://www.w3.org/2000/svg'><path d='M0 0h24v24H0z' fill='none'/><path d='M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z' fill='"+iconColor+"'/></svg>");
+    else if(name == "display")
+        return generateIcon("<svg xmlns='http://www.w3.org/2000/svg'><path d='M7 19h10V4H7v15zm-5-2h4V6H2v11zM18 6v11h4V6h-4z' fill='"+iconColor+"'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     else if(name == "person")
         return generateIcon("<svg xmlns='http://www.w3.org/2000/svg'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z' fill='"+iconColor+"'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
     else if(name == "group")
