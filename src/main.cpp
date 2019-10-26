@@ -4,7 +4,10 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    #if defined(Q_OS_MACOS)
+        QApplication::setFont(QFont("PingFang"));
+        QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    #endif
     int ret = 0;
     do
     {
