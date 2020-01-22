@@ -28,6 +28,7 @@ SOURCES += \
     fetchfriends.cpp \
         main.cpp \
         mainwindow.cpp \
+    screenshot.cpp \
     unifiedicon.cpp \
     wsconnection.cpp \
     cachemanager.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
 HEADERS += \
     fetchfriends.h \
         mainwindow.h \
+    screenshot.h \
     unifiedicon.h \
     wsconnection.h \
     cachemanager.h \

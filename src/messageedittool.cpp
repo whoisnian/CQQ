@@ -32,7 +32,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     screenshotPushButton->setFlat(true);
     screenshotPushButton->setIcon(UnifiedIcon::getIcon("cut"));
     screenshotPushButton->setIconSize(QSize(24, 24));
-    screenshotPushButton->setToolTip("发送剪切版中的图片");
+    screenshotPushButton->setToolTip("截图");
     connect(screenshotPushButton, SIGNAL(clicked()),
             this, SLOT(screenshotPushButtonClicked()));
     messageEditToolLayout->addWidget(screenshotPushButton);
@@ -53,9 +53,9 @@ MessageEditTool::MessageEditTool(QWidget *parent)
 void MessageEditTool::facePushButtonClicked()
 {
     FaceDialog *dialog = new FaceDialog(this);
-    dialog->open();
     connect(dialog, SIGNAL(dialogFinished(QString)),
             this, SLOT(facePushButtonFinished(QString)));
+    dialog->open();
 }
 
 void MessageEditTool::facePushButtonFinished(QString face)
@@ -81,15 +81,19 @@ void MessageEditTool::imagePushButtonClicked()
 
 void MessageEditTool::screenshotPushButtonClicked()
 {
-    QClipboard *systemClipboard = QApplication::clipboard();
-    QString fileName = systemClipboard->text();
-    if(fileName.left(7) == "file://")
-        fileName = fileName.mid(7);
-    if(!fileName.isEmpty())
+    Screenshot *screenshot = new Screenshot();
+    connect(screenshot, SIGNAL(saved(QString)),
+            this, SLOT(screenshotPushButtonFinished(QString)));
+    screenshot->shot();
+}
+
+void MessageEditTool::screenshotPushButtonFinished(QString filePath)
+{
+    if(!filePath.isEmpty())
     {
-        if(QFileInfo::exists(fileName)&&QFileInfo(fileName).isFile())
+        if(QFileInfo::exists(filePath)&&QFileInfo(filePath).isFile())
         {
-            emit sendScreenshot(fileName);
+            emit sendImage(filePath);
         }
     }
 }

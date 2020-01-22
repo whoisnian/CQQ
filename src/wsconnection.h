@@ -59,7 +59,6 @@ public:
     void getFriendList(ContactList *friendList);
     void getGroupList(ContactList *groupList);
     void sendImage(QString fileName);
-    void sendScreenshot(QString fileName);
     void sendMessage(QString plainText);
 
 signals:

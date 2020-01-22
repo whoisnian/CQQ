@@ -21,6 +21,8 @@ CacheManager::CacheManager(QObject *parent)
         dir.mkpath(cachePath + "/chat/");
     if(!dir.exists(cachePath + "/image/"))
         dir.mkpath(cachePath + "/image/");
+    if(!dir.exists(cachePath + "/screenshot/"))
+        dir.mkpath(cachePath + "/screenshot/");
 }
 
 // 从缓存目录加载聊天记录缓存

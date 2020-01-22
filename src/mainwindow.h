@@ -39,7 +39,6 @@ public:
 private slots:
     void insertFace(QString face);
     void sendImage(QString fileName);
-    void sendScreenshot(QString fileName);
     void sendMessage();
     void changeChat(QListWidgetItem *item);
     void deleteChat(QListWidgetItem *item);

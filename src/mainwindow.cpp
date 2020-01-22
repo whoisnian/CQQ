@@ -233,8 +233,6 @@ MainWindow::MainWindow(QWidget *parent)
             this, SLOT(insertFace(QString)));
     connect(messageEditTool, SIGNAL(sendImage(QString)),
             this, SLOT(sendImage(QString)));
-    connect(messageEditTool, SIGNAL(sendScreenshot(QString)),
-            this, SLOT(sendScreenshot(QString)));
     connect(messageEditTool, SIGNAL(sendMessage()),
             this, SLOT(sendMessage()));
     connect(messageEdit, SIGNAL(ctrlEnterPressed()),
@@ -320,11 +318,6 @@ void MainWindow::insertFace(QString face)
 void MainWindow::sendImage(QString fileName)
 {
     WSConn->sendImage(fileName);
-}
-
-void MainWindow::sendScreenshot(QString fileName)
-{
-    WSConn->sendScreenshot(fileName);
 }
 
 void MainWindow::sendMessage()

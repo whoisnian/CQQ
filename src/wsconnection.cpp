@@ -167,11 +167,6 @@ void WSConnection::sendImage(QString fileName)
     messageBrowser->updateContent();
 }
 
-void WSConnection::sendScreenshot(QString fileName)
-{
-    sendImage(fileName);
-}
-
 void WSConnection::sendMessage(QString plainText)
 {
     Message m;

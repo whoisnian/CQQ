@@ -9,6 +9,7 @@
 #include <QWidget>
 #include "facedialog.h"
 #include "unifiedicon.h"
+#include "screenshot.h"
 
 // 聊天消息编辑工具栏
 class MessageEditTool : public QWidget
@@ -21,7 +22,6 @@ public:
 signals:
     void insertFace(QString face);
     void sendImage(QString fileName);
-    void sendScreenshot(QString fileName);
     void sendMessage();
 
 private slots:
@@ -29,6 +29,7 @@ private slots:
     void facePushButtonFinished(QString face);
     void imagePushButtonClicked();
     void screenshotPushButtonClicked();
+    void screenshotPushButtonFinished(QString filePath);
     void sendMessagePushButtonClicked();
 
 private:
