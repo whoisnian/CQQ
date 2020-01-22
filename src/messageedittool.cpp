@@ -30,7 +30,7 @@ MessageEditTool::MessageEditTool(QWidget *parent)
     screenshotPushButton = new QPushButton(this);
     screenshotPushButton->setStyleSheet("padding: 0px");
     screenshotPushButton->setFlat(true);
-    screenshotPushButton->setIcon(UnifiedIcon::getIcon("camera"));
+    screenshotPushButton->setIcon(UnifiedIcon::getIcon("cut"));
     screenshotPushButton->setIconSize(QSize(24, 24));
     screenshotPushButton->setToolTip("发送剪切版中的图片");
     connect(screenshotPushButton, SIGNAL(clicked()),
