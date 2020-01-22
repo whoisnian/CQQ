@@ -639,8 +639,8 @@ void MainWindow::about()
 {
     QMessageBox::about(this, "About",
                  "<b>CQQ</b>"\
-                 "<p>Based on Qt Creator 4.8.2</p>"\
-                 "<p>Based on Qt 5.12.2 (GCC 8.2.1 20181127, 64 bit)</p>");
+                 "<p>Based on Qt Creator 4.11.0</p>"\
+                 "<p>Based on Qt 5.14.0 (GCC 9.2.0, 64 bit)</p>");
 }
 
 void MainWindow::trayIconClicked()

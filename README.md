@@ -3,17 +3,18 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 
 ## 测试环境
 * 服务器：
-  * CoolQ Docker([richardchien/cqhttp](https://cqhttp.cc/docs/4.8/#/Docker))
-  * CoolQ Pro 5.13.1(190303)
-  * richardchien/coolq-http-api 4.8.0
+  * CoolQ Docker([richardchien/cqhttp](https://cqhttp.cc/docs/4.12/#/Docker))
+  * CoolQ Pro 5.15.5(191201)
+  * richardchien/coolq-http-api 4.12.0
 * 本地开发环境：
-  * Qt Creator 4.8.2 Based on Qt 5.12.1 (GCC 8.2.1 20181127, 64 bit)
+  * Qt Creator 4.11.0 Based on Qt 5.14.0 (GCC 9.2.0, 64 bit)
 
 ## 已实现
 * [x] 获取好友列表，群组列表
 * [x] 接收多种格式消息
 * [x] 发送文本消息
 * [x] 发送图片
+* [x] 简易截图
 * [x] 聊天图片预览
 * [x] 聊天消息框自动滚动
 * [x] 记录窗口大小调整
@@ -50,7 +51,7 @@ CQQ即CoolQ + Qt + QQ，通过[CoolQ HTTP API 插件](https://github.com/richard
 * 离线消息由于CoolQ HTTP API的接口限制，可能需要特殊方法实现。
 * 发送图片时存在大小限制，需要进一步测试。
 * ~~插入emoji表情时的表格存在性能问题，拉伸选择emoji窗口时比较明显，需要换用其它方式进行选择。~~ 已换用QGridLayout+QLabel
-* 截图功能未实现，当前的截图按钮是发送剪切版中的文件名对应的图片，可以识别类似`/home/nian/test.png`或者`file:///home/nian/test.png`格式的路径。可以在系统默认截图工具中设置保存图片后复制路径到剪切版，搭配系统截图工具实现发送截图功能。
+* ~~截图功能未实现，当前的截图按钮是发送剪切版中的文件名对应的图片，可以识别类似`/home/nian/test.png`或者`file:///home/nian/test.png`格式的路径。可以在系统默认截图工具中设置保存图片后复制路径到剪切版，搭配系统截图工具实现发送截图功能。~~ 实现了一个简易的截图
 * 图片预览需要放大，缩小，拖动，旋转功能，当前程序中调用系统默认图片查看器打开图片文件。
 * ~~Qt的QNetworkAccessManager首次下载任务报`QNetworkReplyHttpImplPrivate::_q_startOperation was called more than once`，需要解决。~~ 更新Qt后尚未出现
 
